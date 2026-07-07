@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/reciteWordFragment"
+        android:title="@string/recite_word"
+        android:icon="@drawable/baseline_memory_24" />
+    <item
+        android:id="@+id/vocabularyFragment"
+        android:title="@string/vocabulary_book"
+        android:icon="@drawable/baseline_menu_book_24"/>
+    <item
+        android:id="@+id/statisticFragment"
+        android:title="@string/statistic"
+        android:icon="@drawable/baseline_bar_chart_24"/>
+    <item
+        android:id="@+id/mineFragment"
+        android:title="@string/mine"
+        android:icon="@drawable/baseline_person_24"/>
+</menu>

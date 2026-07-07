@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/statusReciteWordOKCL">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/reciteIndicator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/linearProgressIndicator"
+            android:layout_width="0dp"
+            android:layout_height="5dp"
+            android:layout_marginHorizontal="16dp"
+            android:indeterminate="false"
+            app:layout_constraintBottom_toBottomOf="@+id/reciteIndicator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/numberProgressTV"
+            app:trackColor="#E5E7EB"
+            app:trackThickness="6dp"
+            app:trackCornerRadius="3dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/numberProgressTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/number_progress"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ViewFlipper
+        android:id="@+id/wordCardVF"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:inAnimation="@anim/slide_in_right"
+        android:outAnimation="@anim/slide_in_left"
+        app:layout_constraintBottom_toTopOf="@+id/actionLL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reciteIndicator">
+
+        <include
+            android:id="@+id/wordCardView"
+            layout="@layout/word_detail_card"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ViewFlipper>
+
+
+    <LinearLayout
+        android:id="@+id/actionLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <!-- 不认识 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/forgetBtn"
+            style="@style/Widget.MyApp.Button.Recite.Forget"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="@string/forget"
+            android:layout_marginEnd="8dp"/>
+        <!-- 模糊 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/blurBtn"
+            style="@style/Widget.MyApp.Button.Recite.Blur"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="@string/blur"
+            android:layout_marginEnd="8dp"/>
+        <!-- 认识 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rememberBtn"
+            style="@style/Widget.MyApp.Button.Recite.Remember"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:text="@string/remember" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

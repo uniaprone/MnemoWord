@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.MnemoAI_start" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">?attr/colorPrimary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
+        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
+        <item name="postSplashScreenTheme">@style/Theme.MnemoAI</item>
+    </style>
+
+    <style name="Widget.MyApp.Button.Primary" parent="Widget.Material3.Button">
+        <item name="cornerRadius">16dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- 忘记 -->
+    <style name="Widget.MyApp.Button.Recite.Forget" parent="Widget.MyApp.Button.Primary">
+<!--        <item name="backgroundTint">?attr/choiceForgetBackground</item>-->
+<!--        <item name="android:textColor">?attr/choiceForgetText</item>-->
+        <item name="backgroundTint">?attr/colorTertiaryContainer</item>
+        <item name="android:textColor">?attr/colorOnTertiaryContainer</item>
+
+    </style>
+
+    <!-- 模糊 -->
+    <style name="Widget.MyApp.Button.Recite.Blur" parent="Widget.MyApp.Button.Primary">
+<!--        <item name="backgroundTint">?attr/choiceBlurBackground</item>-->
+<!--        <item name="android:textColor">?attr/choiceBlurText</item>-->
+        <item name="backgroundTint">?attr/colorSecondaryContainer</item>
+        <item name="android:textColor">?attr/colorOnSecondaryContainer</item>
+    </style>
+
+    <!-- 认识 -->
+    <style name="Widget.MyApp.Button.Recite.Remember" parent="Widget.MyApp.Button.Primary">
+<!--        <item name="backgroundTint">?attr/choiceRememberBackground</item>-->
+<!--        <item name="android:textColor">?attr/choiceRememberText</item>-->
+        <item name="backgroundTint">?attr/colorPrimaryContainer</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+    </style>
+
+    <style name="Widget.MyApp.CardView.Primary" parent="Widget.Material3.CardView.Elevated">
+    </style>
+
+    <style name="Widget.MyApp.CardView.Small" parent="Widget.MyApp.CardView.Primary">
+        <item name="cardElevation">2dp</item>
+        <item name="cornerRadius">12dp</item>
+    </style>
+
+    <style name="Widget.MyApp.CardView.Middle" parent="Widget.MyApp.CardView.Primary">
+        <item name="cardElevation">1dp</item>
+        <item name="cornerRadius">6dp</item>
+    </style>
+
+    <style name="Widget.MyApp.CardView.Large" parent="Widget.MyApp.CardView.Primary">
+        <item name="cardElevation">0dp</item>
+        <item name="cornerRadius">24dp</item>
+    </style>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/reciteWordFragment">
+
+        <fragment
+            android:id="@+id/reciteWordFragment"
+            android:name="com.kite.mnemoai.fragment.ReciteWordFragment"
+            android:label="ReciteWordFragment" />
+
+        <fragment
+            android:id="@+id/vocabularyFragment"
+            android:name="com.kite.mnemoai.fragment.VocabularyFragment"
+            android:label="VocabularyFragment">
+            <action
+                android:id="@+id/action_vocabularyFragment_to_vocabularyGroupFragment"
+                app:destination="@id/vocabularyGroupFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/vocabularyGroupFragment"
+            android:name="com.kite.mnemoai.fragment.VocabularyGroupFragment"
+            android:label="VocabularyGroupFragment">
+            <argument
+                android:name="group_id"
+                app:argType="long"
+                android:defaultValue="0L" />
+            <action
+                android:id="@+id/action_vocabularyGroupFragment_to_wordDetailFragment"
+                app:destination="@id/wordDetailFragment" />
+        </fragment>
+    <fragment
+        android:id="@+id/wordDetailFragment"
+        android:name="com.kite.mnemoai.fragment.WordDetailFragment"
+        android:label="WordDetailFragment" >
+        <argument
+            android:name="word_id"
+            app:argType="long"
+            android:defaultValue="0L" />
+    </fragment>
+    <fragment
+        android:id="@+id/statisticFragment"
+        android:name="com.kite.mnemoai.fragment.StatisticFragment"
+        android:label="StatisticFragment" />
+    <fragment
+        android:id="@+id/mineFragment"
+        android:name="com.kite.mnemoai.fragment.MineFragment"
+        android:label="MineFragment" />
+</navigation>

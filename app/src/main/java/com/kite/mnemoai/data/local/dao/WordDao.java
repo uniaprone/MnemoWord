@@ -1,0 +1,114 @@
+package com.kite.mnemoai.data.local.dao;
+
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Transaction;
+
+import com.kite.mnemoai.data.local.DTO.WordWithExtractAndDayPlanEntity;
+import com.kite.mnemoai.data.local.entity.WordEntity;
+import com.kite.mnemoai.data.model.WordListItem;
+
+import java.util.List;
+
+@Dao
+public interface WordDao {
+    @Insert
+    public void insertWord(WordEntity wordEntity);
+
+    @Delete
+    public void deleteWord(WordEntity wordEntity);
+
+    @Query("SELECT * FROM words WHERE word = :word")
+    public LiveData<WordEntity> getWordLiveData(String word);
+
+    @Query("SELECT * FROM words WHERE id = :id")
+    public LiveData<WordEntity> getWordLiveDataById(long id);
+
+    @Query("SELECT * FROM words WHERE id IN (:ids)")
+    List<WordEntity> getWordsByIds(List<Long> ids);
+
+    @Query("SELECT * FROM words WHERE id IN (:ids)")
+    LiveData<List<WordEntity>> getWordsLiveDataByIds(List<Long> ids);
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE id IN (" +
+            "SELECT word_id FROM day_plan_word " +
+            "WHERE date = :date AND status = 0" +
+            ")")
+    LiveData<List<WordWithExtractAndDayPlanEntity>> getUnfinishPlanWordDetailLiveData(String date);
+
+    @Transaction
+    @Query("SELECT * FROM words WHERE id = :id")
+    LiveData<WordWithExtractAndDayPlanEntity> getWordWithExtractAndDayPlanLiveDataById(long id);
+
+    @Query("SELECT * FROM words INNER JOIN word_review ON words.id = word_review.id")
+    List<WordEntity> getReviewWords();
+
+    @Query("SELECT w.id," +
+            "w.word, " +
+            "w.phonetic, " +
+            "w.translation, " +
+            "CASE " +
+            "WHEN wr.review_count IS NULL THEN 0 " +
+            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
+            "WHEN wr.review_count >= 6 THEN 2 " +
+            "ELSE 0 " +
+            "END AS review_status " +
+            "FROM words w " +
+            "INNER JOIN word_group wg ON wg.word_id = w.id " +
+            "LEFT JOIN word_review wr ON wr.id = w.id " +
+            "WHERE wg.group_id = :groupId " +
+            "ORDER BY w.word")
+    LiveData<List<WordListItem>> getWordListItemLiveDataByGroupId(long groupId);
+
+    @Query("SELECT w.* " +
+            "FROM words w " +
+            "INNER JOIN DAY_PLAN_WORD dpw WHERE w.id = dpw.word_id AND dpw.date = :date")
+    LiveData<List<WordEntity>> getLearningWordEntityByDate(String date);
+
+//    @Query("SELECT w.* " +
+//            "   FROM words w " +
+//            "   INNER JOIN word_group wg ON wg.word_id = w.id " +
+//            "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
+//            "   LEFT JOIN word_review r ON r.id = w.id " +
+//            "   WHERE r.id IS NULL" +
+//            "   ORDER BY RANDOM() " +
+//            "   LIMIT :newCount")
+//    List<WordEntity> selectTodayNewLearningWordEntities(int newCount);
+
+    @Query("SELECT w.* " +
+            "   FROM words w " +
+            "   INNER JOIN word_group wg ON wg.word_id = w.id " +
+            "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
+            "   LEFT JOIN word_review r ON r.id = w.id " +
+            "   LEFT JOIN day_plan_word dpw ON dpw.word_id = w.id AND dpw.date = :date" +
+            "   WHERE r.id IS NULL AND dpw.word_id IS NULL" +
+            "   ORDER BY RANDOM() " +
+            "   LIMIT :newCount")
+    List<WordEntity> selectTodayNewLearningWordEntities(int newCount, String date);
+
+    @Query("SELECT w.* " +
+            "   FROM words w " +
+            "   INNER JOIN word_group wg ON wg.word_id = w.id " +
+            "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
+            "   LEFT JOIN word_review r ON r.id = w.id " +
+            "   WHERE r.id IS NULL" +
+            "   ORDER BY RANDOM() " +
+            "   LIMIT :newCount")
+    LiveData<List<WordEntity>> selectTodayNewLearningWordEntitiesLiveData(int newCount);
+
+    @Query("SELECT w.* " +
+            "   FROM words w " +
+            "   INNER JOIN word_review r ON r.id = w.id " +
+            "   WHERE r.next_review_time = :today")
+    List<WordEntity> selectTodayReviewingWordEntities(String today);
+
+    @Query("SELECT w.* " +
+            "   FROM words w " +
+            "   INNER JOIN word_review r ON r.id = w.id " +
+            "   WHERE r.next_review_time = :today")
+    LiveData<List<WordEntity>> selectTodayReviewingWordEntitiesLiveData(String today);
+}
