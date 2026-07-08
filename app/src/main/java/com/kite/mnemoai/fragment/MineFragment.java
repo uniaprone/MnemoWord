@@ -46,6 +46,12 @@ public class MineFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
+    public void onDestroy() {
+        binding = null;
+        super.onDestroy();
+    }
+
     private void viewInit(){
         setupToolbar();
     }

@@ -18,7 +18,7 @@
     <string name="reviewing">复习中</string>
     <string name="mastered">已掌握</string>
     <string name="learning_vocabulary">当前学习</string>
-    <string name="study_word_per_day">每日新学单词</string>
+    <string name="study_word_per_day">每日新学</string>
     <string name="today_review_word">今日复习</string>
     <string name="study_word_count_today">已新学</string>
     <string name="review_word_count_today">已复习</string>

@@ -11,7 +11,7 @@ import retrofit2.http.POST;
 public interface DeepseekService {
 
     String DEEPSEEK_BASE_URL = "https://api.deepseek.com";
-    @Headers("Authorization: Bearer ")
+    @Headers("Authorization: Bearer sk-b0f24b1943d44ecb888f85d5097e25a9")
     @POST("chat/completions")
     Call<DeepseekResponseBody> getDeepseekResponseBody(@Body DeepseekRequestBody body);
 

@@ -6,16 +6,18 @@ public class MineSelectorItem extends MineBaseItem{
     private String title;
     private List<String> options;
     private int selected;
-    private OnOptionSelectedListener listener;
+    private int lastSelectedIndex;
+    private final OnOptionSelectedListener listener;
 
     public interface OnOptionSelectedListener {
         void onSelected(int index);
     }
 
-    public MineSelectorItem(String title, List<String> options, int selected, OnOptionSelectedListener listener) {
+    public MineSelectorItem(String title, List<String> options, int selected, int lastSelectedIndex, OnOptionSelectedListener listener) {
         this.title = title;
         this.options = options;
         this.selected =selected;
+        this.lastSelectedIndex = lastSelectedIndex;
         this.listener = listener;
     }
 
@@ -43,6 +45,14 @@ public class MineSelectorItem extends MineBaseItem{
 
     public void setSelected(int selected) {
         this.selected = selected;
+    }
+
+    public int getLastSelectedIndex() {
+        return lastSelectedIndex;
+    }
+
+    public void setLastSelectedIndex(int lastSelectedIndex) {
+        this.lastSelectedIndex = lastSelectedIndex;
     }
 
     public String getTitle() {

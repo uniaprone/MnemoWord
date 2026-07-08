@@ -18,11 +18,13 @@ import com.kite.mnemoai.model.MineBaseItem;
 import com.kite.mnemoai.model.MineSelectorItem;
 import com.kite.mnemoai.uistate.MineUIState;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MineViewModel extends ViewModel {
     private MediatorLiveData<MineUIState> _uiStatus = new MediatorLiveData<>();
-    private List<MineBaseItem> mineBaseItems;
+    private List<MineBaseItem> mineBaseItems = new ArrayList<>();
     private UserSettingRepository userSettingRepository;
 
     public MineViewModel(@NonNull Application app, UserSettingRepository userSettingRepository) {
@@ -35,6 +37,7 @@ public class MineViewModel extends ViewModel {
                             app.getResources().getString(R.string.dark_model)
                     ),
                     convertLightDarkModelToOption(userSetting.getLightDarkModel()),
+                    getThemeLastSelectedIndex(app.getResources().getString(R.string.light_dark_model), convertLightDarkModelToOption(userSetting.getLightDarkModel())),
                     (index) -> {
                         int lightDarkModel = userSetting.getLightDarkModel();
                         if (index == 0) {
@@ -63,6 +66,18 @@ public class MineViewModel extends ViewModel {
         }else {
             return 2;
         }
+    }
+
+    private int getThemeLastSelectedIndex(String title, int lastSelectedIndex){
+        for(MineBaseItem mineBaseItem: mineBaseItems){
+            if(mineBaseItem instanceof MineSelectorItem){
+                MineSelectorItem themeSetting = (MineSelectorItem) mineBaseItem;
+                if(Objects.equals(themeSetting.getTitle(), title)){
+                    return themeSetting.getSelected();
+                }
+            }
+        }
+        return lastSelectedIndex;
     }
 
     private void updateUIStatus(){
