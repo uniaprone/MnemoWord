@@ -9,24 +9,34 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.color.MaterialColors;
+import com.kite.mnemoai.R;
 import com.kite.mnemoai.databinding.ItemMineSettingSelectorBinding;
+import com.kite.mnemoai.databinding.ItemMineSettingTextBinding;
+import com.kite.mnemoai.fragment.dialog.ApiKeySettingDialogFragment;
 import com.kite.mnemoai.model.MineBaseItem;
 import com.kite.mnemoai.model.MineSelectorItem;
+import com.kite.mnemoai.model.MineTextItem;
 import com.kite.mnemoai.utils.UIUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public final static int MINE_TYPE_SELECTOR = 0;
+    private ApiKeyItemListener apiKeyItemListener;
+
     private List<MineBaseItem> mineBaseItems = new ArrayList<>();
 
     public static class SelectorViewHolder extends RecyclerView.ViewHolder{
@@ -48,6 +58,30 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
+    public static class TextViewHolder extends RecyclerView.ViewHolder{
+        private ItemMineSettingTextBinding binding;
+        private MineTextItem mineTextItem;
+        public TextViewHolder(@NonNull ItemMineSettingTextBinding binding, ApiKeyItemListener apiKeyItemListener) {
+            super(binding.getRoot());
+            this.binding = binding;
+            binding.settingCL.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mineTextItem == null) return;
+                    if (Objects.equals(mineTextItem.getTitle(), binding.getRoot().getResources().getString(R.string.setting_title_api_key))) {
+                        apiKeyItemListener.onClick();
+                    }
+                }
+            });
+        }
+
+        public void bind(MineTextItem mineTextItem){
+            this.mineTextItem = mineTextItem;
+            binding.settingTitleTV.setText(mineTextItem.getTitle());
+            binding.infoTV.setText(mineTextItem.getInfo());
+        }
+    }
+
 
     @NonNull
     @Override
@@ -56,6 +90,9 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case 0:
                 ItemMineSettingSelectorBinding binding = ItemMineSettingSelectorBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
                 return new SelectorViewHolder(binding);
+            case 1:
+                ItemMineSettingTextBinding itemMineSettingTextBinding = ItemMineSettingTextBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+                return new TextViewHolder(itemMineSettingTextBinding, apiKeyItemListener);
             default:
                 throw new IllegalArgumentException("未知的: viewType: " + viewType);
         }
@@ -68,6 +105,11 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             MineSelectorItem mineSelectorItem = (MineSelectorItem) item;
             SelectorViewHolder viewHolder = (SelectorViewHolder) holder;
             viewHolder.bind(mineSelectorItem);
+        }
+        if(item instanceof MineTextItem){
+            MineTextItem mineTextItem = (MineTextItem) item;
+            TextViewHolder viewHolder = (TextViewHolder) holder;
+            viewHolder.bind(mineTextItem);
         }
     }
 
@@ -85,5 +127,17 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if(mineBaseItems == null) return;
         this.mineBaseItems = mineBaseItems;
         notifyDataSetChanged();
+    }
+
+    public ApiKeyItemListener getApiKeyItemListener() {
+        return apiKeyItemListener;
+    }
+
+    public void setApiKeyItemListener(ApiKeyItemListener apiKeyItemListener) {
+        this.apiKeyItemListener = apiKeyItemListener;
+    }
+
+    public interface ApiKeyItemListener{
+        void onClick();
     }
 }

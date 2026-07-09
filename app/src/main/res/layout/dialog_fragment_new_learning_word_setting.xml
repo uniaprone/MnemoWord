@@ -36,7 +36,5 @@
         android:text="@string/confirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newLearningWordCountET"
-        app:backgroundTint="@null"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/newLearningWordCountET" />
 </androidx.constraintlayout.widget.ConstraintLayout>

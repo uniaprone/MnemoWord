@@ -7,9 +7,12 @@ public class UserSetting {
 
     private int lightDarkModel;
 
-    public UserSetting(int newLearningWordCount, int lightDarkModel) {
+    private String apiKey;
+
+    public UserSetting(int newLearningWordCount, int lightDarkModel, String apiKey) {
         this.newLearningWordCount = newLearningWordCount;
         this.lightDarkModel = lightDarkModel;
+        this.apiKey = apiKey;
     }
 
     public int getNewLearningWordCount() {
@@ -18,5 +21,9 @@ public class UserSetting {
 
     public int getLightDarkModel() {
         return lightDarkModel;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }

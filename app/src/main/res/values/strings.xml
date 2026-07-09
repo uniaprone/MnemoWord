@@ -51,4 +51,5 @@
     <string name="dark_model">夜间</string>
     <string name="getting_Ai_mnemonic">正在生成AI助记...</string>
     <string name="get_ai_mnemonic_error">获取 AI 助记失败，请稍后再试</string>
+    <string name="setting_title_api_key">API key</string>
 </resources>

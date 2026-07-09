@@ -3,7 +3,6 @@ package com.kite.mnemoai.model;
 import java.util.List;
 
 public class MineSelectorItem extends MineBaseItem{
-    private String title;
     private List<String> options;
     private int selected;
     private int lastSelectedIndex;
@@ -14,7 +13,7 @@ public class MineSelectorItem extends MineBaseItem{
     }
 
     public MineSelectorItem(String title, List<String> options, int selected, int lastSelectedIndex, OnOptionSelectedListener listener) {
-        this.title = title;
+        super(title);
         this.options = options;
         this.selected =selected;
         this.lastSelectedIndex = lastSelectedIndex;
@@ -53,13 +52,5 @@ public class MineSelectorItem extends MineBaseItem{
 
     public void setLastSelectedIndex(int lastSelectedIndex) {
         this.lastSelectedIndex = lastSelectedIndex;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 }

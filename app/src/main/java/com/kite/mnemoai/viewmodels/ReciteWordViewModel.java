@@ -49,6 +49,7 @@ public class ReciteWordViewModel extends ViewModel {
     private boolean shouldAdvance;
     private Random random = new Random();
     private LocalDate date = LocalDate.now();
+    private String apiKey;
     private boolean hasSetDailyPlanWord = false;
 
     public ReciteWordViewModel(WordRepository wordRepository, GroupRepository groupRepository, StatisticsRepository statisticsRepository, UserSettingRepository userSettingRepository, SavedStateHandle savedStateHandle){
@@ -72,6 +73,9 @@ public class ReciteWordViewModel extends ViewModel {
         });
 
         _uiState.addSource(userSettingRepository.getUserSettingLiveData(), userSetting -> {
+            this.apiKey = userSetting.getApiKey();
+            updateUIStatus();
+
             wordRepository.setDailyDayPlanWordEntities(userSetting.getNewLearningWordCount());
             hasSetDailyPlanWord = true;
             _uiState.removeSource(userSettingRepository.getUserSettingLiveData());
@@ -171,10 +175,6 @@ public class ReciteWordViewModel extends ViewModel {
         _uiState.setValue(new ReciteWordUIState(reciteWordStatus, reciteWordItemStatuses, reciteWordItemStatusesOrder, totalProgress, currentProgress, shouldAdvance));
     }
 
-    public void fetchWordExtract(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, IRepositoryCallback<WordExtract> callback){
-        wordRepository.fetchWordExtract(wordWithExtractAndDayPlan, callback);
-    }
-
     public LiveData<ReciteWordUIState> getUiState() {
         return _uiState;
     }
@@ -189,16 +189,22 @@ public class ReciteWordViewModel extends ViewModel {
         showed.setShowTranslation(true);
         if(showed.getWordWithExtractAndDayPlan().getWordExtract() == null){
             showed.setWordDetailStatus(WordDetailStatus.loading);
-            fetchWordExtract(showed.getWordWithExtractAndDayPlan(), new IRepositoryCallback<WordExtract>() {
+            wordRepository.fetchWordExtract(showed.getWordWithExtractAndDayPlan(), apiKey, new IRepositoryCallback<WordExtract>() {
                 @Override
                 public void onComplete(WordExtract wordExtract) {
-                    if(reciteWordItemStatusesOrder.get(0) == showed) showed.setWordDetailStatus(WordDetailStatus.show);
+                    if(reciteWordItemStatusesOrder.get(0) == showed){
+                        showed.setWordDetailStatus(WordDetailStatus.show);
+                        updateUIStatus();
+                    }
                     else showed.setWordDetailStatus(WordDetailStatus.hide);
                 }
 
                 @Override
                 public void onError(Throwable t) {
-                    if(reciteWordItemStatusesOrder.get(0) == showed) showed.setWordDetailStatus(WordDetailStatus.error);
+                    if(reciteWordItemStatusesOrder.get(0) == showed){
+                        showed.setWordDetailStatus(WordDetailStatus.error);
+                        updateUIStatus();
+                    }
                     else showed.setWordDetailStatus(WordDetailStatus.hide);
                 }
             });

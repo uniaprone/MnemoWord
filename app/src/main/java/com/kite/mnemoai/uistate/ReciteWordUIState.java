@@ -16,6 +16,7 @@ public class ReciteWordUIState {
     private int currentProgress;
     private int totalProgress;
     private boolean shouldAdvance;
+    private String apiKey;
 
     public ReciteWordUIState(ReciteWordStatus reciteWordStatus, List<ReciteWordItemStatus> newReciteWordItemStatuses, List<ReciteWordItemStatus> reciteWordItemStatusOrder, int totalProgress, int currentProgress, boolean shouldAdvance) {
         this.reciteWordStatus = reciteWordStatus;
@@ -56,6 +57,10 @@ public class ReciteWordUIState {
 
     public int getTotalProgress() {
         return totalProgress;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 
     public enum ReciteWordStatus{

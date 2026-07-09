@@ -8,9 +8,12 @@ public class WordDetailUIState {
     private WordWithExtractAndDayPlan wordWithExtractAndDayPlan;
     private WordDetailStatus wordDetailStatus;
 
-    public WordDetailUIState(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, WordDetailStatus wordDetailStatus) {
+    private String apiKey;
+
+    public WordDetailUIState(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, WordDetailStatus wordDetailStatus, String apiKey) {
         this.wordWithExtractAndDayPlan = wordWithExtractAndDayPlan;
         this.wordDetailStatus = wordDetailStatus;
+        this.apiKey = apiKey;
     }
 
     public WordWithExtractAndDayPlan getWordWithExtractAndDayPlan() {
@@ -19,5 +22,9 @@ public class WordDetailUIState {
 
     public WordDetailStatus getWordDetailStatus() {
         return wordDetailStatus;
+    }
+
+    public String getApiKey() {
+        return apiKey;
     }
 }

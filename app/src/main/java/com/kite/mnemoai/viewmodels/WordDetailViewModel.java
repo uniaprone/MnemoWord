@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.data.local.DTO.WordWithExtractAndDayPlanEntity;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
+import com.kite.mnemoai.data.repository.UserSettingRepository;
 import com.kite.mnemoai.data.repository.WordRepository;
 import com.kite.mnemoai.model.WordDetailStatus;
 import com.kite.mnemoai.model.WordWithExtractAndDayPlan;
@@ -19,12 +20,17 @@ import com.kite.mnemoai.uistate.WordDetailUIState;
 public class WordDetailViewModel extends ViewModel {
     private MediatorLiveData<WordDetailUIState> uiState = new MediatorLiveData<>();
     private WordRepository wordRepository;
+    private UserSettingRepository userSettingRepository;
+
+    private String apiKey;
     private WordDetailStatus wordDetailStatus = WordDetailStatus.hide;
 
     private WordWithExtractAndDayPlan wordWithExtractAndDayPlan;
     public WordDetailViewModel(WordRepository wordRepository,
+                               UserSettingRepository userSettingRepository,
                                SavedStateHandle savedStateHandle){
         this.wordRepository = wordRepository;
+        this.userSettingRepository = userSettingRepository;
         long wordId = 1;
         if(savedStateHandle != null && savedStateHandle.contains("word_id")){
             wordId = savedStateHandle.get("word_id");
@@ -36,10 +42,15 @@ public class WordDetailViewModel extends ViewModel {
             }
             updateUIState();
         });
+
+        uiState.addSource(userSettingRepository.getUserSettingLiveData(), userSetting -> {
+            this.apiKey = userSetting.getApiKey();
+            updateUIState();
+        });
     }
 
     private void updateUIState(){
-        uiState.setValue(new WordDetailUIState(wordWithExtractAndDayPlan, wordDetailStatus));
+        uiState.setValue(new WordDetailUIState(wordWithExtractAndDayPlan, wordDetailStatus, apiKey));
     }
 
     public MediatorLiveData<WordDetailUIState> getUiState() {
@@ -49,7 +60,8 @@ public class WordDetailViewModel extends ViewModel {
     public void fetchWordExtract(){
         wordDetailStatus = WordDetailStatus.loading;
         updateUIState();
-        wordRepository.fetchWordExtract(wordWithExtractAndDayPlan.getWord(), new IRepositoryCallback<>() {
+
+        wordRepository.fetchWordExtract(wordWithExtractAndDayPlan.getWord(), apiKey, new IRepositoryCallback<>() {
             @Override
             public void onComplete(Exception e) {
                 wordDetailStatus = WordDetailStatus.error;
@@ -70,7 +82,7 @@ public class WordDetailViewModel extends ViewModel {
                 MainApplication app = (MainApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
                 SavedStateHandle savedStateHandle = createSavedStateHandle(creationExtras);
-                return new WordDetailViewModel(app.getWordRepository(), savedStateHandle);
+                return new WordDetailViewModel(app.getWordRepository(), app.getUserSettingRepository(), savedStateHandle);
             }
     );
 }

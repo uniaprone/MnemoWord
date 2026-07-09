@@ -243,8 +243,8 @@ public class WordRepository {
         });
     }
 
-    public void fetchWordExtract(Word word, IRepositoryCallback<Exception> callback){
-        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false)).enqueue(new Callback<>() {
+    public void fetchWordExtract(Word word, String apiKey, IRepositoryCallback<Exception> callback){
+        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null){
@@ -269,8 +269,8 @@ public class WordRepository {
         });
     }
 
-    public void fetchWordExtract(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, IRepositoryCallback<WordExtract> callback){
-        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordWithExtractAndDayPlan.getWord().getWord(), false)).enqueue(new Callback<>() {
+    public void fetchWordExtract(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, String apiKey, IRepositoryCallback<WordExtract> callback){
+        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordWithExtractAndDayPlan.getWord().getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null){
@@ -286,6 +286,8 @@ public class WordRepository {
                         }
 
                     });
+                }else{
+                    handler.post(() -> callback.onError(new NetworkErrorException(String.valueOf(response.errorBody()))));
                 }
             }
             @Override
@@ -295,5 +297,22 @@ public class WordRepository {
         });
     }
 
+    public void apiKeyValidTest(String apiKey, IRepositoryCallback<Boolean> callback){
+        DeepseekService.Factory.getInstance().deepseekConnectiveTest(new DeepseekRequestBody("hello",false), "Bearer " + apiKey).enqueue(new Callback<DeepseekResponseBody>() {
+            @Override
+            public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    handler.post(() -> callback.onComplete(true));
+                }else{
+                    handler.post(() -> callback.onComplete(false));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeepseekResponseBody> call, Throwable t) {
+                handler.post(() -> callback.onError(new NetworkErrorException("网络异常，稍后再试")));
+            }
+        });
+    }
 
 }

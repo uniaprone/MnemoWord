@@ -13,24 +13,41 @@ import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.R;
+import com.kite.mnemoai.data.network.DeepseekRequestBody;
+import com.kite.mnemoai.data.network.DeepseekResponseBody;
+import com.kite.mnemoai.data.network.DeepseekService;
+import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.UserSettingRepository;
+import com.kite.mnemoai.data.repository.WordRepository;
 import com.kite.mnemoai.model.MineBaseItem;
 import com.kite.mnemoai.model.MineSelectorItem;
+import com.kite.mnemoai.model.MineTextItem;
 import com.kite.mnemoai.uistate.MineUIState;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MineViewModel extends ViewModel {
     private MediatorLiveData<MineUIState> _uiStatus = new MediatorLiveData<>();
     private List<MineBaseItem> mineBaseItems = new ArrayList<>();
+    private WordRepository wordRepository;
     private UserSettingRepository userSettingRepository;
 
-    public MineViewModel(@NonNull Application app, UserSettingRepository userSettingRepository) {
+    public MineViewModel(@NonNull Application app, WordRepository wordRepository, UserSettingRepository userSettingRepository) {
+        this.wordRepository = wordRepository;
         this.userSettingRepository = userSettingRepository;
         _uiStatus.addSource(userSettingRepository.getUserSettingLiveData(), userSetting -> {
-            mineBaseItems = List.of(new MineSelectorItem(app.getResources().getString(R.string.light_dark_model),
+            List<MineBaseItem> newList = new ArrayList<>();
+            MineSelectorItem themeSetting = new MineSelectorItem(app.getResources().getString(R.string.light_dark_model),
                     List.of(
                             app.getResources().getString(R.string.fallow_system),
                             app.getResources().getString(R.string.light_model),
@@ -53,7 +70,15 @@ public class MineViewModel extends ViewModel {
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                             saveLightDarkModel(2);
                         }
-                    }));
+                    });
+            newList.add(0, themeSetting);
+
+            MineTextItem apiKeySetting = new MineTextItem(app.getResources().getString(R.string.setting_title_api_key),
+                    userSetting.getApiKey());
+            newList.add(1, apiKeySetting);
+
+            mineBaseItems.clear();
+            mineBaseItems.addAll(newList);
             updateUIStatus();
         });
     }
@@ -80,6 +105,14 @@ public class MineViewModel extends ViewModel {
         return lastSelectedIndex;
     }
 
+    public void apiKeyTest(String apiKey, IRepositoryCallback<Boolean> callback){
+        wordRepository.apiKeyValidTest(apiKey, callback);
+    }
+
+    public void saveApiKey(String apiKey){
+        userSettingRepository.setApiKey(apiKey);
+    }
+
     private void updateUIStatus(){
         _uiStatus.setValue(new MineUIState(mineBaseItems));
     }
@@ -97,7 +130,7 @@ public class MineViewModel extends ViewModel {
             creationExtras -> {
                 MainApplication app = (MainApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new MineViewModel(app, app.getUserSettingRepository());
+                return new MineViewModel(app, app.getWordRepository(), app.getUserSettingRepository());
             }
     );
 }

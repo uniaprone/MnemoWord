@@ -42,7 +42,8 @@ public class UserSettingRepository {
         SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
         int newStudyCount = sp.getInt("study_word_count", 20);
         int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        UserSetting userSetting = new UserSetting(newStudyCount, lightDarkModel);
+        String apiKey = sp.getString("api_key", "");
+        UserSetting userSetting = new UserSetting(newStudyCount, lightDarkModel, apiKey);
         _userSettingMediatorLiveData.setValue(userSetting);
     }
 
@@ -58,6 +59,7 @@ public class UserSettingRepository {
                 SharedPreferences.Editor editor= preferences.edit();
                 editor.putInt("study_word_count", userSetting.getNewLearningWordCount());
                 editor.putInt("light_dark_model", userSetting.getLightDarkModel());
+                editor.putString("api_key", userSetting.getApiKey());
                 editor.apply();
             } catch (Exception ignored) {
             }
@@ -73,7 +75,8 @@ public class UserSettingRepository {
             SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
             int newStudyCount = sp.getInt("study_word_count", 20);
             int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            UserSetting userSetting = new UserSetting(newStudyCount, lightDarkModel);
+            String apiKey = sp.getString("api_key", "");
+            UserSetting userSetting = new UserSetting(newStudyCount, lightDarkModel, apiKey);
             callback.onComplete(userSetting);
         });
     }
@@ -96,7 +99,8 @@ public class UserSettingRepository {
             }
             SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
             int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            UserSetting userSetting = new UserSetting(targetCount, lightDarkModel);
+            String apiKey = sp.getString("api_key", "");
+            UserSetting userSetting = new UserSetting(targetCount, lightDarkModel, apiKey);
             updateUserSetting(userSetting);
         });
     }
@@ -105,7 +109,8 @@ public class UserSettingRepository {
         executor.execute(() -> {
             SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
             int newStudyCount = sp.getInt("study_word_count", 20);
-            UserSetting userSetting = new UserSetting(newStudyCount, model);
+            String apiKey = sp.getString("api_key", "");
+            UserSetting userSetting = new UserSetting(newStudyCount, model, apiKey);
             updateUserSetting(userSetting);
         });
     }
@@ -121,5 +126,15 @@ public class UserSettingRepository {
 
     private void removeNewLearningDayPlanWordEntities(int removeCount){
         dayPlanWordDao.deleteRandomNewLearningWord(LocalDate.now().toString(), removeCount);
+    }
+    //api-key
+    public void setApiKey(String apiKey){
+        executor.execute(() -> {
+            SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
+            int newStudyCount = sp.getInt("study_word_count", 20);
+            int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            UserSetting userSetting = new UserSetting(newStudyCount, lightDarkModel, apiKey);
+            updateUserSetting(userSetting);
+        });
     }
 }
