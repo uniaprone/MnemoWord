@@ -52,25 +52,25 @@ public class MineFragment extends Fragment {
                     public void onConfirm(@NotNull String apiKey) {
                         bannerControl.show();
                         binding.settingInfoTV.setText("正在测试API Key是否可用");
-                       viewModel.apiKeyTest(apiKey, new IRepositoryCallback<Boolean>() {
-                           @Override
-                           public void onComplete(Boolean aBoolean) {
-                                if(aBoolean){
-                                    binding.settingInfoTV.setText("测试成功，API Key可用");
-                                    bannerControl.startTimer(3000);
-                                    viewModel.saveApiKey(apiKey);
-                                }else{
-                                    binding.settingInfoTV.setText("测试成功，API Key不可用");
-                                    bannerControl.startTimer(3000);
-                                }
-                           }
+                        viewModel.apiKeyTest(apiKey, new IRepositoryCallback<Boolean>() {
+                            @Override
+                            public void onComplete(Boolean aBoolean) {
+                                 if(aBoolean){
+                                     binding.settingInfoTV.setText("测试成功，API Key可用");
+                                     bannerControl.startTimer(3000);
+                                     viewModel.saveApiKey(apiKey);
+                                 }else{
+                                     binding.settingInfoTV.setText("测试成功，API Key不可用");
+                                     bannerControl.startTimer(3000);
+                                 }
+                            }
 
-                           @Override
-                           public void onError(Throwable t) {
-                               binding.settingInfoTV.setText("测试失败，请稍后再试");
-                               bannerControl.startTimer(3000);
-                           }
-                       });
+                            @Override
+                            public void onError(Throwable t) {
+                                binding.settingInfoTV.setText("测试失败，请稍后再试");
+                                bannerControl.startTimer(3000);
+                            }
+                        });
                     }
 
                     @Override

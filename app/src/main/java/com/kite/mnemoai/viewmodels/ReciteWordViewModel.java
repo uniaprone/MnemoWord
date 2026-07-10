@@ -4,6 +4,7 @@ import static androidx.lifecycle.SavedStateHandleSupport.createSavedStateHandle;
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -75,10 +76,10 @@ public class ReciteWordViewModel extends ViewModel {
         _uiState.addSource(userSettingRepository.getUserSettingLiveData(), userSetting -> {
             this.apiKey = userSetting.getApiKey();
             updateUIStatus();
-
-            wordRepository.setDailyDayPlanWordEntities(userSetting.getNewLearningWordCount());
-            hasSetDailyPlanWord = true;
-            _uiState.removeSource(userSettingRepository.getUserSettingLiveData());
+            if(!hasSetDailyPlanWord){
+                wordRepository.setDailyDayPlanWordEntities(userSetting.getNewLearningWordCount());
+                hasSetDailyPlanWord = true;
+            }
         });
 
         _uiState.addSource(wordRepository.getUnfinishPlanWordDetailLiveData(), wordWithExtractAndDayPlans -> {
@@ -158,7 +159,7 @@ public class ReciteWordViewModel extends ViewModel {
     }
 
     public void setDailyDayPlanWordEntities(){
-        userSettingRepository.getUserSetting(new IRepositoryCallback<UserSetting>() {
+        userSettingRepository.getUserSetting(new IRepositoryCallback<>() {
             @Override
             public void onComplete(UserSetting userSetting) {
                 wordRepository.setDailyDayPlanWordEntities(userSetting.getNewLearningWordCount());

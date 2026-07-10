@@ -113,43 +113,6 @@ public class WordRepository {
         });
     }
 
-//    public void setDailyDayPlanWordEntities(int learningCount, IRepositoryCallback<List<WordDetailInfo>> callback){
-//        executors.execute(() -> {
-//            //1.获取今日的背诵单词
-//            String date = LocalDate.now().toString();
-//            List<DayPlanWordEntity> dayPlanWordEntities = dayPlanWordDao.queryDayPlanWordsByDate(date);
-//            if(dayPlanWordEntities.isEmpty()){
-//                //2.1今日首次获取
-//                List<WordEntity> newLearningWordEntities = wordDao.selectTodayNewLearningWordEntities(learningCount);
-//                List<WordEntity> reviewingWordEntities = wordDao.selectTodayReviewingWordEntities(date);
-//                List<WordDetailInfo> wordDetailInfos = new ArrayList<>();
-//                for (WordEntity word: newLearningWordEntities){
-//                    wordDetailInfos.add(new WordDetailInfo(ModelTransformer.transformWordEntityToWord(word), null, null));
-//                }
-//                for (WordEntity word: reviewingWordEntities){
-//                    wordDetailInfos.add(new WordDetailInfo(ModelTransformer.transformWordEntityToWord(word), null, null));
-//                }
-//                handler.post(() -> callback.onComplete(wordDetailInfos));
-//                //插入选择的单词到数据库
-//                //1.转化实体
-//                List<DayPlanWordEntity> allDayPlanWordEntities = Stream.concat(
-//                        newLearningWordEntities.stream().map((wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 0, 0, null))),
-//                        reviewingWordEntities.stream().map((wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 1, 0, null)))
-//                ).collect(Collectors.toList());
-//                dayPlanWordDao.InsertDayPlanWord(allDayPlanWordEntities);
-//            }else{
-//                //2.2已经获取过
-//                List<Long> reciteWordsIds = dayPlanWordEntities.stream().map((DayPlanWordEntity::getWordId)).collect(Collectors.toList());
-//                List<WordEntity> wordEntities = wordDao.getWordsByIds(reciteWordsIds);
-//                List<WordDetailInfo> wordDetailInfos = new ArrayList<>();
-//                for (WordEntity word: wordEntities){
-//                    wordDetailInfos.add(new WordDetailInfo(ModelTransformer.transformWordEntityToWord(word), null, null));
-//                }
-//                handler.post(() -> callback.onComplete(wordDetailInfos));
-//            }
-//        });
-//    }
-
     public void setDailyDayPlanWordEntities(int learningCount){
         executors.execute(() -> {
             synchronized (lock){
@@ -164,7 +127,7 @@ public class WordRepository {
                     //1.转化实体
                     List<DayPlanWordEntity> allDayPlanWordEntities = Stream.concat(
                             newLearningWordEntities.stream().map((wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 0, 0, 0, 0, 0, null))),
-                            reviewingWordEntities.stream().map((wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 0, 0, 0, 0, 0, null)))
+                            reviewingWordEntities.stream().map((wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 1, 0, 0, 0, 0, null)))
                     ).collect(Collectors.toList());
                     dayPlanWordDao.InsertDayPlanWord(allDayPlanWordEntities);
                 }

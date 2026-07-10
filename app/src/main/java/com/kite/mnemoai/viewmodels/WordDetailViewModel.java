@@ -36,6 +36,7 @@ public class WordDetailViewModel extends ViewModel {
             wordId = savedStateHandle.get("word_id");
         }
         uiState.addSource(wordRepository.getWordWithExtractAndDayPlanLiveDataById(wordId), wordWithExtractAndDayPlan -> {
+            if(wordWithExtractAndDayPlan == null) return;
             this.wordWithExtractAndDayPlan = wordWithExtractAndDayPlan;
             if(wordWithExtractAndDayPlan.getWordExtract() != null){
                 this.wordDetailStatus = WordDetailStatus.show;

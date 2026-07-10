@@ -58,7 +58,7 @@ public class WordDetailFragment extends Fragment {
         binding.wordDetailCard.wordCardView.bindClickListener();
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(WordDetailViewModel.initializer)).get(WordDetailViewModel.class);
         viewModel.getUiState().observe(getViewLifecycleOwner(), wordDetailUIState -> {
-            if(wordDetailUIState == null) return;
+            if(wordDetailUIState == null || wordDetailUIState.getWordWithExtractAndDayPlan() == null) return;
             ReciteWordUIState.ReciteWordItemStatus reciteWordItemStatus =
                     new ReciteWordUIState.ReciteWordItemStatus(wordDetailUIState.getWordWithExtractAndDayPlan(), wordDetailUIState.getWordDetailStatus(), true);
             binding.wordDetailCard.wordCardView.bind(reciteWordItemStatus);
