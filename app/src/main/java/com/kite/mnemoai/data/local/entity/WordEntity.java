@@ -51,8 +51,6 @@ public class WordEntity {
     @ColumnInfo(name = "audio")
     private String audio;
 
-    @ColumnInfo(name = "review_times")
-    private Integer reviewTimes;
     public WordEntity(@NonNull String word, String phonetic, String definition,
                       String translation, String pos, Integer collins, Integer oxford,
                       String tag, Integer bnc, Integer frq, String exchange,
@@ -119,12 +117,4 @@ public class WordEntity {
 
     public String getAudio() { return audio; }
     public void setAudio(String audio) { this.audio = audio; }
-
-    public Integer getReviewTimes() {
-        return reviewTimes;
-    }
-
-    public void setReviewTimes(Integer reviewTimes) {
-        this.reviewTimes = reviewTimes;
-    }
 }

@@ -211,14 +211,23 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
             android:text="@string/my_group"
             android:textSize="@dimen/text_size_default"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/allVocabularyRV"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/learningGoalLL" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_vocabulary_book_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:text="@string/add"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/learningGoalLL" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -227,7 +236,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"/>
+            app:layout_constraintTop_toBottomOf="@+id/add_vocabulary_book_btn" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

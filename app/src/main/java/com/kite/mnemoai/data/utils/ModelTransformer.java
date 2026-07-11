@@ -21,12 +21,12 @@ public class ModelTransformer {
     private static Gson gson = new Gson();
     public static Group transformGroupEntitiesToGroups(GroupEntity groupEntity){
         if(groupEntity == null) return null;
-        return new Group(groupEntity.getId(), groupEntity.getName(), groupEntity.isLearning(), groupEntity.getCreateTime());
+        return new Group(groupEntity.getId(), groupEntity.getName(), groupEntity.getDescription(), groupEntity.isLearning(), groupEntity.getCreateTime());
     }
     public static List<Group> transformGroupEntitiesToGroups(List<GroupEntity> groupEntities){
         if(groupEntities == null) return null;
         return groupEntities.stream()
-                .map(groupEntity -> new Group(groupEntity.getId(), groupEntity.getName(), groupEntity.isLearning(), groupEntity.getCreateTime()))
+                .map(groupEntity -> new Group(groupEntity.getId(), groupEntity.getName(), groupEntity.getDescription(), groupEntity.isLearning(), groupEntity.getCreateTime()))
                 .collect(Collectors.toList());
     }
 

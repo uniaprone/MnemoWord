@@ -2,9 +2,6 @@ package com.kite.mnemoai.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -12,10 +9,9 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,17 +21,16 @@ import com.kite.mnemoai.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.VocabularyCardAdapter;
 import com.kite.mnemoai.data.local.DTO.DailyStatistic;
-import com.kite.mnemoai.data.model.Group;
 import com.kite.mnemoai.data.model.GroupDetail;
-import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
+import com.kite.mnemoai.fragment.dialog.SettingAndAddNewVocabularyBookDialogFragment;
 import com.kite.mnemoai.fragment.dialog.NewLearningWordSettingDialogFragment;
 import com.kite.mnemoai.fragment.dialog.VocabularySelectDialogFragment;
-import com.kite.mnemoai.uistate.VocabularyUIState;
 import com.kite.mnemoai.viewmodels.VocabularyViewModel;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class VocabularyFragment extends Fragment{
@@ -94,6 +89,24 @@ public class VocabularyFragment extends Fragment{
                 showVocabularySelectDialog();
             }
         });
+
+        binding.addVocabularyBookBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SettingAndAddNewVocabularyBookDialogFragment dialogFragment = new SettingAndAddNewVocabularyBookDialogFragment();
+                dialogFragment.show(getChildFragmentManager(), "ADDNEWVOCABULARYBOOK");
+            }
+        });
+
+        getChildFragmentManager().setFragmentResultListener("confirm", this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                String name = result.getString("name");
+                String desc = result.getString("desc");
+                viewModel.addNewVocabularyBook(name, desc, System.currentTimeMillis());
+            }
+        });
+
 
         viewModel.getUIState().observe(getViewLifecycleOwner(), vocabularyUIState -> {
             if(vocabularyUIState == null || vocabularyUIState.getGroupDetails() == null) return;

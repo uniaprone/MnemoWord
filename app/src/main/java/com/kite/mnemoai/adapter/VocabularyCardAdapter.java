@@ -55,7 +55,6 @@ public class VocabularyCardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 binding.addVocabularyCV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("点击", "嗲你就i");
                         actionListener.onAddVocabularyClick();
                     }
                 });

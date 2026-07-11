@@ -2,6 +2,7 @@ package com.kite.mnemoai.data.local.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "groups")
@@ -12,15 +13,27 @@ public class GroupEntity {
     @ColumnInfo(name = "name")
     private String name;
 
+    @ColumnInfo(name = "description")
+    private String description;
+
     @ColumnInfo(name = "create_time")
     private long createTime;
 
-    @ColumnInfo(name = "is_learning", defaultValue = "false")
+    @ColumnInfo(name = "is_learning", defaultValue = "0")
     private int isLearning;
 
-    public GroupEntity(long id, String name, int isLearning, long createTime) {
+    public GroupEntity(long id, String name, String description, int isLearning, long createTime) {
         this.id = id;
         this.name = name;
+        this.description = description;
+        this.isLearning = isLearning;
+        this.createTime = createTime;
+    }
+
+    @Ignore
+    public GroupEntity(String name, String description, int isLearning, long createTime) {
+        this.name = name;
+        this.description = description;
         this.isLearning = isLearning;
         this.createTime = createTime;
     }
@@ -55,5 +68,13 @@ public class GroupEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

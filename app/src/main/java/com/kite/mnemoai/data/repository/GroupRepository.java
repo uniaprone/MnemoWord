@@ -54,4 +54,18 @@ public class GroupRepository {
             groupDao.addLearningGroups(ids);
         });
     }
+
+    public void setVocabularyBookLearningStatus(Long id, int status){
+        executors.execute(() -> {
+            groupDao.setVocabularyBookLearningStatus(id, status);
+        });
+    }
+
+    public void addNewOrModifyVocabularyBook(GroupEntity groupEntity){
+        executors.execute(() -> groupDao.insertGroup(groupEntity));
+    }
+
+    public void deleteGroup(long id){
+        executors.execute(() -> groupDao.deleteGroupById(id));
+    }
 }

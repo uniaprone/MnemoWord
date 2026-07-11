@@ -4,13 +4,12 @@ import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLI
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.data.local.DTO.DailyStatistic;
-import com.kite.mnemoai.data.local.UserSetting;
+import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.model.Group;
 import com.kite.mnemoai.data.model.GroupDetail;
 import com.kite.mnemoai.data.repository.GroupRepository;
@@ -86,6 +85,10 @@ public class VocabularyViewModel extends ViewModel {
 
             }
         });
+    }
+
+    public void addNewVocabularyBook(String name, String desc, long timestamp){
+        groupRepository.addNewOrModifyVocabularyBook(new GroupEntity(name, desc, 0, timestamp));
     }
 
     public static final ViewModelInitializer<VocabularyViewModel> initializer = new ViewModelInitializer<>(

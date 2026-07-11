@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.kite.mnemoai.data.local.entity.GroupEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Dao
 public interface GroupDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertGroup(GroupEntity groupEntity);
 
     @Delete
@@ -50,9 +51,15 @@ public interface GroupDao {
     @Query("UPDATE `groups` SET is_learning = 1 WHERE id IN (:ids)")
     void addLearningGroups(List<Long> ids);
 
+    @Query("UPDATE `groups` SET is_learning = :status WHERE id = :id")
+    void setVocabularyBookLearningStatus(Long id, int status);
+
     @Query("SELECT * FROM `groups` WHERE id = :id")
     LiveData<GroupEntity> getGroupEntityById(long id);
 
     @Query("SELECT EXISTS (SELECT 1 FROM `groups` WHERE is_learning = 1)")
     LiveData<Integer> hasLearningGroup();
+
+    @Query("DELETE FROM `groups` WHERE id = :id")
+    void deleteGroupById(Long id);
 }

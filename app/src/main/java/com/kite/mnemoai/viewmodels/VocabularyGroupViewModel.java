@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.kite.mnemoai.MainApplication;
+import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.data.model.Group;
 import com.kite.mnemoai.data.repository.GroupRepository;
@@ -51,6 +52,22 @@ public class VocabularyGroupViewModel extends ViewModel {
 
     public void updateUIState(){
         uiState.setValue(new VocabularyGroupUIState(group, words));
+    }
+
+    public Group getGroup() {
+        return group;
+    }
+
+    public void modifyVocabularyBook(String name, String desc){
+        groupRepository.addNewOrModifyVocabularyBook(new GroupEntity(group.getId(), name, desc, group.getIsLearning(), group.getCreateTime()));
+    }
+
+    public void setVocabularyBookLearningStatus(int status){
+        groupRepository.setVocabularyBookLearningStatus(getGroup().getId(), status);
+    }
+
+    public void deleteGroup(){
+        groupRepository.deleteGroup(getGroup().getId());
     }
 
     public LiveData<VocabularyGroupUIState> getUiState(){

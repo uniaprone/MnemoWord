@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/README.md
+app/src/main/assets/vocabulary.db
