@@ -3,6 +3,7 @@ package com.kite.mnemoai.adapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private void bind(MineSelectorItem item){
             binding.settingTitleTV.setText(item.getTitle());
             binding.segmentedControl.setItems(item.getSelected(),item.getLastSelectedIndex(), item.getOptions().toArray(new String[0]));
+            item.setLastSelectedIndex(item.getSelected());
             binding.segmentedControl.setOnSelectionChangedListener(integer -> {
                 item.onTrigger(integer);
                 return Unit.INSTANCE;
