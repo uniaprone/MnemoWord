@@ -28,7 +28,6 @@ public class ReciteWordFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentReciteWordBinding.inflate(inflater, container, false);
-        viewInit();
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(ReciteWordViewModel.initializer)).get(ReciteWordViewModel.class);
         viewModel.setDailyDayPlanWordEntities();
         //禁用手势
@@ -108,6 +107,11 @@ public class ReciteWordFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 //        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     @Override

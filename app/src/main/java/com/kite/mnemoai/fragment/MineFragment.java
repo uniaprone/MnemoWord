@@ -3,6 +3,7 @@ package com.kite.mnemoai.fragment;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,6 @@ public class MineFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewInit();
         binding = FragmentMineBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MineViewModel.initializer)).get(MineViewModel.class);
         bannerControl = new BannerControl(binding.infoFL, getLifecycle());
@@ -93,6 +93,12 @@ public class MineFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     @Override

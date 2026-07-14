@@ -45,7 +45,6 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentVocabularyGroupBinding.inflate(inflater, container, false);
-        viewInit();
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
                 .get(VocabularyGroupViewModel.class);
 
@@ -95,6 +94,11 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
                 })).attach();
             }
         });
+    }
+
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     @Override

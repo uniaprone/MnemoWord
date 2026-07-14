@@ -42,7 +42,6 @@ public class VocabularyWordsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCollectionLearningWordsBinding.inflate(inflater, container, false);
-        viewInit();
         int status = getArguments().getInt("status", 0);
         viewModel = new ViewModelProvider(requireParentFragment(), ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
                 .get(VocabularyGroupViewModel.class);
@@ -90,6 +89,11 @@ public class VocabularyWordsFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     @Override

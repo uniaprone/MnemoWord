@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kite.mnemoai.MainActivity
 import com.kite.mnemoai.R
 import com.kite.mnemoai.adapter.WordListAdapter
 import com.kite.mnemoai.data.model.WordListItem
@@ -61,5 +62,19 @@ class SearchFragment: Fragment() {
         })
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewInit()
+    }
+
+    private fun viewInit() {
+        setupToolbar()
+    }
+
+    private fun setupToolbar() {
+        val mainActivity = requireActivity() as MainActivity
+        mainActivity.setTitleText(R.string.search)
     }
 }

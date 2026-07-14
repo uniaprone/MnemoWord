@@ -49,7 +49,6 @@ public class StatisticFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewInit();
         binding = FragmentStatisticBinding.inflate(inflater, container, false);
         StatisticViewModel viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(StatisticViewModel.initializer)).get(StatisticViewModel.class);
         viewModel.getStudyStatistic(new IRepositoryCallback<List<StudyStatistic>>() {
@@ -65,6 +64,11 @@ public class StatisticFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     private void viewInit(){

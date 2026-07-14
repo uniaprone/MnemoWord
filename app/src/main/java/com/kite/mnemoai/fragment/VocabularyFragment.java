@@ -56,7 +56,6 @@ public class VocabularyFragment extends Fragment implements MenuProvider {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentVocabularyBinding.inflate(inflater, container, false);
-        viewInit();
         assert getActivity() != null;
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyViewModel.initializer))
                 .get(VocabularyViewModel.class);
@@ -139,6 +138,11 @@ public class VocabularyFragment extends Fragment implements MenuProvider {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+    }
+
+    public void onResume() {
+        super.onResume();
+        viewInit();
     }
 
     @Override
