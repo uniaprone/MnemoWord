@@ -1,47 +1,43 @@
 package com.kite.mnemoai.fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.search.SearchBar;
 import com.kite.mnemoai.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.VocabularyCardAdapter;
 import com.kite.mnemoai.data.local.DTO.DailyStatistic;
 import com.kite.mnemoai.data.model.GroupDetail;
-import com.kite.mnemoai.data.model.WordListItem;
-import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
 import com.kite.mnemoai.fragment.dialog.SettingAndAddNewVocabularyBookDialogFragment;
 import com.kite.mnemoai.fragment.dialog.NewLearningWordSettingDialogFragment;
 import com.kite.mnemoai.fragment.dialog.VocabularySelectDialogFragment;
 import com.kite.mnemoai.viewmodels.VocabularyViewModel;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VocabularyFragment extends Fragment{
+public class VocabularyFragment extends Fragment implements MenuProvider {
     private FragmentVocabularyBinding binding;
     private VocabularyViewModel viewModel;
 
@@ -102,14 +98,6 @@ public class VocabularyFragment extends Fragment{
             }
         });
 
-        binding.addVocabularyBookBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SettingAndAddNewVocabularyBookDialogFragment dialogFragment = new SettingAndAddNewVocabularyBookDialogFragment();
-                dialogFragment.show(getChildFragmentManager(), "ADDNEWVOCABULARYBOOK");
-            }
-        });
-
         getChildFragmentManager().setFragmentResultListener("confirm", this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
@@ -150,7 +138,7 @@ public class VocabularyFragment extends Fragment{
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
     @Override
@@ -159,18 +147,20 @@ public class VocabularyFragment extends Fragment{
         binding = null;
     }
 
-//    @Override
-//    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-//        menuInflater.inflate(R.menu.app_bar_menu, menu);
-//    }
-//
-//    @Override
-//    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-//        if (menuItem.getItemId() == R.id.word_group) {
-//            return true;
-//        }
-//        return false;
-//    }
+    @Override
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.vocabulary_menu, menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.add_new_vocabulary) {
+            SettingAndAddNewVocabularyBookDialogFragment dialogFragment = new SettingAndAddNewVocabularyBookDialogFragment();
+            dialogFragment.show(getChildFragmentManager(), "ADDNEWVOCABULARYBOOK");
+            return true;
+        }
+        return false;
+    }
 
     private void viewInit(){
         setupToolbar();
@@ -179,7 +169,6 @@ public class VocabularyFragment extends Fragment{
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText(R.string.vocabulary_book);
-        mainActivity.hideBackIV();
     }
 
     private void showVocabularySelectDialog() {

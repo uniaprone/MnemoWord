@@ -24,8 +24,8 @@ class SettingAndAddNewVocabularyBookDialogFragment: DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        name = requireArguments().getString("name", "")
-        desc = requireArguments().getString("desc", "")
+        name = arguments?.getString("name") ?: ""
+        desc = arguments?.getString("desc") ?: ""
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

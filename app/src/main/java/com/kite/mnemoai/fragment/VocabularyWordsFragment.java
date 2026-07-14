@@ -105,7 +105,6 @@ public class VocabularyWordsFragment extends Fragment {
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText("");
-        mainActivity.hideBackIV();
     }
 
     private void setupTitle(String title){

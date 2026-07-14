@@ -74,6 +74,5 @@ public class StatisticFragment extends Fragment {
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText(R.string.study_history);
-        mainActivity.hideBackIV();
     }
 }

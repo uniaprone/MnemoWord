@@ -136,6 +136,5 @@ public class ReciteWordFragment extends Fragment{
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText(R.string.recite_word);
-        mainActivity.hideBackIV();
     }
 }

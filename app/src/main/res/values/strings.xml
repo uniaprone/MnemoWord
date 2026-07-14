@@ -54,7 +54,7 @@
     <string name="setting_title_api_key">API key</string>
     <string name="name">名称:</string>
     <string name="description">描述</string>
-    <string name="add_new_vocabulary">添加新词汇本</string>
+    <string name="add_new_vocabulary">添加新单词本</string>
     <string name="change_vocabulary_ook">修改单词本</string>
     <string name="join_learning">加入学习</string>
     <string name="cancel_learning">取消学习</string>

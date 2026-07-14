@@ -23,15 +23,6 @@ import kotlin.math.ceil
 import kotlin.time.Duration.Companion.milliseconds
 
 class StatisticChart(val chart: CombinedChart, val studyStatistics: List<StudyStatistic>) {
-    fun Float.ceilToNextTen(): Float{
-        val ceilInt = ceil(this).toInt()
-
-        return if(ceilInt % 10 == 0){
-            ceilInt.toFloat()
-        }else{
-            ((ceilInt / 10) + 1) * 10f
-        }
-    }
     private val dates: MutableList<String> = mutableListOf()
     private val stackedEntries: MutableList<BarEntry> = mutableListOf()
     private val lineEntries: MutableList<Entry> = mutableListOf()
@@ -72,6 +63,10 @@ class StatisticChart(val chart: CombinedChart, val studyStatistics: List<StudySt
         val lineDataSet = LineDataSet(lineEntries, "").apply {
             label = "学习时长"
             axisDependency = YAxis.AxisDependency.RIGHT
+            lineWidth = 2f
+            circleRadius = 2f
+            setDrawFilled(true)
+            setDrawCircleHole(false)
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     val longValue = value.toLong()

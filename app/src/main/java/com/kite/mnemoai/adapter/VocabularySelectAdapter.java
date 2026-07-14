@@ -1,16 +1,13 @@
 package com.kite.mnemoai.adapter;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kite.mnemoai.R;
-import com.kite.mnemoai.data.model.GroupDetail;
 import com.kite.mnemoai.databinding.ItemVocabularySelectBinding;
 import com.kite.mnemoai.fragment.dialog.VocabularySelectDialogFragment;
 import com.kite.mnemoai.utils.StringConvert;
@@ -25,7 +22,7 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        private ItemVocabularySelectBinding binding;
+        private final ItemVocabularySelectBinding binding;
 
         public ViewHolder(@NonNull ItemVocabularySelectBinding binding) {
             super(binding.getRoot());
@@ -33,23 +30,23 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
         }
 
         public void binding(VocabularySelectDialogFragment.VocabularySelectInfo vocabularySelectInfo){
-            Resources resources = binding.getRoot().getResources();
             String groupName = vocabularySelectInfo.getName();
             groupName = StringConvert.convertVocabularyName(groupName);
             binding.vocabularyNameTV.setText(groupName);
+            binding.vocabularyDescribe.setText(vocabularySelectInfo.getDescribe());
             if(vocabularySelectInfo.isSelect()){
-                binding.vocabularyCheckboxIV.setImageDrawable(resources.getDrawable(R.drawable.baseline_check_box_24));
+                binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_24);
             }else{
-                binding.vocabularyCheckboxIV.setImageDrawable(resources.getDrawable(R.drawable.baseline_check_box_outline_blank_24));
+                binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_outline_blank_24);
             }
             binding.vocabularySelectCL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     vocabularySelectInfo.setSelect(!vocabularySelectInfo.isSelect());
                     if(vocabularySelectInfo.isSelect()){
-                        binding.vocabularyCheckboxIV.setImageDrawable(resources.getDrawable(R.drawable.baseline_check_box_24));
+                        binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_24);
                     }else{
-                        binding.vocabularyCheckboxIV.setImageDrawable(resources.getDrawable(R.drawable.baseline_check_box_outline_blank_24));
+                        binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_outline_blank_24);
                     }
 
                 }

@@ -108,6 +108,5 @@ public class MineFragment extends Fragment {
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText(R.string.mine);
-        mainActivity.hideBackIV();
     }
 }

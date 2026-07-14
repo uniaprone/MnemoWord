@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(
-                binding.toolbar.toolbar, (v, insets) -> {
+                binding.toolbar, (v, insets) -> {
                     Insets bars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
                     v.setPadding(0, bars.top, 0, 0
                     );
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
                     );
                     return insets;
                 });
-        toolbar = binding.toolbar.toolbar;
+        toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
@@ -84,18 +84,12 @@ public class MainActivity extends AppCompatActivity {
         return isSuccess;
     }
 
-    public void showBackIV(){
-        binding.toolbar.backIV.setVisibility(View.VISIBLE);
-    }
-    public void hideBackIV(){
-        binding.toolbar.backIV.setVisibility(View.GONE);
-    }
 
     public void setTitleText(int titleResource){
-        binding.toolbar.titleTV.setText(titleResource);
+        binding.toolbar.setTitle(titleResource);
     }
 
     public void setTitleText(String title){
-        binding.toolbar.titleTV.setText(title);
+        binding.toolbar.setTitle(title);
     }
 }

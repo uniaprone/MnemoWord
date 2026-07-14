@@ -36,26 +36,44 @@
                 android:layout_marginBottom="8dp"/>
         </LinearLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/studyingTV"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_corner"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/learning_vocabulary"
-            android:textSize="@dimen/text_size_default"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchLL" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/addVocabularyTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="@string/add"
-            app:layout_constraintBottom_toBottomOf="@+id/studyingTV"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/studyingTV" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchLL">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/studyingTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="start"
+                android:layout_weight="1"
+                android:text="@string/learning_vocabulary"
+                android:textSize="@dimen/text_size_default"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/addVocabularyTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="@string/add"
+                android:textSize="@dimen/text_size_default"/>
+
+        </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/studyingVocabulary"
@@ -63,7 +81,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/studyingTV" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
         <LinearLayout
             android:id="@+id/learningGoalLL"
@@ -81,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_margin="3dp"
+                android:layout_marginEnd="3dp"
                 android:gravity="center_horizontal"
                 android:background="@drawable/bg_corner"
                 android:orientation="vertical">
@@ -125,7 +143,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_margin="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:gravity="center_horizontal"
                 android:background="@drawable/bg_corner"
                 android:orientation="vertical">
@@ -162,7 +181,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_margin="3dp"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="3dp"
                 android:gravity="center_horizontal"
                 android:background="@drawable/bg_corner"
                 android:orientation="vertical">
@@ -200,7 +220,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_margin="3dp"
+                android:layout_marginStart="3dp"
                 android:gravity="center_horizontal"
                 android:background="@drawable/bg_corner"
                 android:orientation="vertical">
@@ -234,26 +254,29 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="@string/my_group"
-            android:textSize="@dimen/text_size_default"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_corner"
             app:layout_constraintBottom_toTopOf="@+id/allVocabularyRV"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/learningGoalLL" />
+            app:layout_constraintTop_toBottomOf="@+id/learningGoalLL">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/my_group"
+                android:textSize="@dimen/text_size_default"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/add_vocabulary_book_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:padding="0dp"
-            android:text="@string/add"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/learningGoalLL" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/allVocabularyRV"
@@ -261,7 +284,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/add_vocabulary_book_btn" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

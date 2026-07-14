@@ -110,7 +110,6 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText("");
-        mainActivity.hideBackIV();
     }
 
     private void setupTitle(String title){
