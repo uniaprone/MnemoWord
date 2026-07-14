@@ -93,7 +93,7 @@ public class VocabularyCardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     MaterialColors.getColor(binding.statisticPieChart, com.google.android.material.R.attr.colorTertiary));
             PieData pieData = new PieData(pieDataSet);
             Legend legend = binding.statisticPieChart.getLegend();
-            legend.setTextColor(MaterialColors.getColor(binding.statisticPieChart, com.google.android.material.R.attr.colorPrimary));
+            legend.setTextColor(MaterialColors.getColor(binding.statisticPieChart, R.attr.colorPrimary));
 
             binding.statisticPieChart.setBackgroundColor(Color.TRANSPARENT);
             binding.statisticPieChart.setDrawHoleEnabled(true);

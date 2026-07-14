@@ -278,4 +278,11 @@ public class WordRepository {
         });
     }
 
+    public void performSearch(String searchText, IRepositoryCallback<List<WordListItem>> callback){
+        executors.execute(() -> {
+            List<WordListItem> searchResult = wordDao.performSearch(searchText);
+            handler.post(() -> callback.onComplete(searchResult)
+            );
+        });
+    }
 }

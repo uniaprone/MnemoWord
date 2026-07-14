@@ -111,4 +111,20 @@ public interface WordDao {
             "   INNER JOIN word_review r ON r.id = w.id " +
             "   WHERE r.next_review_time = :today")
     LiveData<List<WordEntity>> selectTodayReviewingWordEntitiesLiveData(String today);
+
+    @Query("SELECT w.id," +
+            "w.word, " +
+            "w.phonetic, " +
+            "w.translation, " +
+            "CASE " +
+            "WHEN wr.review_count IS NULL THEN 0 " +
+            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
+            "WHEN wr.review_count >= 6 THEN 2 " +
+            "ELSE 0 " +
+            "END AS review_status " +
+            "FROM words w " +
+            "LEFT JOIN word_review wr ON wr.id = w.id " +
+            "WHERE w.word " +
+            "LIKE :searchText || '%'")
+    List<WordListItem> performSearch(String searchText);
 }

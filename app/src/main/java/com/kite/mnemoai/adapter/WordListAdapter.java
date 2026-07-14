@@ -21,24 +21,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHolder> {
+    private OnItemClickListener listener;
     private List<WordListItem> words = new ArrayList<>();
+
+    public WordListAdapter(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private ItemWordListBinding binding;
-        public ViewHolder(@NonNull ItemWordListBinding binding) {
+        private WordListItem word;
+        public ViewHolder(@NonNull ItemWordListBinding binding, OnItemClickListener listener) {
             super(binding.getRoot());
             this.binding = binding;
-        }
-
-        public void binding(WordListItem word){
             binding.wordListItemCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Bundle args = new Bundle();
-                    args.putLong("word_id", word.getId());
-                    Navigation.findNavController(view).navigate(R.id.action_vocabularyGroupFragment_to_wordDetailFragment, args);
+                    if(word == null) return;
+                    listener.onClick(word);
                 }
             });
+        }
+
+        public void binding(WordListItem word){
+            this.word = word;
             binding.wordTextView.setText(word.getWord());
             binding.phoneticTextView.setText(word.getPhonetic());
             binding.meaningTextView.setText(word.getTranslation());
@@ -65,7 +71,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemWordListBinding binding = ItemWordListBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ViewHolder(binding);
+        return new ViewHolder(binding, listener);
     }
 
     @Override
@@ -82,5 +88,9 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.ViewHo
         if(words == null) return;
         this.words = words;
         notifyDataSetChanged();
+    }
+
+    public interface OnItemClickListener{
+        void onClick(WordListItem wordListItem);
     }
 }

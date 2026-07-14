@@ -1,27 +1,35 @@
 package com.kite.mnemoai.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.search.SearchBar;
 import com.kite.mnemoai.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.VocabularyCardAdapter;
 import com.kite.mnemoai.data.local.DTO.DailyStatistic;
 import com.kite.mnemoai.data.model.GroupDetail;
+import com.kite.mnemoai.data.model.WordListItem;
+import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
 import com.kite.mnemoai.fragment.dialog.SettingAndAddNewVocabularyBookDialogFragment;
 import com.kite.mnemoai.fragment.dialog.NewLearningWordSettingDialogFragment;
@@ -69,6 +77,10 @@ public class VocabularyFragment extends Fragment{
                 dialogFragment.show(getParentFragmentManager(), "NEWLEARNINGCOUNTSETTING");
             }
         });
+
+        binding.searchLL.setOnClickListener((view -> {
+            Navigation.findNavController(view).navigate(R.id.action_vocabularyFragment_to_searchFragment);
+        }));
 
         RecyclerView studyingVocabularyRV = binding.studyingVocabulary;
         studyingVocabularyRV.setNestedScrollingEnabled(false);
@@ -188,5 +200,4 @@ public class VocabularyFragment extends Fragment{
             dialogFragment.show(getParentFragmentManager(), "vocabularySelect");
         });
     }
-
 }

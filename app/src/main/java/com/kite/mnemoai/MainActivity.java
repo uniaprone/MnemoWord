@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -37,14 +38,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        View view = binding.getRoot();
+        setContentView(binding.getRoot());
+
         EdgeToEdge.enable(this);
-        setContentView(view);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        ViewCompat.setOnApplyWindowInsetsListener(
+                binding.toolbar.toolbar, (v, insets) -> {
+                    Insets bars = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+                    v.setPadding(0, bars.top, 0, 0
+                    );
+                    return insets;
+                });
+        ViewCompat.setOnApplyWindowInsetsListener(
+                binding.bottomNavigation, (v, insets) -> {
+                    Insets bars = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+                    v.setPadding(bars.left, 0, bars.right, -80
+                    );
+                    return insets;
+                });
         toolbar = binding.toolbar.toolbar;
         setSupportActionBar(toolbar);
 
@@ -59,9 +69,9 @@ public class MainActivity extends AppCompatActivity {
                     destination.getId() == R.id.vocabularyFragment ||
                     destination.getId() == R.id.statisticFragment ||
                     destination.getId() == R.id.mineFragment){
-                navigationBarView.setVisibility(View.VISIBLE);
+                binding.bottomNavigation.setVisibility(View.VISIBLE);
             }else {
-                navigationBarView.setVisibility(View.GONE);
+                binding.bottomNavigation.setVisibility(View.GONE);
             }
         });
     }

@@ -16,6 +16,9 @@
             <action
                 android:id="@+id/action_vocabularyFragment_to_vocabularyGroupFragment"
                 app:destination="@id/vocabularyGroupFragment" />
+            <action
+                android:id="@+id/action_vocabularyFragment_to_searchFragment"
+                app:destination="@id/searchFragment" />
         </fragment>
         <fragment
             android:id="@+id/vocabularyGroupFragment"
@@ -46,4 +49,12 @@
         android:id="@+id/mineFragment"
         android:name="com.kite.mnemoai.fragment.MineFragment"
         android:label="MineFragment" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.kite.mnemoai.fragment.SearchFragment"
+        android:label="SearchFragment" >
+        <action
+            android:id="@+id/action_searchFragment_to_wordDetailFragment"
+            app:destination="@id/wordDetailFragment" />
+    </fragment>
 </navigation>

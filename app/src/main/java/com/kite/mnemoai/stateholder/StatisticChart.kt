@@ -15,8 +15,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.google.android.material.R
 import com.google.android.material.color.MaterialColors
+import com.kite.mnemoai.R
 import com.kite.mnemoai.data.local.DTO.StudyStatistic
 import java.time.LocalDate
 import kotlin.math.ceil

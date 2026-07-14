@@ -12,10 +12,12 @@ import com.kite.mnemoai.data.local.DTO.DailyStatistic;
 import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.model.Group;
 import com.kite.mnemoai.data.model.GroupDetail;
+import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.data.repository.GroupRepository;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.StatisticsRepository;
 import com.kite.mnemoai.data.repository.UserSettingRepository;
+import com.kite.mnemoai.data.repository.WordRepository;
 import com.kite.mnemoai.fragment.dialog.VocabularySelectDialogFragment;
 import com.kite.mnemoai.uistate.VocabularyUIState;
 
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 public class VocabularyViewModel extends ViewModel {
     private MediatorLiveData<VocabularyUIState> uiState = new MediatorLiveData<>();
+    private WordRepository wordRepository;
     private GroupRepository groupRepository;
     private StatisticsRepository statisticsRepository;
     private UserSettingRepository userSettingRepository;
@@ -33,7 +36,8 @@ public class VocabularyViewModel extends ViewModel {
     private DailyStatistic dailyStatistic;
     private int newLearningWordCount;
 
-    public VocabularyViewModel(GroupRepository groupRepository, StatisticsRepository statisticsRepository, UserSettingRepository userSettingRepository){
+    public VocabularyViewModel(WordRepository wordRepository, GroupRepository groupRepository, StatisticsRepository statisticsRepository, UserSettingRepository userSettingRepository){
+        this.wordRepository = wordRepository;
         this.groupRepository = groupRepository;
         this.statisticsRepository = statisticsRepository;
         this.userSettingRepository = userSettingRepository;
@@ -91,12 +95,16 @@ public class VocabularyViewModel extends ViewModel {
         groupRepository.addNewOrModifyVocabularyBook(new GroupEntity(name, desc, 0, timestamp));
     }
 
+    public void performSearch(String searchText, IRepositoryCallback<List<WordListItem>> callback){
+        wordRepository.performSearch(searchText, callback);
+    }
+
     public static final ViewModelInitializer<VocabularyViewModel> initializer = new ViewModelInitializer<>(
             VocabularyViewModel.class,
             creationExtras -> {
                 MainApplication app = (MainApplication) creationExtras.get(APPLICATION_KEY);
                 assert app != null;
-                return new VocabularyViewModel(app.getGroupRepository(), app.getStatisticsRepository(), app.getUserSettingRepository());
+                return new VocabularyViewModel(app.getWordRepository(), app.getGroupRepository(), app.getStatisticsRepository(), app.getUserSettingRepository());
             }
     );
 

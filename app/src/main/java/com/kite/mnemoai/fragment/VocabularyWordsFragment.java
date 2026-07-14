@@ -10,10 +10,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.WordListAdapter;
 import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.databinding.FragmentCollectionLearningWordsBinding;
@@ -47,7 +49,14 @@ public class VocabularyWordsFragment extends Fragment {
 
         RecyclerView recyclerView = binding.wordRecycleView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        WordListAdapter wordListAdapter = new WordListAdapter();
+        WordListAdapter wordListAdapter = new WordListAdapter(new WordListAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(WordListItem word) {
+                Bundle args = new Bundle();
+                args.putLong("word_id", word.getId());
+                Navigation.findNavController(recyclerView).navigate(R.id.action_vocabularyGroupFragment_to_wordDetailFragment, args);
+            }
+        });
         recyclerView.setAdapter(wordListAdapter);
 
         viewModel.getUiState().observe(getViewLifecycleOwner(), new Observer<VocabularyGroupUIState>() {

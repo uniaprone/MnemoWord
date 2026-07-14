@@ -25,4 +25,6 @@
     <attr name="wordAwaitingLearning" format="color|reference"/>
     <attr name="wordReviewing" format="color|reference"/>
     <attr name="wordMastered" format="color|reference"/>
+    <attr name="colorPrimary" format="color|reference"/>
+    <attr name="colorSecondary" />
 </resources>
