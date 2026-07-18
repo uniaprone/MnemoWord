@@ -22,9 +22,9 @@ public interface GroupDao {
 
     @Query("SELECT g.*, " +
             "COUNT(DISTINCT wg.word_id) AS total_count, " +
-            "COUNT(DISTINCT CASE WHEN wr.id IS NULL THEN wg.word_id END) AS learning_count ," +
-            "COUNT(DISTINCT CASE WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN wg.word_id END) AS reviewing_count ," +
-            "COUNT(DISTINCT CASE WHEN wr.review_count = 6 THEN wg.word_id END) AS mastered_count " +
+            "COUNT(DISTINCT CASE WHEN wr.id IS NULL OR wr.review_status = 0 THEN wg.word_id END) AS learning_count ," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 1 THEN wg.word_id END) AS reviewing_count ," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 2 THEN wg.word_id END) AS mastered_count " +
             "FROM `groups` g " +
             "LEFT JOIN word_group wg ON g.id = wg.group_id " +
             "LEFT JOIN words w ON wg.word_id = w.id " +
@@ -34,9 +34,9 @@ public interface GroupDao {
 
     @Query("SELECT g.*, " +
             "COUNT(DISTINCT wg.word_id) AS total_count, " +
-            "COUNT(DISTINCT CASE WHEN wr.id IS NULL THEN wg.word_id END) AS learning_count ," +
-            "COUNT(DISTINCT CASE WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN wg.word_id END) AS reviewing_count ," +
-            "COUNT(DISTINCT CASE WHEN wr.review_count = 6 THEN wg.word_id END) AS mastered_count " +
+            "COUNT(DISTINCT CASE WHEN wr.id IS NULL OR wr.review_status = 0  THEN wg.word_id END) AS learning_count ," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 1 THEN wg.word_id END) AS reviewing_count ," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 2 THEN wg.word_id END) AS mastered_count " +
             "FROM `groups` g " +
             "LEFT JOIN word_group wg ON g.id = wg.group_id " +
             "LEFT JOIN words w ON wg.word_id = w.id " +

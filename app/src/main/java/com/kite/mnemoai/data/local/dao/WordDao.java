@@ -51,12 +51,7 @@ public interface WordDao {
             "w.word, " +
             "w.phonetic, " +
             "w.translation, " +
-            "CASE " +
-            "WHEN wr.review_count IS NULL THEN 0 " +
-            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
-            "WHEN wr.review_count >= 6 THEN 2 " +
-            "ELSE 0 " +
-            "END AS review_status " +
+            "wr.review_status " +
             "FROM words w " +
             "INNER JOIN word_group wg ON wg.word_id = w.id " +
             "LEFT JOIN word_review wr ON wr.id = w.id " +
@@ -127,12 +122,7 @@ public interface WordDao {
             "w.word, " +
             "w.phonetic, " +
             "w.translation, " +
-            "CASE " +
-            "WHEN wr.review_count IS NULL THEN 0 " +
-            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
-            "WHEN wr.review_count >= 6 THEN 2 " +
-            "ELSE 0 " +
-            "END AS review_status " +
+            "wr.review_status " +
             "FROM words w " +
             "LEFT JOIN word_review wr ON wr.id = w.id " +
             "WHERE w.word " +
@@ -143,12 +133,7 @@ public interface WordDao {
             "w.word, " +
             "w.phonetic, " +
             "w.translation, " +
-            "CASE " +
-            "WHEN wr.review_count IS NULL THEN 0 " +
-            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
-            "WHEN wr.review_count >= 6 THEN 2 " +
-            "ELSE 0 " +
-            "END AS review_status " +
+            "wr.review_status " +
             "FROM words w " +
             "LEFT JOIN word_review wr ON wr.id = w.id " +
             "WHERE w.word "+
@@ -165,12 +150,7 @@ public interface WordDao {
             "w.word, " +
             "w.phonetic, " +
             "w.translation, " +
-            "CASE " +
-            "WHEN wr.review_count IS NULL THEN 0 " +
-            "WHEN wr.review_count >= 0 AND wr.review_count < 6 THEN 1 " +
-            "WHEN wr.review_count >= 6 THEN 2 " +
-            "ELSE 0 " +
-            "END AS review_status " +
+            "wr.review_status " +
             "FROM words w " +
             "LEFT JOIN word_group wg On w.id = wg.word_id " +
             "INNER JOIN `groups` g ON wg.group_id = g.id AND g.id = :groupId " +

@@ -77,7 +77,7 @@ public class StatisticsRepository {
                     reviewWordEntity.setNextReviewTime(MemoryAlgorithm.calculateNextReviewDate(reviewCount, date));
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }else{
-                    reviewWordEntity = new ReviewWordEntity(wordId, 0, dateTime, MemoryAlgorithm.calculateNextReviewDate(0, date));
+                    reviewWordEntity = new ReviewWordEntity(wordId, 1, 0, dateTime, MemoryAlgorithm.calculateNextReviewDate(0, date));
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }
             }
