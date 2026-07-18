@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_words"
+        android:title="@string/add_words"/>
+    <item
+        android:id="@+id/remove_word"
+        android:title="@string/remove_words"/>
+</menu>

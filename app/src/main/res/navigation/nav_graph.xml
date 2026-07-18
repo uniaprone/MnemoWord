@@ -31,6 +31,9 @@
             <action
                 android:id="@+id/action_vocabularyGroupFragment_to_wordDetailFragment"
                 app:destination="@id/wordDetailFragment" />
+            <action
+                android:id="@+id/action_vocabularyGroupFragment_to_changeVocabularyBookWordFragment"
+                app:destination="@id/changeVocabularyBookWordFragment" />
         </fragment>
     <fragment
         android:id="@+id/wordDetailFragment"
@@ -56,5 +59,14 @@
         <action
             android:id="@+id/action_searchFragment_to_wordDetailFragment"
             app:destination="@id/wordDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/changeVocabularyBookWordFragment"
+        android:name="com.kite.mnemoai.fragment.ChangeVocabularyBookWordFragment"
+        android:label="ChangeVocabularyBookWordFragment" >
+        <argument
+            android:name="group_id"
+            app:argType="long"
+            android:defaultValue="-1L" />
     </fragment>
 </navigation>

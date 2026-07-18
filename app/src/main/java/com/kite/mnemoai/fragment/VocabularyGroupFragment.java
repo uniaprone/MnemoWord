@@ -162,11 +162,15 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
             } else {
                 viewModel.setVocabularyBookLearningStatus(0);
             }
+        } else if (id == R.id.alterWords) {
+            Bundle bundle = new Bundle();
+            bundle.putLong("group_id", viewModel.getGroup().getId());
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_vocabularyGroupFragment_to_changeVocabularyBookWordFragment, bundle);
         } else if (id == R.id.deleteVocabularyBook) {
-            viewModel.deleteGroup();
-            NavController navController = Navigation.findNavController(requireView());
-            navController.navigateUp();
+                viewModel.deleteGroup();
+                NavController navController = Navigation.findNavController(requireView());
+                navController.navigateUp();
+            }
+            return true;
         }
-        return true;
-    }
 }

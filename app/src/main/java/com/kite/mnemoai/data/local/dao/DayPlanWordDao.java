@@ -69,4 +69,7 @@ public interface DayPlanWordDao {
             "GROUP BY date " +
             "ORDER BY date")
     List<StudyStatistic> getStudyStatistic();
+
+    @Query("SELECT word_id FROM day_plan_word WHERE date = :date AND type = 0")
+    List<Long> getTodayNewLearningWordsId(String date);
 }

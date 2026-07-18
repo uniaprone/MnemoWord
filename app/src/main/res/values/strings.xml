@@ -60,4 +60,11 @@
     <string name="join_learning">加入学习</string>
     <string name="cancel_learning">取消学习</string>
     <string name="delete_vocabulary_book">删除单词本</string>
+    <string name="add_words">添加单词</string>
+    <string name="remove_words">移除单词</string>
+    <string name="adding_removing_words">改变单词</string>
+    <string name="optional_words">可选单词</string>
+    <string name="add_remove_words">添加/移除单词</string>
+    <string name="operation_sort">操作顺序</string>
+    <string name="alphabetical_order">字母顺序</string>
 </resources>

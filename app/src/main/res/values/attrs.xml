@@ -27,4 +27,5 @@
     <attr name="wordMastered" format="color|reference"/>
     <attr name="colorPrimary" format="color|reference"/>
     <attr name="colorSecondary" />
+    <attr name="colorTertiary" format="color|reference"/>
 </resources>

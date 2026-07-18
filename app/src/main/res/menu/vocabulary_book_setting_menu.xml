@@ -10,6 +10,10 @@
         android:title="@string/join_learning"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/alterWords"
+        android:title="@string/add_remove_words"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/deleteVocabularyBook"
         android:title="@string/delete_vocabulary_book"
         app:showAsAction="never"/>

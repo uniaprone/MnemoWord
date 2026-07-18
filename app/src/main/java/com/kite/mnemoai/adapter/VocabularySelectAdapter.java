@@ -16,7 +16,6 @@ import java.util.List;
 
 public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySelectAdapter.ViewHolder> {
     private final List<VocabularySelectDialogFragment.VocabularySelectInfo> vocabularySelectInfos;
-
     public VocabularySelectAdapter(List<VocabularySelectDialogFragment.VocabularySelectInfo> groupDetails) {
         this.vocabularySelectInfos = groupDetails;
     }

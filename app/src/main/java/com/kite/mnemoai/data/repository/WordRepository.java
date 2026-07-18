@@ -131,6 +131,15 @@ public class WordRepository {
                     ).collect(Collectors.toList());
                     dayPlanWordDao.InsertDayPlanWord(allDayPlanWordEntities);
                 }
+                List<Long> newLearningWordIds = dayPlanWordDao.getTodayNewLearningWordsId(date);
+                if(newLearningWordIds.size() < learningCount){
+                    List<WordEntity> newLearningWordEntities = wordDao.addTodayNewLearningWordEntities(learningCount, date, newLearningWordIds);
+                    dayPlanWordDao.InsertDayPlanWord(newLearningWordEntities.stream()
+                            .map((wordEntity ->
+                                    new DayPlanWordEntity(wordEntity.getId(), date, 0, 0, 0, 0, 0, null)))
+                            .collect(Collectors.toList()));
+                }
+
             }
         });
     }
@@ -283,6 +292,20 @@ public class WordRepository {
             List<WordListItem> searchResult = wordDao.performSearch(searchText);
             handler.post(() -> callback.onComplete(searchResult)
             );
+        });
+    }
+
+    public void performVocabularyBookAddOptionWordsSearch(long groupId, String searchText, IRepositoryCallback<List<WordListItem>> callback){
+        executors.execute(() -> {
+            List<WordListItem> addOptionWords = wordDao.performAddOptionSearch(groupId, searchText);
+            handler.post(() -> callback.onComplete(addOptionWords));
+        });
+    }
+
+    public void performVocabularyBookRemoveOptionWordsSearch(long groupId, String searchText, IRepositoryCallback<List<WordListItem>> callback){
+        executors.execute(() -> {
+            List<WordListItem> removeOptionWords = wordDao.performRemoveOptionSearch(groupId, searchText);
+            handler.post(() -> callback.onComplete(removeOptionWords));
         });
     }
 }
