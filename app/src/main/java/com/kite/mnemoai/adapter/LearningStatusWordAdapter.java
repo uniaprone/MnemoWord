@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.kite.mnemoai.fragment.VocabularyWordsFragment;
+import com.kite.mnemoai.ui.vocabularybookwords.VocabularyWordsFragment;
 
 public class LearningStatusWordAdapter extends FragmentStateAdapter {
     public LearningStatusWordAdapter(@NonNull Fragment fragment) {

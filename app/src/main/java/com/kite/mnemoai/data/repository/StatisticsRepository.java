@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.data.local.AppDatabase;
-import com.kite.mnemoai.data.local.DTO.DailyStatistic;
-import com.kite.mnemoai.data.local.DTO.StudyStatistic;
+import com.kite.mnemoai.data.model.DailyStatistic;
+import com.kite.mnemoai.data.model.StudyStatistic;
 import com.kite.mnemoai.data.local.dao.DayPlanDao;
 import com.kite.mnemoai.data.local.dao.DayPlanWordDao;
 import com.kite.mnemoai.data.local.dao.ReviewWordDao;
@@ -16,7 +16,7 @@ import com.kite.mnemoai.data.local.entity.DayPlanEntity;
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity;
 import com.kite.mnemoai.data.local.entity.ReviewWordEntity;
 import com.kite.mnemoai.utils.MemoryAlgorithm;
-import com.kite.mnemoai.viewmodels.ReciteWordViewModel;
+import com.kite.mnemoai.ui.reciteword.ReciteWordViewModel;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -73,11 +73,10 @@ public class StatisticsRepository {
                 if(reviewWordEntity != null){
                     int reviewCount = reviewWordEntity.getReviewCount() + 1;
                     reviewWordEntity.setReviewCount(reviewCount);
-                    reviewWordEntity.setLastReviewTime(dateTime);
                     reviewWordEntity.setNextReviewTime(MemoryAlgorithm.calculateNextReviewDate(reviewCount, date));
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }else{
-                    reviewWordEntity = new ReviewWordEntity(wordId, 1, 0, dateTime, MemoryAlgorithm.calculateNextReviewDate(0, date));
+                    reviewWordEntity = new ReviewWordEntity(wordId, 1, 0, MemoryAlgorithm.calculateNextReviewDate(0, date));
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }
             }

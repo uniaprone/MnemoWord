@@ -6,8 +6,8 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.kite.mnemoai.data.local.DTO.DailyStatistic;
-import com.kite.mnemoai.data.local.DTO.StudyStatistic;
+import com.kite.mnemoai.data.model.DailyStatistic;
+import com.kite.mnemoai.data.model.StudyStatistic;
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity;
 
 import java.util.List;

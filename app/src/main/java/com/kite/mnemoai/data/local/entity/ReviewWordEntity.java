@@ -15,17 +15,14 @@ public class ReviewWordEntity {
     private int reviewState; // 0-未复习 1-复习中 2-完成
     @ColumnInfo(name = "review_count")
     private int reviewCount;
-    @ColumnInfo(name = "last_review_time")
-    private String lastReviewTime;
     @ColumnInfo(name = "next_review_time")
     private String nextReviewTime;
 
 
-    public ReviewWordEntity(long wordId, int reviewState, int reviewCount, String lastReviewTime, String nextReviewTime) {
+    public ReviewWordEntity(long wordId, int reviewState, int reviewCount, String nextReviewTime) {
         this.wordId = wordId;
         this.reviewState = reviewState;
         this.reviewCount = reviewCount;
-        this.lastReviewTime = lastReviewTime;
         this.nextReviewTime = nextReviewTime;
     }
 
@@ -38,14 +35,6 @@ public class ReviewWordEntity {
 
     public void setReviewState(int reviewState) {
         this.reviewState = reviewState;
-    }
-
-    public String getLastReviewTime() {
-        return lastReviewTime;
-    }
-
-    public void setLastReviewTime(String lastReviewTime) {
-        this.lastReviewTime = lastReviewTime;
     }
 
     public String getNextReviewTime() {

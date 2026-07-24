@@ -1,7 +1,6 @@
 package com.kite.mnemoai.stateholder
 
 import android.graphics.Typeface
-import android.util.Log
 import com.github.mikephil.charting.charts.CombinedChart
 import com.github.mikephil.charting.charts.CombinedChart.DrawOrder
 import com.github.mikephil.charting.components.Legend
@@ -17,9 +16,8 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.google.android.material.color.MaterialColors
 import com.kite.mnemoai.R
-import com.kite.mnemoai.data.local.DTO.StudyStatistic
+import com.kite.mnemoai.data.model.StudyStatistic
 import java.time.LocalDate
-import kotlin.math.ceil
 import kotlin.time.Duration.Companion.milliseconds
 
 class StatisticChart(val chart: CombinedChart, val studyStatistics: List<StudyStatistic>) {

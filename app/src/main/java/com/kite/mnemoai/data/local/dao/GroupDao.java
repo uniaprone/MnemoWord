@@ -9,6 +9,8 @@ import androidx.room.Query;
 
 import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.model.GroupDetail;
+import com.kite.mnemoai.ui.vocabularybook.AllVocabularyBookItem;
+import com.kite.mnemoai.ui.vocabularybook.LearningVocabularyBookItem;
 
 import java.util.List;
 
@@ -62,4 +64,31 @@ public interface GroupDao {
 
     @Query("DELETE FROM `groups` WHERE id = :id")
     void deleteGroupById(Long id);
+
+    @Query("SELECT " +
+            "g.id," +
+            "g.name," +
+            "g.description," +
+            "COUNT(DISTINCT CASE WHEN wg.word_id THEN wg.word_id END) AS total_words," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 0 OR wr.id IS NULL THEN wg.word_id END) AS learning_words," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 1 THEN wg.word_id END) AS reviewing_words," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 2 THEN wg.word_id END) AS mastered_words " +
+            "FROM `groups` g " +
+            "LEFT JOIN word_group wg ON wg.group_id = g.id " +
+            "LEFT JOIN word_review wr ON wr.id = wg.word_id " +
+            "WHERE g.is_learning = 1 " +
+            "GROUP BY g.id")
+    LiveData<List<LearningVocabularyBookItem>> getLearningVocabularyBookItem();
+
+    @Query("SELECT " +
+            "g.id," +
+            "g.name," +
+            "COUNT(DISTINCT CASE WHEN wg.word_id THEN wg.word_id END) AS total_words," +
+            "COUNT(DISTINCT CASE WHEN wr.review_status = 2 THEN wr.id END) AS mastered_words " +
+            "FROM `groups` g " +
+            "LEFT JOIN word_group wg ON wg.group_id = g.id " +
+            "LEFT JOIN word_review wr ON wr.id = wg.word_id " +
+            "WHERE g.is_learning = 0 " +
+            "GROUP BY g.id")
+    LiveData<List<AllVocabularyBookItem>> getAllVocabularyBookItem();
 }

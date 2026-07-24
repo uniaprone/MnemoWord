@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.kite.mnemoai.R
 import com.kite.mnemoai.databinding.ItemAlterWordListBinding
-import com.kite.mnemoai.model.VocabularyBookChangedWord
-import com.kite.mnemoai.uistate.ChangeVocabularyBookWordUIState
+import com.kite.mnemoai.ui.changevocabularybookword.VocabularyBookChangedWord
+import com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
 
 class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Unit):
     ListAdapter<VocabularyBookChangedWord, AlterWordListAdapter.AlterWordViewHolder>(VocabularyBookChangedWord.DIFF_CALLBACK) {

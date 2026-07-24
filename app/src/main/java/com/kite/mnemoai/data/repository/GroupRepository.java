@@ -11,10 +11,9 @@ import com.kite.mnemoai.data.local.dao.GroupDao;
 import com.kite.mnemoai.data.local.dao.WordGroupDao;
 import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.local.entity.WordGroupEntity;
-import com.kite.mnemoai.data.model.Group;
 import com.kite.mnemoai.data.model.GroupDetail;
-import com.kite.mnemoai.data.utils.ModelTransformer;
-import com.kite.mnemoai.model.VocabularyBookChangedWord;
+import com.kite.mnemoai.ui.vocabularybook.AllVocabularyBookItem;
+import com.kite.mnemoai.ui.vocabularybook.LearningVocabularyBookItem;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -40,18 +39,18 @@ public class GroupRepository {
         return groupDao.getAllGroupDeatilsLiveData();
     };
 
-    public LiveData<Group> getGroupLiveDataById(long id){
-        return Transformations.map(groupDao.getGroupEntityById(id), ModelTransformer::transformGroupEntitiesToGroups);
+    public LiveData<GroupEntity> getGroupLiveDataById(long id){
+        return groupDao.getGroupEntityById(id);
     }
 
     public LiveData<List<GroupDetail>> getGroupDetailLiveDataById(long id){
         return groupDao.getGroupDetailLiveDataById(id);
     }
 
-    public void getAllUnlearningGroups(IRepositoryCallback<List<Group>> callback){
+    public void getAllUnlearningGroups(IRepositoryCallback<List<GroupEntity>> callback){
         executors.execute(() -> {
             List<GroupEntity> groupEntities = groupDao.getAllUnlearningGroupEntities();
-            callback.onComplete(ModelTransformer.transformGroupEntitiesToGroups(groupEntities));
+            callback.onComplete(groupEntities);
         });
     }
 
@@ -84,5 +83,13 @@ public class GroupRepository {
 
     public void removeAlterWords(long groupId, List<Long> ids){
         executors.execute(() -> wordGroupDao.deleteWordGroupItem(groupId, ids));
+    }
+
+    public LiveData<List<LearningVocabularyBookItem>> getLearningVocabularyBookItem(){
+        return groupDao.getLearningVocabularyBookItem();
+    }
+
+    public LiveData<List<AllVocabularyBookItem>> getAllVocabularyBookItem(){
+        return groupDao.getAllVocabularyBookItem();
     }
 }

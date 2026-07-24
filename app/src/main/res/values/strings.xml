@@ -30,7 +30,7 @@
     <string name="click_add_vocabulary">点击添加词汇</string>
     <string name="confirm">确认</string>
     <string name="cancel">取消</string>
-    <string name="add">+添加</string>
+    <string name="add">添加</string>
     <string name="all_word">所有单词 %d</string>
     <string name="mnemonic">助记</string>
     <string name="core_image">核心意象</string>
@@ -67,4 +67,16 @@
     <string name="add_remove_words">添加/移除单词</string>
     <string name="operation_sort">操作顺序</string>
     <string name="alphabetical_order">字母顺序</string>
+    <string name="today_goal">今日目标</string>
+    <string name="study_progress">学习进度: </string>
+    <string name="ai_mnemonic">AI助记</string>
+    <string name="ai_help_message">用AI帮你理解单词</string>
+    <string name="generate_mnemonic">生成助记</string>
+    <string name="communicate_with_ai">与AI对话</string>
+    <string name="no_ai_mnemonic_info">没有生成过助记信息~</string>
+    <string name="no_study_history">没有学习过这个单词~</string>
+    <string name="learned_time">学习时间: %s</string>
+    <string name="rememberTimes_count">认识%d次</string>
+    <string name="blurTimes_count">模糊%d次</string>
+    <string name="forgetTimes_count">忘记%d次</string>
 </resources>

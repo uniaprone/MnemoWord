@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.databinding.ItemVocabularySelectBinding;
-import com.kite.mnemoai.fragment.dialog.VocabularySelectDialogFragment;
+import com.kite.mnemoai.ui.dialog.vocabularyselect.VocabularySelectDialogFragment;
 import com.kite.mnemoai.utils.StringConvert;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
             String groupName = vocabularySelectInfo.getName();
             groupName = StringConvert.convertVocabularyName(groupName);
             binding.vocabularyNameTV.setText(groupName);
-            binding.vocabularyDescribe.setText(vocabularySelectInfo.getDescribe());
+            binding.vocabularyDescribe.setText(vocabularySelectInfo.getDescription());
             if(vocabularySelectInfo.isSelect()){
                 binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_24);
             }else{

@@ -7,8 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.kite.mnemoai.data.local.DTO.WordWithExtractAndDayPlanEntity;
 import com.kite.mnemoai.data.local.entity.WordEntity;
+import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.data.model.WordListItem;
 
 import java.util.List;
@@ -38,11 +38,11 @@ public interface WordDao {
             "SELECT word_id FROM day_plan_word " +
             "WHERE date = :date AND status = 0" +
             ")")
-    LiveData<List<WordWithExtractAndDayPlanEntity>> getUnfinishPlanWordDetailLiveData(String date);
+    LiveData<List<WordDetailInfo>> getUnfinishWordDetailInfoLiveData(String date);
 
     @Transaction
     @Query("SELECT * FROM words WHERE id = :id")
-    LiveData<WordWithExtractAndDayPlanEntity> getWordWithExtractAndDayPlanLiveDataById(long id);
+    LiveData<WordDetailInfo> getWordDetailInfoLiveDataById(long id);
 
     @Query("SELECT * FROM words INNER JOIN word_review ON words.id = word_review.id")
     List<WordEntity> getReviewWords();

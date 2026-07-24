@@ -6,12 +6,12 @@
 
         <fragment
             android:id="@+id/reciteWordFragment"
-            android:name="com.kite.mnemoai.fragment.ReciteWordFragment"
+            android:name="com.kite.mnemoai.ui.reciteword.ReciteWordFragment"
             android:label="ReciteWordFragment" />
 
         <fragment
             android:id="@+id/vocabularyFragment"
-            android:name="com.kite.mnemoai.fragment.VocabularyFragment"
+            android:name="com.kite.mnemoai.ui.vocabularybook.VocabularyFragment"
             android:label="VocabularyFragment">
             <action
                 android:id="@+id/action_vocabularyFragment_to_vocabularyGroupFragment"
@@ -22,7 +22,7 @@
         </fragment>
         <fragment
             android:id="@+id/vocabularyGroupFragment"
-            android:name="com.kite.mnemoai.fragment.VocabularyGroupFragment"
+            android:name="com.kite.mnemoai.ui.vocabularybookgroup.VocabularyGroupFragment"
             android:label="VocabularyGroupFragment">
             <argument
                 android:name="group_id"
@@ -37,7 +37,7 @@
         </fragment>
     <fragment
         android:id="@+id/wordDetailFragment"
-        android:name="com.kite.mnemoai.fragment.WordDetailFragment"
+        android:name="com.kite.mnemoai.ui.worddetail.WordDetailFragment"
         android:label="WordDetailFragment" >
         <argument
             android:name="word_id"
@@ -46,15 +46,15 @@
     </fragment>
     <fragment
         android:id="@+id/statisticFragment"
-        android:name="com.kite.mnemoai.fragment.StatisticFragment"
+        android:name="com.kite.mnemoai.ui.statistic.StatisticFragment"
         android:label="StatisticFragment" />
     <fragment
         android:id="@+id/mineFragment"
-        android:name="com.kite.mnemoai.fragment.MineFragment"
+        android:name="com.kite.mnemoai.ui.mine.MineFragment"
         android:label="MineFragment" />
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.kite.mnemoai.fragment.SearchFragment"
+        android:name="com.kite.mnemoai.ui.search.SearchFragment"
         android:label="SearchFragment" >
         <action
             android:id="@+id/action_searchFragment_to_wordDetailFragment"
@@ -62,7 +62,7 @@
     </fragment>
     <fragment
         android:id="@+id/changeVocabularyBookWordFragment"
-        android:name="com.kite.mnemoai.fragment.ChangeVocabularyBookWordFragment"
+        android:name="com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordFragment"
         android:label="ChangeVocabularyBookWordFragment" >
         <argument
             android:name="group_id"

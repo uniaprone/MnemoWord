@@ -26,6 +26,13 @@
     <attr name="wordReviewing" format="color|reference"/>
     <attr name="wordMastered" format="color|reference"/>
     <attr name="colorPrimary" format="color|reference"/>
-    <attr name="colorSecondary" />
+    <attr name="colorOnPrimary" format="color|reference"/>
+    <attr name="colorPrimaryContainer" format="color|reference"/>
+    <attr name="colorOnPrimaryContainer" format="color|reference"/>
+
+    <attr name="colorSecondary" format="color|reference"/>
     <attr name="colorTertiary" format="color|reference"/>
+
+    <attr name="statusBarBackground" format="color|reference"/>
+
 </resources>

@@ -22,6 +22,7 @@ public class Affix {
     @NonNull
     @Override
     public String toString() {
+        if(prefix == null) return "";
         StringBuilder builder = new StringBuilder();
         boolean shouldAddPlus = false;
         if(!root.isEmpty() || !suffix.isEmpty()) shouldAddPlus = true;
@@ -34,6 +35,7 @@ public class Affix {
         }
         shouldAddPlus = false;
         if(!suffix.isEmpty()) shouldAddPlus = true;
+        if(root == null) return builder.toString();
         for(Map.Entry<String, String> ro: root.entrySet()){
             builder.append(ro.getKey());
             builder.append(" (");
@@ -41,6 +43,7 @@ public class Affix {
             builder.append(")");
             if(shouldAddPlus) builder.append(" + ");
         }
+        if(suffix == null) return builder.toString();
         for(Map.Entry<String, String> suf: suffix.entrySet()){
             builder.append(suf.getKey());
             builder.append(" (");
@@ -48,7 +51,7 @@ public class Affix {
             builder.append(")");
         }
 
-        return builder.toString().isEmpty() ? "无" : builder.toString();
+        return builder.toString().isEmpty() ? "" : builder.toString();
     }
 
     public void setPrefix(Map<String, String> prefix) {

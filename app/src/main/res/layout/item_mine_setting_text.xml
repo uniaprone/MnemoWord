@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    android:id="@+id/settingCL">
+    android:id="@+id/settingCL"
+    android:background="?attr/colorSurfaceContainerLowest">
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/settingTitleTV"

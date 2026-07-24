@@ -1,38 +1,25 @@
 package com.kite.mnemoai.adapter;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.color.MaterialColors;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.databinding.ItemMineSettingSelectorBinding;
 import com.kite.mnemoai.databinding.ItemMineSettingTextBinding;
-import com.kite.mnemoai.fragment.dialog.ApiKeySettingDialogFragment;
-import com.kite.mnemoai.model.MineBaseItem;
-import com.kite.mnemoai.model.MineSelectorItem;
-import com.kite.mnemoai.model.MineTextItem;
-import com.kite.mnemoai.utils.UIUtil;
-
-import org.jetbrains.annotations.NotNull;
+import com.kite.mnemoai.ui.mine.model.MineBaseItem;
+import com.kite.mnemoai.ui.mine.model.MineSelectorItem;
+import com.kite.mnemoai.ui.mine.model.MineTextItem;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 
 public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public final static int MINE_TYPE_SELECTOR = 0;

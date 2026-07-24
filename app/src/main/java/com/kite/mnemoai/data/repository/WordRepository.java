@@ -14,34 +14,26 @@ import com.google.gson.JsonSyntaxException;
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.data.local.AppDatabase;
 import com.kite.mnemoai.data.local.Converters;
-import com.kite.mnemoai.data.local.DTO.WordWithExtractAndDayPlanEntity;
 import com.kite.mnemoai.data.local.dao.DayPlanWordDao;
 import com.kite.mnemoai.data.local.dao.GroupDao;
-import com.kite.mnemoai.data.local.dao.ReviewWordDao;
 import com.kite.mnemoai.data.local.dao.WordDao;
 import com.kite.mnemoai.data.local.dao.WordExtractDao;
-import com.kite.mnemoai.data.local.dao.WordGroupDao;
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity;
 import com.kite.mnemoai.data.local.entity.WordEntity;
 import com.kite.mnemoai.data.local.entity.WordExtractEntity;
-import com.kite.mnemoai.data.model.DayPlanWord;
 import com.kite.mnemoai.data.model.WordExtract;
 import com.kite.mnemoai.data.model.WordListItem;
-import com.kite.mnemoai.data.model.Word;
-import com.kite.mnemoai.data.model.WordReview;
 import com.kite.mnemoai.data.network.DeepseekRequestBody;
 import com.kite.mnemoai.data.network.DeepseekResponseBody;
 import com.kite.mnemoai.data.network.DeepseekService;
-import com.kite.mnemoai.data.utils.ModelTransformer;
-import com.kite.mnemoai.model.WordDetailInfo;
-import com.kite.mnemoai.model.WordWithExtractAndDayPlan;
+import com.kite.mnemoai.data.model.WordDetailInfo;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,68 +41,26 @@ import retrofit2.Response;
 
 public class WordRepository {
     private AppDatabase db;
-    private ExecutorService executors;
-    private Handler handler;
-    private WordGroupDao wordGroupDao;
-    private ReviewWordDao reviewWordDao;
-    private WordDao wordDao;
-    private GroupDao groupDao;
-    private WordExtractDao wordExtractDao;
-    private DayPlanWordDao dayPlanWordDao;
+    private final ExecutorService executors;
+    private final Handler handler;
+    private final WordDao wordDao;
+    private final GroupDao groupDao;
+    private final WordExtractDao wordExtractDao;
+    private final DayPlanWordDao dayPlanWordDao;
     private final Object lock = new Object();
 
     public WordRepository(Application app, Handler handler) {
         this.executors = MainApplication.getEXECUTOR_SERVICE();
         this.handler = handler;
         this.db = ((MainApplication) app).getAppDatabase();
-        this.wordGroupDao = db.wordGroupDao();
-        this.reviewWordDao = db.reviewWordDao();
         this.wordDao = db.wordDao();
         this.wordExtractDao = db.wordExtractDao();
         this.dayPlanWordDao = db.dayPlanWordDao();
         this.groupDao = db.groupDao();
     }
 
-    public LiveData<List<Word>> getWordsByGroupId(long groupId){
-        return Transformations.map(wordGroupDao.getWordsByGroupId(groupId), ModelTransformer::transformWordEntityToWord);
-    }
-
-    public void getReviewWords(IRepositoryCallback<List<Word>> callback){
-        executors.execute(() -> {
-            List<WordEntity> wordEntities = wordDao.getReviewWords();
-            List<Word> words = ModelTransformer.transformWordEntityToWord(wordEntities);
-            callback.onComplete(words);
-        });
-    }
-
     public LiveData<List<WordListItem>> getWordListItemLiveDataById(long id){
         return wordDao.getWordListItemLiveDataByGroupId(id);
-    }
-
-    public LiveData<Word> getWordById(long id){
-        return Transformations.map(wordDao.getWordLiveDataById(id), ModelTransformer::transformWordEntityToWord);
-    }
-
-    public LiveData<WordReview> getWordReviewById(long id){
-        return Transformations.map(reviewWordDao.getReviewWordEntityLiveData(id), ModelTransformer::transformWordReviewEntityToWordReview);
-    }
-
-    public LiveData<WordExtract> getWordExtractLiveDataById(long id){
-        return  Transformations.map(wordExtractDao.getWordExtractEntityJsonLiveDataById(id), (wordExtractEntity -> {
-            if(wordExtractEntity == null) return null;
-            return wordExtractEntity.getExtract();
-        }));
-    }
-
-    public void getWordExtractById(long id, IRepositoryCallback<WordExtract> callback){
-        executors.execute(() -> {
-            WordExtractEntity wordExtractEntity = wordExtractDao.getWordExtractEntityJsonById(id);
-            if(wordExtractEntity == null){
-                handler.post(() -> callback.onComplete(null));
-            }else {
-                handler.post(() -> callback.onComplete(wordExtractEntity.getExtract()));
-            }
-        });
     }
 
     public void setDailyDayPlanWordEntities(int learningCount){
@@ -168,54 +118,39 @@ public class WordRepository {
 
     }
 
-    public LiveData<List<WordWithExtractAndDayPlan>> getUnfinishPlanWordDetailLiveData(){
+    public LiveData<List<WordDetailInfo>> getUnfinishWordDetailInfoLiveData(){
         String date = LocalDate.now().toString();
-        return Transformations.map(wordDao.getUnfinishPlanWordDetailLiveData(date), wordWithExtractAndDayPlanEntities ->
-                wordWithExtractAndDayPlanEntities.stream()
-                        .map(wordWithExtractAndDayPlanEntity -> {
-                            Word word = ModelTransformer.transformWordEntityToWord(wordWithExtractAndDayPlanEntity.getWord());
-                            WordExtract wordExtract;
-                            WordExtractEntity wordExtractEntity = wordWithExtractAndDayPlanEntity.getWordExtract();
-                            List<DayPlanWord> dayPlanWords = ModelTransformer.transformDayPlanWordEntityToDayPlanWord(wordWithExtractAndDayPlanEntity.getDayPlanWordEntities());
-                            if(wordExtractEntity == null){
-                                wordExtract = null;
-                            }else {
-                                wordExtract = wordExtractEntity.getExtract();
-                            }
-                            return new WordWithExtractAndDayPlan(word, wordExtract, dayPlanWords);
-                        })
-                        .collect(Collectors.toList()));
-    }
-
-    public LiveData<WordWithExtractAndDayPlan> getWordWithExtractAndDayPlanLiveDataById(long id){
-        return Transformations.map(wordDao.getWordWithExtractAndDayPlanLiveDataById(id), wordWithExtractAndDayPlanEntity -> {
-            Word word = ModelTransformer.transformWordEntityToWord(wordWithExtractAndDayPlanEntity.getWord());
-            WordExtract wordExtract;
-            WordExtractEntity wordExtractEntity = wordWithExtractAndDayPlanEntity.getWordExtract();
-            List<DayPlanWord> dayPlanWords = ModelTransformer.transformDayPlanWordEntityToDayPlanWord(wordWithExtractAndDayPlanEntity.getDayPlanWordEntities());
-            if(wordExtractEntity == null){
-                wordExtract = null;
-            }else {
-                wordExtract = wordExtractEntity.getExtract();
+        return Transformations.map(wordDao.getUnfinishWordDetailInfoLiveData(date), wordDetailInfos -> {
+                for(WordDetailInfo wordDetailInfo: wordDetailInfos){
+                    wordDetailInfo.setDayPlanWordEntities(
+                            wordDetailInfo.getDayPlanWordEntities().stream()
+                                    .filter(dayPlanWordEntity -> !Objects.equals(dayPlanWordEntity.getDate(), date))
+                                    .collect(Collectors.toList())
+                    );
+                }
+                return wordDetailInfos;
             }
-            return new WordWithExtractAndDayPlan(word, wordExtract, dayPlanWords);
-        });
+        );
     }
 
-    public LiveData<List<WordDetailInfo>> getDayPlanWordEntitiesLiveData() {
-        String date = LocalDate.now().toString();
-        return Transformations.switchMap(dayPlanWordDao.queryUnfinishedDayPlanWordsLiveDataByDate(date), dayPlanWordEntities -> {
-            // 已有数据：直接根据 IDs 查询并转换
-            List<Long> ids = dayPlanWordEntities.stream().map(DayPlanWordEntity::getWordId).collect(Collectors.toList());
-            return Transformations.map(wordDao.getWordsLiveDataByIds(ids),
-                    wordEntities -> wordEntities.stream()
-                            .map(w -> new WordDetailInfo(ModelTransformer.transformWordEntityToWord(w), null, null))
-                            .collect(Collectors.toList())
-            );
-        });
+    public LiveData<WordDetailInfo> getWordDetailInfoLiveDataById(long id){
+        return wordDao.getWordDetailInfoLiveDataById(id);
     }
 
-    public void fetchWordExtract(Word word, String apiKey, IRepositoryCallback<Exception> callback){
+//    public LiveData<List<WordDetailInfo>> getDayPlanWordEntitiesLiveData() {
+//        String date = LocalDate.now().toString();
+//        return Transformations.switchMap(dayPlanWordDao.queryUnfinishedDayPlanWordsLiveDataByDate(date), dayPlanWordEntities -> {
+//            // 已有数据：直接根据 IDs 查询并转换
+//            List<Long> ids = dayPlanWordEntities.stream().map(DayPlanWordEntity::getWordId).collect(Collectors.toList());
+//            return Transformations.map(wordDao.getWordsLiveDataByIds(ids),
+//                    wordEntities -> wordEntities.stream()
+//                            .map(w -> new WordDetailInfo(ModelTransformer.transformWordEntityToWord(w), null, null))
+//                            .collect(Collectors.toList())
+//            );
+//        });
+//    }
+
+    public void fetchWordExtract(WordEntity word, String apiKey, IRepositoryCallback<WordExtractEntity> callback){
         DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
@@ -241,8 +176,8 @@ public class WordRepository {
         });
     }
 
-    public void fetchWordExtract(WordWithExtractAndDayPlan wordWithExtractAndDayPlan, String apiKey, IRepositoryCallback<WordExtract> callback){
-        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordWithExtractAndDayPlan.getWord().getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
+    public void fetchWordExtract(WordDetailInfo wordDetailInfo, String apiKey, IRepositoryCallback<WordExtractEntity> callback){
+        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordDetailInfo.getWordEntity().getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null){
@@ -251,8 +186,9 @@ public class WordRepository {
                         Log.d("接收的json数据", wordExtractString);
                         try{
                             WordExtract wordExtract = Converters.stringToWordExtract(wordExtractString);
-                            wordExtractDao.insertWordExtractEntity(new WordExtractEntity(wordWithExtractAndDayPlan.getWord().getId(), wordExtract));
-                            handler.post(() -> callback.onComplete(wordExtract));
+                            WordExtractEntity wordExtractEntity = new WordExtractEntity(wordDetailInfo.getWordEntity().getId(), wordExtract);
+                            wordExtractDao.insertWordExtractEntity(wordExtractEntity);
+                            handler.post(() -> callback.onComplete(wordExtractEntity));
                         }catch (JsonSyntaxException e){
                             handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
                         }
