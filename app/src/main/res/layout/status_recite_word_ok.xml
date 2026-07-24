@@ -240,6 +240,7 @@
         app:layout_constraintEnd_toEndOf="parent">
         <!-- 不认识 -->
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:id="@+id/forgetBtn"
             android:layout_width="0dp"
             android:layout_height="52dp"
@@ -247,10 +248,12 @@
             android:text="@string/forget"
             android:textColor="?attr/colorOnTertiaryContainer"
             android:textSize="@dimen/text_size_body_large"
+            app:elevation="10dp"
             app:backgroundTint="?attr/colorTertiaryContainer"
             android:layout_marginEnd="8dp"/>
         <!-- 模糊 -->
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:id="@+id/blurBtn"
             android:layout_width="0dp"
             android:layout_height="52dp"
@@ -262,6 +265,7 @@
             android:layout_marginEnd="8dp"/>
         <!-- 认识 -->
         <com.google.android.material.button.MaterialButton
+            style="@style/Widget.Material3.Button.ElevatedButton"
             android:id="@+id/rememberBtn"
             android:layout_width="0dp"
             android:layout_height="52dp"

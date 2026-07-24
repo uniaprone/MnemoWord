@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.kite.mnemoai.MainApplication;
+import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.UserSettingRepository;
@@ -34,6 +35,10 @@ public class WordDetailViewModel extends ViewModel {
             wordId = savedStateHandle.get("word_id");
         }
         uiState.addSource(wordRepository.getWordDetailInfoLiveDataById(wordId), wordDetailInfo -> {
+            String phonetic = "\\" + wordDetailInfo.getWordEntity().getPhonetic() + "\\";
+            String translation = wordDetailInfo.getWordEntity().getTranslation().replace("\\n", " ");
+            wordDetailInfo.getWordEntity().setPhonetic(phonetic);
+            wordDetailInfo.getWordEntity().setTranslation(translation);
             this.wordDetailInfo = wordDetailInfo;
             updateUIState();
         });
@@ -56,19 +61,16 @@ public class WordDetailViewModel extends ViewModel {
         wordDetailStatus = WordDetailStatus.loading;
         updateUIState();
 
-//        wordRepository.fetchWordExtract(wordDetailInfo.getWordEntity(), apiKey, new IRepositoryCallback<>() {
-//            @Override
-//            public void onComplete(Exception e) {
-//                wordDetailStatus = WordDetailStatus.error;
-//                updateUIState();
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                wordDetailStatus = WordDetailStatus.error;
-//                updateUIState();
-//            }
-//        });
+        wordRepository.fetchWordExtract(wordDetailInfo.getWordEntity(), apiKey, new IRepositoryCallback<>() {
+
+            @Override
+            public void onComplete(WordExtractEntity wordExtractEntity) {
+            }
+
+            @Override
+            public void onError(Throwable t) {
+            }
+        });
     }
 
     public static ViewModelInitializer<WordDetailViewModel> initializer = new ViewModelInitializer<>(
