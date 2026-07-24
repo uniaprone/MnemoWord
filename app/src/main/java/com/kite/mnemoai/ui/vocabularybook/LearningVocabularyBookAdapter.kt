@@ -50,6 +50,7 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
         }
 
         fun bind(item: LearningVocabularyBookItem){
+            val resource = binding.root.resources
             this.item = item
             binding.learningVocabularyBookNameTV.text = item.name
             binding.totalWordsCountTV.text = item.totalWords.toString()
@@ -79,6 +80,14 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
                 binding.statisticPieChart,
                 com.google.android.material.R.attr.colorPrimaryContainer
             )
+            val colorSecondaryContainer = MaterialColors.getColor(
+                binding.statisticPieChart,
+                com.google.android.material.R.attr.colorSecondaryContainer
+            )
+            val colorTertiaryContainer = MaterialColors.getColor(
+                binding.statisticPieChart,
+                com.google.android.material.R.attr.colorTertiaryContainer
+            )
             val colorOnPrimaryContainer = MaterialColors.getColor(
                 binding.statisticPieChart,
                 com.google.android.material.R.attr.colorOnPrimaryContainer
@@ -86,9 +95,9 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
 
             val pieEntries: MutableList<PieEntry?> = mutableListOf()
             pieEntries.apply {
-                add(PieEntry(item.learningWords.toFloat()))
-                add(PieEntry(item.reviewingWords.toFloat()))
-                add(PieEntry(item.masteredWords.toFloat()))
+                add(PieEntry(item.learningWords.toFloat(), resource.getString(R.string.learning)))
+                add(PieEntry(item.reviewingWords.toFloat(), resource.getString(R.string.reviewing)))
+                add(PieEntry(item.masteredWords.toFloat(), resource.getString(R.string.mastered)))
             }
             val pieDataSet = PieDataSet(pieEntries, "").apply {
                 setDrawValues(false)
@@ -101,8 +110,10 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
             }
             val pieData = PieData(pieDataSet)
             binding.statisticPieChart.legend.apply {
-                isEnabled = false
+                isEnabled = true
                 textColor = colorPrimary
+                xEntrySpace = 2f
+                formToTextSpace = 1f
             }
 
             val fullText = "${(item.learningProgress * 100).roundToInt()} %\n待学习"
@@ -143,9 +154,10 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
                 setDrawEntryLabels(false)
                 description = null
                 holeRadius = 60f
+                setExtraOffsets(-4f, 0f, 0f, -8f)
                 setHoleColor(MaterialColors.getColor(
                     binding.statisticPieChart,
-                    com.google.android.material.R.attr.colorPrimaryContainer
+                    com.google.android.material.R.attr.colorSurfaceContainerLowest
                 ))
                 setDrawCenterText(true)
                 centerText = spannable

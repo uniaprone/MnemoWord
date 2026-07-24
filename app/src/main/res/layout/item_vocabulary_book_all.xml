@@ -6,11 +6,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:cardElevation="0dp"
     app:strokeWidth="0dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="0dp"
     app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginBottom="8dp"
     android:id="@+id/itemVocabularyBookAll">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/groupIV"
             app:layout_constraintTop_toTopOf="parent">
@@ -41,7 +38,8 @@
                 android:id="@+id/groupNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_title_medium"
+                android:layout_marginBottom="4dp"
+                android:textSize="@dimen/text_size_body_large"
                 tools:text="中考词汇" />
 
             <LinearLayout
@@ -54,29 +52,34 @@
                     android:id="@+id/totalWordsTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body_medium"
                     tools:text="1228" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/materialTextView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body_medium"
                     android:text="个单词" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/masteredWordsPercentageTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body_medium"
                     android:layout_marginStart="30dp" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body_medium"
                     android:text="% " />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_body_medium"
                     android:text="@string/mastered" />
 
             </LinearLayout>

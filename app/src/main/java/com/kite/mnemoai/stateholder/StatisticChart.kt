@@ -31,6 +31,7 @@ class StatisticChart(val chart: CombinedChart, val studyStatistics: List<StudySt
     init{
         var maxLearnCount: Int = 0
         var maxLearnTime: Long = 0
+        lineEntries.add(Entry( 0f, 0f))
         studyStatistics.forEachIndexed { index, statistic ->
             dates.add(statistic.date)
 
@@ -46,7 +47,7 @@ class StatisticChart(val chart: CombinedChart, val studyStatistics: List<StudySt
         }
         //学习数量数据
         val barDataSet = BarDataSet(stackedEntries, "").apply {
-            setDrawValues(false)
+            setDrawValues(true)
             stackLabels = arrayOf<String>("新学", "复习")
             setColors(
                 MaterialColors.getColor(chart, R.attr.colorPrimary),
