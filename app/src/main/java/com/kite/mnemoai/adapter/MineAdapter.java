@@ -38,7 +38,7 @@ public class MineAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private void bind(MineSelectorItem item){
             binding.settingTitleTV.setText(item.getTitle());
-            binding.segmentedControl.setItems(item.getSelected(),item.getLastSelectedIndex(), item.getOptions().toArray(new String[0]));
+            binding.segmentedControl.setItems(item.getSelected(), item.getOptions().toArray(new String[0]));
             item.setLastSelectedIndex(item.getSelected());
             binding.segmentedControl.setOnSelectionChangedListener(integer -> {
                 item.onTrigger(integer);

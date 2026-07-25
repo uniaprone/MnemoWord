@@ -101,7 +101,7 @@ public class ReciteWordFragment extends Fragment{
                         binding.statusReciteWordFinish.statusReciteWordFinishCL.setVisibility(View.GONE);
 
                         int progress = (int) ((reciteWordUIState.getCurrentProgress() * 100f)/reciteWordUIState.getTotalProgress());
-                        binding.statusReciteWordOK.linearProgressIndicator.setProgress(progress);
+                        binding.statusReciteWordOK.linearProgressIndicator.setProgress(progress, true);
                         binding.statusReciteWordOK.numberProgressTV.setText(getResources().getString(R.string.number_progress, reciteWordUIState.getCurrentProgress(), reciteWordUIState.getTotalProgress()));
 
                         List<WordDetailInfo> original = reciteWordUIState.getReciteWordItemStatusOrder();

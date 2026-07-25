@@ -35,4 +35,6 @@
 
     <attr name="statusBarBackground" format="color|reference"/>
 
+    <attr name="colorSurfaceContainerLowest" format="color|reference"/>
+
 </resources>
