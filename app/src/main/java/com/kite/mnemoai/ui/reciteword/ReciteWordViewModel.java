@@ -45,7 +45,7 @@ public class ReciteWordViewModel extends ViewModel {
     private boolean isShowNext = true;
     private boolean isShowTranslation;
     private boolean isShowDetail;
-    private LoadingState aiMnemonicLoadingState;
+    private LoadingState<String> aiMnemonicLoadingState;
     private final Random random = new Random();
     private LocalDate date = LocalDate.now();
     private String apiKey;
@@ -213,17 +213,18 @@ public class ReciteWordViewModel extends ViewModel {
         this.isShowDetail = false;
         updateUIStatus();
     }
-
+    @SuppressWarnings("unchecked")
     public void fetchWordExtract(){
         if(this.reciteWordDetailInfoItemUIState == null || this.reciteWordDetailInfoItemUIState.isEmpty()) return;
         WordDetailInfo currentWord = this.reciteWordDetailInfoItemUIState.get(0);
-        aiMnemonicLoadingState = LoadingState.LOADING;
+        aiMnemonicLoadingState = LoadingState.Loading.INSTANCE;
         updateUIStatus();
-        wordRepository.fetchWordExtract(currentWord.getWordEntity(), apiKey, new IRepositoryCallback<WordExtractEntity>() {
+        wordRepository.fetchWordExtract(currentWord.getWordEntity(), apiKey, new IRepositoryCallback<LoadingState<String>>() {
+
             @Override
-            public void onComplete(WordExtractEntity wordExtract) {
+            public void onComplete(LoadingState<String> stringLoadingState) {
                 if(reciteWordDetailInfoItemUIState.get(0) == currentWord){
-                    aiMnemonicLoadingState = LoadingState.SUCCESS;
+                    aiMnemonicLoadingState = stringLoadingState;
                     updateUIStatus();
                 }
             }
@@ -231,46 +232,17 @@ public class ReciteWordViewModel extends ViewModel {
             @Override
             public void onError(Throwable t) {
                 if(reciteWordDetailInfoItemUIState.get(0) == currentWord){
-                    aiMnemonicLoadingState = LoadingState.SUCCESS;
+                    aiMnemonicLoadingState = new LoadingState.Error(t);
                     updateUIStatus();
                 }
             }
         });
     }
 
-//    public void showTranslation(){
-//        if(this.reciteWordItemStatusesOrder == null || this.reciteWordItemStatusesOrder.isEmpty()) return;
-//        ReciteWordUIState.ReciteWordItemStatus showed = this.reciteWordItemStatusesOrder.get(0);
-//        showed.setShowTranslation(true);
-//        if(showed.getWordWithExtractAndDayPlan().getWordExtract() == null){
-//            showed.setWordDetailStatus(WordDetailStatus.loading);
-//            wordRepository.fetchWordExtract(showed.getWordWithExtractAndDayPlan(), apiKey, new IRepositoryCallback<WordExtract>() {
-//                @Override
-//                public void onComplete(WordExtract wordExtract) {
-//                    if(reciteWordItemStatusesOrder.get(0) == showed){
-//                        showed.setWordDetailStatus(WordDetailStatus.show);
-//                        updateUIStatus();
-//                    }
-//                    else showed.setWordDetailStatus(WordDetailStatus.hide);
-//                }
-//
-//                @Override
-//                public void onError(Throwable t) {
-//                    if(reciteWordItemStatusesOrder.get(0) == showed){
-//                        showed.setWordDetailStatus(WordDetailStatus.error);
-//                        updateUIStatus();
-//                    }
-//                    else showed.setWordDetailStatus(WordDetailStatus.hide);
-//                }
-//            });
-//        }else {
-//            showed.setWordDetailStatus(WordDetailStatus.show);
-//        }
-//        updateUIStatus();
-//    }
     public void rememberWord(){
         if(this.reciteWordDetailInfoItemUIState == null || this.reciteWordDetailInfoItemUIState.isEmpty()) return;
         WordDetailInfo remembered = this.reciteWordDetailInfoItemUIState.get(0);
+        resetShowState();
         this.reciteWordDetailInfoItemUIState.remove(remembered);
         ReciteStatistics rememberedReciteStatistics = reciteStatistics.stream()
                 .filter(rs -> rs.getWordId() == remembered.getWordEntity().getId()).findFirst().get();

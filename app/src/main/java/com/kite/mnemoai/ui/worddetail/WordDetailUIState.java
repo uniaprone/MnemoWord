@@ -1,17 +1,17 @@
 package com.kite.mnemoai.ui.worddetail;
 
 import com.kite.mnemoai.data.model.WordDetailInfo;
+import com.kite.mnemoai.ui.model.LoadingState;
 import com.kite.mnemoai.ui.reciteword.WordDetailStatus;
 
 public class WordDetailUIState {
     private WordDetailInfo wordDetailInfo;
-    private WordDetailStatus wordDetailStatus;
-
+    private LoadingState<String> aiMnemonicLoadingState;
     private String apiKey;
 
-    public WordDetailUIState(WordDetailInfo wordDetailInfo, WordDetailStatus wordDetailStatus, String apiKey) {
+    public WordDetailUIState(WordDetailInfo wordDetailInfo, LoadingState<String> aiMnemonicLoadingState, String apiKey) {
         this.wordDetailInfo = wordDetailInfo;
-        this.wordDetailStatus = wordDetailStatus;
+        this.aiMnemonicLoadingState = aiMnemonicLoadingState;
         this.apiKey = apiKey;
     }
 
@@ -19,8 +19,8 @@ public class WordDetailUIState {
         return wordDetailInfo;
     }
 
-    public WordDetailStatus getWordDetailStatus() {
-        return wordDetailStatus;
+    public LoadingState<String> getAiMnemonicLoadingState() {
+        return aiMnemonicLoadingState;
     }
 
     public String getApiKey() {

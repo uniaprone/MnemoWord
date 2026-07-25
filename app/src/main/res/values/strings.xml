@@ -79,4 +79,5 @@
     <string name="rememberTimes_count">认识%d次</string>
     <string name="blurTimes_count">模糊%d次</string>
     <string name="forgetTimes_count">忘记%d次</string>
+    <string name="ai_thinking">AI思考中……</string>
 </resources>

@@ -27,6 +27,7 @@ import com.kite.mnemoai.data.network.DeepseekRequestBody;
 import com.kite.mnemoai.data.network.DeepseekResponseBody;
 import com.kite.mnemoai.data.network.DeepseekService;
 import com.kite.mnemoai.data.model.WordDetailInfo;
+import com.kite.mnemoai.ui.model.LoadingState;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -150,7 +151,7 @@ public class WordRepository {
 //        });
 //    }
 
-    public void fetchWordExtract(WordEntity word, String apiKey, IRepositoryCallback<WordExtractEntity> callback){
+    public void fetchWordExtract(WordEntity word, String apiKey, IRepositoryCallback<LoadingState<String>> callback){
         DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
@@ -162,6 +163,7 @@ public class WordRepository {
                         try{
                             WordExtract wordExtract = gson.fromJson(wordExtractString, WordExtract.class);
                             wordExtractDao.insertWordExtractEntity(new WordExtractEntity(word.getId(), Converters.stringToWordExtract(wordExtractString)));
+                            handler.post(() -> callback.onComplete(new LoadingState.Success<>("获取成功")));
                         } catch (JsonSyntaxException e) {
                             handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
                         }

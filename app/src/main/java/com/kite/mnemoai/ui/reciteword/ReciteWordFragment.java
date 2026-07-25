@@ -32,8 +32,10 @@ import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.databinding.FragmentReciteWordBinding;
 import com.kite.mnemoai.databinding.ItemExampleSentenceBinding;
 import com.kite.mnemoai.databinding.ItemPhraseBinding;
+import com.kite.mnemoai.stateholder.BannerControl;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryAdapter;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryItem;
+import com.kite.mnemoai.ui.model.LoadingState;
 import com.kite.mnemoai.utils.DensityUtilKt;
 import com.kite.mnemoai.utils.TimeUtilKt;
 
@@ -49,16 +51,20 @@ import java.util.stream.Collectors;
 public class ReciteWordFragment extends Fragment{
     private FragmentReciteWordBinding binding;
     private ReciteWordViewModel viewModel;
+    private BannerControl bannerControl;
     private RecyclerView reviewRV;
     private ReviewHistoryAdapter reviewAdapter;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentReciteWordBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(ReciteWordViewModel.initializer)).get(ReciteWordViewModel.class);
         viewModel.setDailyDayPlanWordEntities();
+
+        bannerControl = new BannerControl(binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner, getLifecycle());
 
         reviewRV = binding.statusReciteWordOK.aiMnemonic.studyHistoryItemsRV;
         reviewAdapter = new ReviewHistoryAdapter();
@@ -88,6 +94,7 @@ public class ReciteWordFragment extends Fragment{
                 viewModel.forgetWord();
             }
         });
+
         viewModel.getUiState().observe(getViewLifecycleOwner(), new Observer<ReciteWordUIState>() {
             @Override
             public void onChanged(ReciteWordUIState reciteWordUIState) {
@@ -104,6 +111,13 @@ public class ReciteWordFragment extends Fragment{
                         binding.statusReciteWordOK.linearProgressIndicator.setProgress(progress, true);
                         binding.statusReciteWordOK.numberProgressTV.setText(getResources().getString(R.string.number_progress, reciteWordUIState.getCurrentProgress(), reciteWordUIState.getTotalProgress()));
 
+                        binding.statusReciteWordOK.aiMnemonic.generateAIMnemonicChip.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                viewModel.fetchWordExtract();
+                            }
+                        });
+
                         List<WordDetailInfo> original = reciteWordUIState.getReciteWordItemStatusOrder();
                         if(original != null && !original.isEmpty()){
                             WordDetailInfo currentReciteWord = original.get(0);
@@ -119,52 +133,35 @@ public class ReciteWordFragment extends Fragment{
                             binding.statusReciteWordOK.showWordDefinitionLL.setOnClickListener((view) -> {
                                 TransitionManager.beginDelayedTransition(binding.statusReciteWordOK.wordContentCL,
                                         new TransitionSet().addTransition(new ChangeBounds()).addTransition(new Fade()));
-                                binding.statusReciteWordOK.aiMnemonicLL.setVisibility(View.VISIBLE);
                                 ConstraintSet constraintSet = new ConstraintSet();
                                 constraintSet.clone(binding.statusReciteWordOK.wordContentCL);
                                 constraintSet.constrainHeight(R.id.wordCV, ConstraintSet.MATCH_CONSTRAINT);
-                                constraintSet.clear(R.id.wordCV, ConstraintSet.BOTTOM);
-                                constraintSet.connect(R.id.wordCV, ConstraintSet.BOTTOM, R.id.aiMnemonicLL, ConstraintSet.TOP, DensityUtilKt.dpToPx(requireContext(), 32));
                                 constraintSet.applyTo(binding.statusReciteWordOK.wordContentCL);
+
                                 viewModel.showAll();
                             });
                             if(reciteWordUIState.isShowDetail()){
-                                Log.d("mmmmmmmmm", "showdetail");
-                                binding.statusReciteWordOK.aiMnemonicLL.setVisibility(View.VISIBLE);
+                                TransitionManager.beginDelayedTransition(binding.statusReciteWordOK.wordContentCL,
+                                        new TransitionSet().addTransition(new ChangeBounds()).addTransition(new Fade()));
                                 binding.statusReciteWordOK.showWordDefinitionLL.setVisibility(View.GONE);
                                 binding.statusReciteWordOK.aiMnemonic.getRoot().setVisibility(View.VISIBLE);
-                                binding.statusReciteWordOK.generateAIMnemonicBtn.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        viewModel.fetchWordExtract();
-                                    }
-                                });
-
                                 ConstraintSet constraintSet = new ConstraintSet();
                                 constraintSet.clone(binding.statusReciteWordOK.wordContentCL);
                                 constraintSet.constrainHeight(R.id.wordCV, ConstraintSet.MATCH_CONSTRAINT);
-                                constraintSet.clear(R.id.wordCV, ConstraintSet.BOTTOM);
-                                constraintSet.connect(R.id.wordCV, ConstraintSet.BOTTOM, R.id.aiMnemonicLL, ConstraintSet.TOP, DensityUtilKt.dpToPx(requireContext(), 8));
                                 constraintSet.applyTo(binding.statusReciteWordOK.wordContentCL);
 
                                 setAndShowTranslation(currentReciteWord.getWordEntity().getTranslation());
-                                setAndShowWordExtract(inflater, container, currentReciteWord.getWordExtractEntity());
+                                setAndShowWordExtract(inflater, container, reciteWordUIState.getAiMnemonicLoadingState(), currentReciteWord.getWordExtractEntity());
                                 setAndShowStudyHistory(currentReciteWord.getDayPlanWordEntities());
                             }else{
-                                Log.d("mmmmmmmmm", "notshowdetail");
                                 binding.statusReciteWordOK.translateTV.setVisibility(View.GONE);
-                                binding.statusReciteWordOK.aiMnemonicLL.setVisibility(View.GONE);
                                 binding.statusReciteWordOK.showWordDefinitionLL.setVisibility(View.VISIBLE);
                                 binding.statusReciteWordOK.aiMnemonic.getRoot().setVisibility(View.GONE);
+
                                 ConstraintSet constraintSet = new ConstraintSet();
                                 constraintSet.clone(binding.statusReciteWordOK.wordContentCL);
-
                                 constraintSet.constrainHeight(R.id.wordCV, ConstraintSet.WRAP_CONTENT);
-                                constraintSet.clear(R.id.wordCV, ConstraintSet.BOTTOM);
-                                constraintSet.connect(R.id.wordCV, ConstraintSet.BOTTOM, R.id.aiMnemonicLL, ConstraintSet.TOP, 0);
-
                                 constraintSet.applyTo(binding.statusReciteWordOK.wordContentCL);
-                                Log.d("mmmmmmmmm", binding.statusReciteWordOK.showWordDefinitionLL.getVisibility() + "");
                             }
                         }
                         break;
@@ -207,7 +204,19 @@ public class ReciteWordFragment extends Fragment{
         binding.statusReciteWordOK.translateTV.setText(Objects.requireNonNullElse(translation, "null"));
         binding.statusReciteWordOK.translateTV.setVisibility(View.VISIBLE);
     }
-    private void setAndShowWordExtract(LayoutInflater inflater, View view, WordExtractEntity currentWordExtract){
+    private void setAndShowWordExtract(LayoutInflater inflater, View view, LoadingState<String> aiMnemonicLoadingState, WordExtractEntity currentWordExtract){
+        String data;
+        if(aiMnemonicLoadingState instanceof LoadingState.Loading){
+            bannerControl.show();
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setText(getResources().getString(R.string.ai_thinking));
+        } else if (aiMnemonicLoadingState instanceof LoadingState.Success) {
+            bannerControl.hide();
+        }else if(aiMnemonicLoadingState instanceof LoadingState.Error){
+            data = ((LoadingState.Error) aiMnemonicLoadingState).getException().getMessage();
+            bannerControl.startTimer(3000);
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setText(data);
+        }
+
         if(currentWordExtract == null){
             binding.statusReciteWordOK.aiMnemonic.noExtractContent.setVisibility(View.VISIBLE);
             binding.statusReciteWordOK.aiMnemonic.extractContent.setVisibility(View.GONE);

@@ -19,8 +19,13 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.ChangeBounds;
+import androidx.transition.Fade;
+import androidx.transition.TransitionManager;
+import androidx.transition.TransitionSet;
 
 import com.google.android.material.color.MaterialColors;
+import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity;
 import com.kite.mnemoai.data.local.entity.WordEntity;
 import com.kite.mnemoai.data.local.entity.WordExtractEntity;
@@ -31,8 +36,10 @@ import com.kite.mnemoai.data.model.WordExtract;
 import com.kite.mnemoai.databinding.FragmentWordDetailBinding;
 import com.kite.mnemoai.databinding.ItemExampleSentenceBinding;
 import com.kite.mnemoai.databinding.ItemPhraseBinding;
+import com.kite.mnemoai.stateholder.BannerControl;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryAdapter;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryItem;
+import com.kite.mnemoai.ui.model.LoadingState;
 import com.kite.mnemoai.ui.reciteword.ReciteWordUIState;
 import com.kite.mnemoai.utils.TimeUtilKt;
 
@@ -46,6 +53,7 @@ public class WordDetailFragment extends Fragment {
     private ActivityResultLauncher<String> requestPermissionLauncher;
     private RecyclerView reviewRV;
     private ReviewHistoryAdapter reviewHistoryAdapter;
+    private BannerControl bannerControl;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,8 +71,8 @@ public class WordDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentWordDetailBinding.inflate(inflater, container, false);
-
-        binding.generateAIMnemonicBtn.setOnClickListener(new View.OnClickListener() {
+        bannerControl = new BannerControl(binding.aiMnemonic.AIGenerateBanner, this.getLifecycle());
+        binding.aiMnemonic.generateAIMnemonicChip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkAndRequestPermission();
@@ -80,9 +88,13 @@ public class WordDetailFragment extends Fragment {
 
         viewModel.getUiState().observe(getViewLifecycleOwner(), wordDetailUIState -> {
             if(wordDetailUIState == null || wordDetailUIState.getWordDetailInfo() == null) return;
+
+            TransitionManager.beginDelayedTransition(binding.aiMnemonic.getRoot(),
+                    new TransitionSet().addTransition(new ChangeBounds()).addTransition(new Fade()));
             showAll(
                     inflater,
                     wordDetailUIState.getWordDetailInfo().getWordEntity(),
+                    wordDetailUIState.getAiMnemonicLoadingState(),
                     wordDetailUIState.getWordDetailInfo().getWordExtractEntity(),
                     wordDetailUIState.getWordDetailInfo().getDayPlanWordEntities()
             );
@@ -91,10 +103,10 @@ public class WordDetailFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void showAll(LayoutInflater inflater, WordEntity wordEntity, WordExtractEntity wordExtractEntity, List<DayPlanWordEntity> dayPlanWordEntities){
+    private void showAll(LayoutInflater inflater, WordEntity wordEntity, LoadingState<String> aiMnemonicLoadingState, WordExtractEntity wordExtractEntity, List<DayPlanWordEntity> dayPlanWordEntities){
         showWord(wordEntity);
         binding.aiMnemonic.getRoot().setVisibility(View.VISIBLE);
-        showWordExtract(inflater, wordExtractEntity);
+        showWordExtract(inflater, aiMnemonicLoadingState, wordExtractEntity);
         showReviewHistory(dayPlanWordEntities);
     }
 
@@ -104,7 +116,19 @@ public class WordDetailFragment extends Fragment {
         binding.translateTV.setText(word.getTranslation());
     }
     
-    private void showWordExtract(LayoutInflater inflater, WordExtractEntity wordExtractEntity){
+    private void showWordExtract(LayoutInflater inflater, LoadingState<String> aiMnemonicLoadingState, WordExtractEntity wordExtractEntity){
+        String data;
+        if(aiMnemonicLoadingState instanceof LoadingState.Loading){
+            bannerControl.show();
+            binding.aiMnemonic.AIGenerateResultTV.setText(getResources().getString(R.string.ai_thinking));
+        } else if (aiMnemonicLoadingState instanceof LoadingState.Success) {
+            bannerControl.hide();
+        }else if(aiMnemonicLoadingState instanceof LoadingState.Error){
+            data = ((LoadingState.Error) aiMnemonicLoadingState).getException().getMessage();
+            bannerControl.startTimer(3000);
+            binding.aiMnemonic.AIGenerateResultTV.setText(data);
+        }
+
         if(wordExtractEntity == null || wordExtractEntity.getExtract() == null){
             binding.aiMnemonic.noExtractContent.setVisibility(View.VISIBLE);
             binding.aiMnemonic.extractContent.setVisibility(View.GONE);

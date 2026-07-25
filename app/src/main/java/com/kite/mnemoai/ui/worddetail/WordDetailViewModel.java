@@ -14,17 +14,16 @@ import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.UserSettingRepository;
 import com.kite.mnemoai.data.repository.WordRepository;
+import com.kite.mnemoai.ui.model.LoadingState;
 import com.kite.mnemoai.ui.reciteword.WordDetailStatus;
 
 public class WordDetailViewModel extends ViewModel {
     private MediatorLiveData<WordDetailUIState> uiState = new MediatorLiveData<>();
     private WordRepository wordRepository;
     private UserSettingRepository userSettingRepository;
-
     private String apiKey;
-    private WordDetailStatus wordDetailStatus = WordDetailStatus.hide;
-
     private WordDetailInfo wordDetailInfo;
+    private LoadingState<String> aiMnemonicLoadingState;
     public WordDetailViewModel(WordRepository wordRepository,
                                UserSettingRepository userSettingRepository,
                                SavedStateHandle savedStateHandle){
@@ -50,25 +49,26 @@ public class WordDetailViewModel extends ViewModel {
     }
 
     private void updateUIState(){
-        uiState.setValue(new WordDetailUIState(wordDetailInfo, wordDetailStatus, apiKey));
+        uiState.setValue(new WordDetailUIState(wordDetailInfo, aiMnemonicLoadingState, apiKey));
     }
 
     public MediatorLiveData<WordDetailUIState> getUiState() {
         return uiState;
     }
-
+    @SuppressWarnings("unchecked")
     public void fetchWordExtract(){
-        wordDetailStatus = WordDetailStatus.loading;
+        this.aiMnemonicLoadingState = LoadingState.Loading.INSTANCE;
         updateUIState();
 
         wordRepository.fetchWordExtract(wordDetailInfo.getWordEntity(), apiKey, new IRepositoryCallback<>() {
-
             @Override
-            public void onComplete(WordExtractEntity wordExtractEntity) {
+            public void onComplete(LoadingState<String> stringLoadingState) {
+                aiMnemonicLoadingState = stringLoadingState;
             }
 
             @Override
             public void onError(Throwable t) {
+                aiMnemonicLoadingState = new LoadingState.Error(t);
             }
         });
     }

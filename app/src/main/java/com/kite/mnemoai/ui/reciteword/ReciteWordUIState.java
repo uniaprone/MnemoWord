@@ -13,7 +13,7 @@ public class ReciteWordUIState {
     private boolean isShowNext;
     private boolean isShowTranslation;
     private boolean isShowDetail;
-    private LoadingState aiMnemonicLoadingState;
+    private LoadingState<String> aiMnemonicLoadingState;
 
     public ReciteWordUIState(ReciteStage reciteStage,
                              List<WordDetailInfo> reciteWordItemStatusOrder,
@@ -22,7 +22,7 @@ public class ReciteWordUIState {
                              boolean isShowNext,
                              boolean isShowTranslation,
                              boolean isShowDetail,
-                             LoadingState aiMnemonicLoadingState) {
+                             LoadingState<String> aiMnemonicLoadingState) {
         this.reciteStage = reciteStage;
         this.reciteWordItemStatusOrder = reciteWordItemStatusOrder;
         this.totalProgress = totalProgress;

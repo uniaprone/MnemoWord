@@ -45,6 +45,7 @@
 
     <ViewFlipper
         android:id="@+id/wordCardVF"
+        android:transitionGroup="false"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:inAnimation="@anim/slide_in_right"
@@ -67,7 +68,8 @@
                 app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp"
-                app:layout_constraintBottom_toTopOf="@+id/aiMnemonicLL"
+
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,15 +78,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="?attr/colorSurfaceContainer">
+                    android:background="?attr/colorSurfaceContainer"
+                    android:orientation="vertical">
+
                     <LinearLayout
                         android:id="@+id/headerLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
                         android:background="?attr/colorSurfaceContainerLowest"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="8dp">
 
                         <com.google.android.material.textview.MaterialTextView
                             android:id="@+id/wordTV"
@@ -132,13 +135,14 @@
 
                         </LinearLayout>
                     </LinearLayout>
+
                     <androidx.core.widget.NestedScrollView
                         android:id="@+id/aiMnemonicNSV"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="?attr/colorSurfaceContainer"
                         android:clipChildren="false"
-                        android:fillViewport="false"
-                        android:background="?attr/colorSurfaceContainer">
+                        android:fillViewport="false">
 
                         <include
                             android:id="@+id/ai_mnemonic"
@@ -149,78 +153,6 @@
                     </androidx.core.widget.NestedScrollView>
                 </LinearLayout>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/aiMnemonicLL"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:strokeWidth="0dp"
-                app:cardElevation="2dp"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginVertical="8dp"
-                app:cardBackgroundColor="?attr/colorTertiaryContainer"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingVertical="8dp"
-                    android:paddingHorizontal="16dp">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_weight="4"
-                        android:elevation="2dp">
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/ai_mnemonic"
-                            android:textSize="@dimen/text_size_title_medium"
-                            android:textColor="?attr/colorOnTertiaryContainer"/>
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/ai_help_message"
-                            android:textSize="@dimen/text_size_body_medium"
-                            android:textColor="?attr/colorOnTertiaryContainer"/>
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/generateAIMnemonicBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="10dp"
-                        app:backgroundTint="?attr/colorTertiary"
-                        android:text="@string/generate_mnemonic"
-                        android:textSize="@dimen/text_size_body_medium"
-                        android:textColor="?attr/colorOnTertiary"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/communicateWithAIBtn"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:minHeight="0dp"
-                        android:minWidth="0dp"
-                        android:paddingHorizontal="10dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_weight="1"
-                        app:backgroundTint="?attr/colorTertiary"
-                        android:text="@string/communicate_with_ai"
-                        android:textSize="@dimen/text_size_body_medium"
-                        android:textColor="?attr/colorOnTertiary"/>
-
-                </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
