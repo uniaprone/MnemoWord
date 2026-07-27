@@ -11,6 +11,7 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
+import com.google.android.material.color.MaterialColors;
 import com.kite.mnemoai.MainApplication;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
@@ -19,6 +20,7 @@ import com.kite.mnemoai.data.repository.WordRepository;
 import com.kite.mnemoai.ui.mine.model.MineBaseItem;
 import com.kite.mnemoai.ui.mine.model.MineSelectorItem;
 import com.kite.mnemoai.ui.mine.model.MineTextItem;
+import com.kite.mnemoai.ui.model.LoadingState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.Objects;
 public class MineViewModel extends ViewModel {
     private MediatorLiveData<MineUIState> _uiStatus = new MediatorLiveData<>();
     private List<MineBaseItem> mineBaseItems = new ArrayList<>();
+    private LoadingState<String> apiTestState = null;
     private WordRepository wordRepository;
     private UserSettingRepository userSettingRepository;
 
@@ -93,8 +96,21 @@ public class MineViewModel extends ViewModel {
         return lastSelectedIndex;
     }
 
-    public void apiKeyTest(String apiKey, IRepositoryCallback<Boolean> callback){
-        wordRepository.apiKeyValidTest(apiKey, callback);
+    public void apiKeyTest(String apiKey){
+        wordRepository.apiKeyValidTest(apiKey, new IRepositoryCallback<LoadingState<String>>() {
+            @Override
+            public void onComplete(LoadingState<String> stringLoadingState) {
+                apiTestState = stringLoadingState;
+                if(apiTestState instanceof LoadingState.Success){
+                    saveApiKey(apiKey);
+                }
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                apiTestState = new LoadingState.Error(t);
+            }
+        });
     }
 
     public void saveApiKey(String apiKey){
@@ -102,7 +118,7 @@ public class MineViewModel extends ViewModel {
     }
 
     private void updateUIStatus(){
-        _uiStatus.setValue(new MineUIState(mineBaseItems));
+        _uiStatus.setValue(new MineUIState(mineBaseItems, apiTestState));
     }
 
     public LiveData<MineUIState> getUIStatus() {

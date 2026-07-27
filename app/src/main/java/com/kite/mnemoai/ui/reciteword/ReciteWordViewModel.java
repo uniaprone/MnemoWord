@@ -4,6 +4,7 @@ import static androidx.lifecycle.SavedStateHandleSupport.createSavedStateHandle;
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -128,6 +129,7 @@ public class ReciteWordViewModel extends ViewModel {
                 long wordId = wordDetailInfo.getWordEntity().getId();
                 if(newPlanMap.get(wordId) == null){
                     iterator.remove();
+                    isShowNext = true;
                 }
             }
 
@@ -150,6 +152,7 @@ public class ReciteWordViewModel extends ViewModel {
                         int insertIndex = random.nextInt(orderSize) + 1;
                         this.reciteWordDetailInfoItemUIState.add(insertIndex, newPlan);
                     }
+                    isShowNext = true;
                 }else{
                     //赋新值
                     oldStatus.setWordEntity(newPlan.getWordEntity());

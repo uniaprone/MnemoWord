@@ -21,6 +21,7 @@ import com.kite.mnemoai.databinding.FragmentMineBinding;
 import com.kite.mnemoai.ui.dialog.apikeysetting.ApiKeySettingDialogFragment;
 import com.kite.mnemoai.stateholder.BannerControl;
 import com.kite.mnemoai.ui.main.MainViewModel;
+import com.kite.mnemoai.ui.model.LoadingState;
 
 public class MineFragment extends Fragment {
     private FragmentMineBinding binding;
@@ -55,31 +56,7 @@ public class MineFragment extends Fragment {
                 binding.settingInfoTV.setText("正在测试API Key是否可用");
                 binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
                 binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
-                viewModel.apiKeyTest(apiKey, new IRepositoryCallback<Boolean>() {
-                    @Override
-                    public void onComplete(Boolean aBoolean) {
-                        if(aBoolean){
-                            binding.settingInfoTV.setText("测试成功，API Key可用");
-                            binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
-                            binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
-                            bannerControl.startTimer(3000);
-                            viewModel.saveApiKey(apiKey);
-                        }else{
-                            binding.settingInfoTV.setText("测试成功，API Key不可用");
-                            binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorErrorContainer));
-                            binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnErrorContainer));
-                            bannerControl.startTimer(3000);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable t) {
-                        binding.settingInfoTV.setText("测试失败，请稍后再试");
-                        binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorErrorContainer));
-                        binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnErrorContainer));
-                        bannerControl.startTimer(3000);
-                    }
-                });
+                viewModel.apiKeyTest(apiKey);
             }
         });
 
@@ -91,6 +68,19 @@ public class MineFragment extends Fragment {
             public void onChanged(MineUIState mineUIState) {
                 if(mineUIState == null) return;
                 adapter.setMineBaseItems(mineUIState.getMineBaseItems());
+                if(mineUIState.getApiTestState() != null){
+                    if(mineUIState.getApiTestState() instanceof LoadingState.Success){
+                        binding.settingInfoTV.setText(((LoadingState.Success<String>) mineUIState.getApiTestState()).getData());
+                        binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
+                        binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
+                        bannerControl.startTimer(3000);
+                    } else if (mineUIState.getApiTestState() instanceof LoadingState.Error) {
+                        binding.settingInfoTV.setText("测试失败，请稍后再试");
+                        binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorErrorContainer));
+                        binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnErrorContainer));
+                        bannerControl.startTimer(3000);
+                    }
+                }
             }
         });
 

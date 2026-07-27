@@ -207,14 +207,14 @@ public class WordRepository {
         });
     }
 
-    public void apiKeyValidTest(String apiKey, IRepositoryCallback<Boolean> callback){
+    public void apiKeyValidTest(String apiKey, IRepositoryCallback<LoadingState<String>> callback){
         DeepseekService.Factory.getInstance().deepseekConnectiveTest(new DeepseekRequestBody("hello",false), "Bearer " + apiKey).enqueue(new Callback<DeepseekResponseBody>() {
             @Override
             public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
                 if(response.isSuccessful() && response.body() != null){
-                    handler.post(() -> callback.onComplete(true));
+                    handler.post(() -> callback.onComplete(new LoadingState.Success<>("测试成功，API Key可用")));
                 }else{
-                    handler.post(() -> callback.onComplete(false));
+                    handler.post(() -> callback.onComplete(new LoadingState.Error(new Throwable("测试成功，API Key不可用"))));
                 }
             }
 
