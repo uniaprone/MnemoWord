@@ -1,4 +1,4 @@
-package com.kite.mnemoai.adapter;
+package com.kite.mnemoai.ui.mine;
 
 import android.content.Context;
 import android.view.LayoutInflater;

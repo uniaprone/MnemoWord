@@ -83,6 +83,7 @@ class SegmentedControl @JvmOverloads constructor(
 
                 cornerRadius = 0
 
+                rippleColor = null
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.MATCH_PARENT

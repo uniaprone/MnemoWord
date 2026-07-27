@@ -15,10 +15,18 @@
             android:label="VocabularyFragment">
             <action
                 android:id="@+id/action_vocabularyFragment_to_vocabularyGroupFragment"
-                app:destination="@id/vocabularyGroupFragment" />
+                app:destination="@id/vocabularyGroupFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right" />
             <action
                 android:id="@+id/action_vocabularyFragment_to_searchFragment"
-                app:destination="@id/searchFragment" />
+                app:destination="@id/searchFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
         </fragment>
         <fragment
             android:id="@+id/vocabularyGroupFragment"
@@ -30,10 +38,18 @@
                 android:defaultValue="0L" />
             <action
                 android:id="@+id/action_vocabularyGroupFragment_to_wordDetailFragment"
-                app:destination="@id/wordDetailFragment" />
+                app:destination="@id/wordDetailFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
             <action
                 android:id="@+id/action_vocabularyGroupFragment_to_changeVocabularyBookWordFragment"
-                app:destination="@id/changeVocabularyBookWordFragment" />
+                app:destination="@id/changeVocabularyBookWordFragment"
+                app:enterAnim="@anim/slide_in_right"
+                app:exitAnim="@anim/slide_out_left"
+                app:popEnterAnim="@anim/slide_in_left"
+                app:popExitAnim="@anim/slide_out_right"/>
         </fragment>
     <fragment
         android:id="@+id/wordDetailFragment"
@@ -58,7 +74,11 @@
         android:label="SearchFragment" >
         <action
             android:id="@+id/action_searchFragment_to_wordDetailFragment"
-            app:destination="@id/wordDetailFragment" />
+            app:destination="@id/wordDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/changeVocabularyBookWordFragment"

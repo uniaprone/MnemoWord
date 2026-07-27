@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.color.MaterialColors;
-import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
-import com.kite.mnemoai.adapter.MineAdapter;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.databinding.FragmentMineBinding;
 import com.kite.mnemoai.ui.dialog.apikeysetting.ApiKeySettingDialogFragment;
