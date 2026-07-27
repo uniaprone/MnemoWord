@@ -1,19 +1,15 @@
 package com.kite.mnemoai.ui.dialog.vocabularyselect
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kite.mnemoai.R
 import com.kite.mnemoai.adapter.VocabularySelectAdapter
 import com.kite.mnemoai.databinding.DialogFragmentVocabularySelectBinding
-import java.util.stream.Collectors
-import kotlin.collections.toLongArray
 
 class VocabularySelectDialogFragment: DialogFragment() {
     private lateinit var vocabularySelectInfos: MutableList<VocabularySelectInfo?>
@@ -59,6 +55,7 @@ class VocabularySelectDialogFragment: DialogFragment() {
                     putLongArray("ids", ids)
                 }
                 parentFragmentManager.setFragmentResult(VOCABULARY_BOOK_SELECT, bundle)
+                dismiss()
             }
             val builder = MaterialAlertDialogBuilder(it, R.style.CustomAlertDialog)
             builder.setView(binding.root)

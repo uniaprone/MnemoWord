@@ -1,6 +1,7 @@
 package com.kite.mnemoai.ui.vocabularybookwords;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,9 +43,6 @@ public class VocabularyWordsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        mainViewModel.setShowNavIcon(true);
-
         binding = FragmentCollectionLearningWordsBinding.inflate(inflater, container, false);
         int status = getArguments().getInt("status", 0);
         viewModel = new ViewModelProvider(requireParentFragment(), ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
@@ -66,30 +64,28 @@ public class VocabularyWordsFragment extends Fragment {
             @Override
             public void onChanged(VocabularyGroupUIState vocabularyGroupUIState) {
                 if(vocabularyGroupUIState == null) return;
-                if(vocabularyGroupUIState.getWords() == null) return;
-                List<WordListItem> wordListItems = vocabularyGroupUIState.getWords();
-                switch (status){
-                    case 0: break;
-                    case 1:
-                        wordListItems = wordListItems.stream()
-                                .filter((wordListItem -> wordListItem.getReviewState() == 0))
-                                .collect(Collectors.toList());
-                        break;
-                    case 2:
-                        wordListItems = wordListItems.stream()
-                                .filter((wordListItem -> wordListItem.getReviewState() == 1))
-                                .collect(Collectors.toList());
-                        break;
-                    case 3:
-                        wordListItems = wordListItems.stream()
-                                .filter((wordListItem -> wordListItem.getReviewState() == 2))
-                                .collect(Collectors.toList());
-                        break;
+                if(vocabularyGroupUIState.getWords() != null){
+                    List<WordListItem> wordListItems = vocabularyGroupUIState.getWords();
+                    switch (status){
+                        case 0: break;
+                        case 1:
+                            wordListItems = wordListItems.stream()
+                                    .filter((wordListItem -> wordListItem.getReviewState() == 0))
+                                    .collect(Collectors.toList());
+                            break;
+                        case 2:
+                            wordListItems = wordListItems.stream()
+                                    .filter((wordListItem -> wordListItem.getReviewState() == 1))
+                                    .collect(Collectors.toList());
+                            break;
+                        case 3:
+                            wordListItems = wordListItems.stream()
+                                    .filter((wordListItem -> wordListItem.getReviewState() == 2))
+                                    .collect(Collectors.toList());
+                            break;
+                    }
+                    wordListAdapter.setWords(wordListItems);
                 }
-                wordListAdapter.setWords(wordListItems);
-                if(vocabularyGroupUIState.getGroup() == null || vocabularyGroupUIState.getGroup().getName() == null) return;
-                mainViewModel.settitle(vocabularyGroupUIState.getGroup().getName());
-
             }
         });
 

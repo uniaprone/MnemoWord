@@ -1,6 +1,7 @@
 package com.kite.mnemoai.ui.changevocabularybookword
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,7 +63,8 @@ class ChangeVocabularyBookWordFragment: Fragment() {
         })
 
         binding.addRemoveOptionMenu.setOnClickListener { v ->
-            val popupMenu = this.context?.let { PopupMenu(it, v) }
+            val popupMenu = this.context?.let { PopupMenu(it, v, Gravity.NO_GRAVITY,
+                0, R.style.OverflowMenuStyle) }
             popupMenu?.inflate(R.menu.vocabulary_book_change_option_menu)
             popupMenu?.setOnMenuItemClickListener { item ->
                 when(item.itemId){

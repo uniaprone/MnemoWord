@@ -56,19 +56,19 @@
                                     app:chipStartPadding="0dp"
                                     app:ensureMinTouchTargetSize="false" />
 
-                                <com.google.android.material.chip.Chip
-                                    android:id="@+id/communicateWithAIChip"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/communicate_with_ai"
-                                    android:textColor="?attr/colorOnTertiaryContainer"
-                                    android:textSize="@dimen/text_size_body_small"
-                                    app:chipBackgroundColor="?attr/colorTertiaryContainer"
-                                    app:chipStrokeColor="?attr/colorOutline"
-                                    app:chipCornerRadius="16dp"
-                                    app:chipEndPadding="0dp"
-                                    app:chipStartPadding="0dp"
-                                    app:ensureMinTouchTargetSize="false" />
+<!--                                <com.google.android.material.chip.Chip-->
+<!--                                    android:id="@+id/communicateWithAIChip"-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="@string/communicate_with_ai"-->
+<!--                                    android:textColor="?attr/colorOnTertiaryContainer"-->
+<!--                                    android:textSize="@dimen/text_size_body_small"-->
+<!--                                    app:chipBackgroundColor="?attr/colorTertiaryContainer"-->
+<!--                                    app:chipStrokeColor="?attr/colorOutline"-->
+<!--                                    app:chipCornerRadius="16dp"-->
+<!--                                    app:chipEndPadding="0dp"-->
+<!--                                    app:chipStartPadding="0dp"-->
+<!--                                    app:ensureMinTouchTargetSize="false" />-->
                         </com.google.android.material.chip.ChipGroup>
                 </androidx.constraintlayout.widget.ConstraintLayout>
                 <LinearLayout

@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 class MainViewModel: ViewModel() {
     private val _uiState: MutableLiveData<MainUIState> = MutableLiveData<MainUIState>()
     val uiState: LiveData<MainUIState> get() = _uiState
-    private var title: String = ""
+    private var title: String = "1"
     private var isShowNavIcon = false
 
     fun settitle(title: String){

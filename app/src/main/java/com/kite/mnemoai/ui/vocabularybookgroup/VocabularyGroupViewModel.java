@@ -55,7 +55,7 @@ public class VocabularyGroupViewModel extends ViewModel {
     }
 
     public void modifyVocabularyBook(String name, String desc){
-        groupRepository.addNewOrModifyVocabularyBook(new GroupEntity(group.getId(), name, desc, group.isLearning(), group.getCreateTime()));
+        groupRepository.modifyVocabularyBook(new GroupEntity(group.getId(), name, desc, group.isLearning(), group.getCreateTime()));
     }
 
     public void setVocabularyBookLearningStatus(int status){

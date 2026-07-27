@@ -71,6 +71,7 @@
         <item name="wordReviewing">@color/reviewing</item>
         <item name="wordMastered">@color/mastered</item>
 
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
     </style>
 
 </resources>

@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.kite.mnemoai.data.local.entity.GroupEntity;
 import com.kite.mnemoai.data.model.GroupDetail;
@@ -18,6 +19,9 @@ import java.util.List;
 public interface GroupDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertGroup(GroupEntity groupEntity);
+
+    @Update
+    void updateGroup(GroupEntity groupEntity);
 
     @Delete
     public void deleteGroup(GroupEntity groupEntity);

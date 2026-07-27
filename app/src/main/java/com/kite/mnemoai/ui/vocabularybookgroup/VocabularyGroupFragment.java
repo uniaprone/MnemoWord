@@ -1,6 +1,7 @@
 package com.kite.mnemoai.ui.vocabularybookgroup;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,7 @@ import com.kite.mnemoai.adapter.LearningStatusWordAdapter;
 import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.databinding.FragmentVocabularyGroupBinding;
 import com.kite.mnemoai.ui.dialog.settingandaddnewvocabularybook.SettingAndAddNewVocabularyBookDialogFragment;
+import com.kite.mnemoai.ui.main.MainViewModel;
 
 import java.util.List;
 
@@ -35,11 +37,13 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
     private static final String MODIFY_KEY = "modifyVocabularyBookConfirm";
     private FragmentVocabularyGroupBinding binding;
     private VocabularyGroupViewModel viewModel;
+    private MainViewModel mainViewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.setShowNavIcon(true);
 
         binding = FragmentVocabularyGroupBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
@@ -67,55 +71,42 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
         viewModel.getUiState().observe(getViewLifecycleOwner(), new Observer<VocabularyGroupUIState>() {
             @Override
             public void onChanged(VocabularyGroupUIState vocabularyGroupUIState) {
-                if(vocabularyGroupUIState == null || vocabularyGroupUIState.getWords() == null) return;
-                List<WordListItem> listItems = vocabularyGroupUIState.getWords();
-                long allCount = listItems.size();
-                long learningCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 0).count();
-                long reviewingCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 1).count();
-                long masteredCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 2).count();
-                new TabLayoutMediator(tabLayout, viewPager2, ((tab, position) -> {
-                    switch (position){
-                        case 0:
-                            tab.setText(getString(R.string.all_word, allCount));
-                            break;
-                        case 1:
-                            tab.setText(getString(R.string.learning_count, learningCount));
-                            break;
-                        case 2:
-                            tab.setText(getString(R.string.reviewing_count, reviewingCount));
-                            break;
-                        case 3:
-                            tab.setText(getString(R.string.mastered_count, masteredCount));
-                            break;
-                    }
-                })).attach();
+                if(vocabularyGroupUIState == null) return;
+                if(vocabularyGroupUIState.getWords() != null){
+                    List<WordListItem> listItems = vocabularyGroupUIState.getWords();
+                    long allCount = listItems.size();
+                    long learningCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 0).count();
+                    long reviewingCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 1).count();
+                    long masteredCount = listItems.stream().filter(wordListItem -> wordListItem.getReviewState() == 2).count();
+                    new TabLayoutMediator(tabLayout, viewPager2, ((tab, position) -> {
+                        switch (position){
+                            case 0:
+                                tab.setText(getString(R.string.all_word, allCount));
+                                break;
+                            case 1:
+                                tab.setText(getString(R.string.learning_count, learningCount));
+                                break;
+                            case 2:
+                                tab.setText(getString(R.string.reviewing_count, reviewingCount));
+                                break;
+                            case 3:
+                                tab.setText(getString(R.string.mastered_count, masteredCount));
+                                break;
+                        }
+                    })).attach();
+                }
+                if(vocabularyGroupUIState.getGroup() != null){
+                    Log.d("名称2", vocabularyGroupUIState.getGroup().getName());
+                    mainViewModel.settitle(vocabularyGroupUIState.getGroup().getName());
+                }
             }
         });
-    }
-
-    public void onResume() {
-        super.onResume();
-        viewInit();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    private void viewInit(){
-        setupToolbar();
-    }
-
-    private void setupToolbar(){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText("");
-    }
-
-    private void setupTitle(String title){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText(title);
     }
 
     @Override

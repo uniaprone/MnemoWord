@@ -55,13 +55,18 @@ public class MainActivity extends AppCompatActivity {
                 });
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                navController.navigateUp();
+            }
+        });
         viewmodel.getUiState().observe(this, new Observer<MainUIState>() {
             @Override
             public void onChanged(MainUIState mainUIState) {
                 if(mainUIState == null) return;
                 Objects.requireNonNull(getSupportActionBar()).setTitle(mainUIState.getTitle());
-                Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(mainUIState.isShowNavIcon());
+                getSupportActionBar().setDisplayHomeAsUpEnabled(mainUIState.isShowNavIcon());
             }
         });
 
@@ -89,14 +94,5 @@ public class MainActivity extends AppCompatActivity {
         if(isSuccess) Log.d("Navigationaaa", "返回成功: " + true);
         else Log.d("Navigationaaa", "返回失败: " + false);
         return isSuccess;
-    }
-
-
-    public void setTitleText(int titleResource){
-        binding.toolbar.setTitle(titleResource);
-    }
-
-    public void setTitleText(String title){
-        binding.toolbar.setTitle(title);
     }
 }

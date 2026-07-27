@@ -70,6 +70,10 @@ public class GroupRepository {
         executors.execute(() -> groupDao.insertGroup(groupEntity));
     }
 
+    public void modifyVocabularyBook(GroupEntity groupEntity){
+        executors.execute(() -> groupDao.updateGroup(groupEntity));
+    }
+
     public void deleteGroup(long id){
         executors.execute(() -> groupDao.deleteGroupById(id));
     }

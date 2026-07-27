@@ -60,5 +60,7 @@
         <item name="wordReviewing">@color/reviewing_dark</item>
         <item name="wordMastered">@color/mastered_dark</item>
 
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+
     </style>
 </resources>

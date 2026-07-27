@@ -106,7 +106,7 @@ public class VocabularyFragment extends Fragment{
             public void onClick(View view) {
                 viewModel.getVocabularySelectedInfo(vocabularySelectInfos -> {
                     VocabularySelectDialogFragment dialogFragment = VocabularySelectDialogFragment.Companion.newInstance(vocabularySelectInfos);
-                    dialogFragment.show(getParentFragmentManager(), "vocabularySelect");
+                    dialogFragment.show(getChildFragmentManager(), "vocabularySelect");
                 });
             }
         });

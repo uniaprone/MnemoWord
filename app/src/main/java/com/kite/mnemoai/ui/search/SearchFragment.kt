@@ -1,9 +1,12 @@
 package com.kite.mnemoai.ui.search
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +20,7 @@ import com.kite.mnemoai.ui.main.MainViewModel
 import androidx.navigation.findNavController
 
 class SearchFragment: Fragment() {
+    private lateinit var binding: FragmentSearchBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -24,9 +28,9 @@ class SearchFragment: Fragment() {
     ): View {
         val mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class]
         mainViewModel.settitle(resources.getString(R.string.search))
-        mainViewModel.setShowNavIcon(false)
+        mainViewModel.setShowNavIcon(true)
 
-        val binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
+        binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         val viewModel: SearchViewModel = ViewModelProvider(
             this,
             ViewModelProvider.Factory.from(SearchViewModel.initializer)
@@ -64,9 +68,26 @@ class SearchFragment: Fragment() {
                 }
                 return true
             }
-
         })
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 确保 SearchView 处于展开状态（非图标化）
+        binding.searchSV.isIconified = false
+
+        binding.searchSV.post {
+            // 获取 SearchView 内部的 EditText (兼容 AndroidX)
+            val editText = binding.searchSV.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+            editText?.let {
+                it.requestFocus()
+                it.isFocusable = true
+                it.isFocusableInTouchMode = true
+                val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
     }
 }

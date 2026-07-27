@@ -47,7 +47,7 @@ class ApiKeySettingDialogFragment: DialogFragment() {
         binding.apiKeyET.post {
             binding.apiKeyET.requestFocus()
             val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.apiKeyET, InputMethodManager.SHOW_FORCED)
+            imm.showSoftInput(binding.apiKeyET, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 }

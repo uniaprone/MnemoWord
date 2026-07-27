@@ -79,4 +79,10 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.Material3.PopupMenu.Overflow">
+        <!-- 强制不重叠锚点，菜单将在按钮下方显示 -->
+        <item name="android:overlapAnchor">false</item>
+        <item name="android:popupBackground">@drawable/bg_overflow_menu</item>
+    </style>
 </resources>
