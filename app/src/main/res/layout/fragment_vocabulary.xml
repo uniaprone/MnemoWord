@@ -339,6 +339,8 @@
                         android:textSize="@dimen/text_size_label_medium"
                         android:textColor="?attr/colorOnSurfaceVariant"
 
+                        app:strokeWidth="0.5dp"
+                        app:strokeColor="?attr/colorOutlineVariant"
                         app:backgroundTint="?attr/colorTertiaryContainer"
 
                         app:icon="@drawable/baseline_add_24"
@@ -423,6 +425,8 @@
                         android:textSize="@dimen/text_size_label_medium"
                         android:textColor="?attr/colorOnSurfaceVariant"
 
+                        app:strokeWidth="0.5dp"
+                        app:strokeColor="?attr/colorOutlineVariant"
                         app:backgroundTint="?attr/colorTertiaryContainer"
 
                         app:icon="@drawable/baseline_add_24"

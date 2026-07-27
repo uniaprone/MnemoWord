@@ -29,11 +29,11 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
         }
 
         public void binding(VocabularySelectDialogFragment.VocabularySelectInfo vocabularySelectInfo){
-            String groupName = vocabularySelectInfo.getName();
+            String groupName = vocabularySelectInfo.name;
             groupName = StringConvert.convertVocabularyName(groupName);
             binding.vocabularyNameTV.setText(groupName);
-            binding.vocabularyDescribe.setText(vocabularySelectInfo.getDescription());
-            if(vocabularySelectInfo.isSelect()){
+            binding.vocabularyDescribe.setText(vocabularySelectInfo.description);
+            if(vocabularySelectInfo.isSelect){
                 binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_24);
             }else{
                 binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_outline_blank_24);
@@ -41,8 +41,8 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
             binding.vocabularySelectCL.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    vocabularySelectInfo.setSelect(!vocabularySelectInfo.isSelect());
-                    if(vocabularySelectInfo.isSelect()){
+                    vocabularySelectInfo.isSelect = !vocabularySelectInfo.isSelect;
+                    if(vocabularySelectInfo.isSelect){
                         binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_24);
                     }else{
                         binding.vocabularyCheckboxIV.setImageResource(R.drawable.baseline_check_box_outline_blank_24);

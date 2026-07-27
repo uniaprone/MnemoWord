@@ -11,7 +11,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/colorPrimaryContainer"
         android:visibility="gone">
 
         <com.google.android.material.textview.MaterialTextView
@@ -19,7 +19,8 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"/>
+            android:padding="8dp"
+            android:textSize="@dimen/text_size_body_medium"/>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

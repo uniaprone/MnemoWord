@@ -146,7 +146,7 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
         int id = menuItem.getItemId();
         if(id == R.id.modifyGroup){
             SettingAndAddNewVocabularyBookDialogFragment dialogFragment =
-                    SettingAndAddNewVocabularyBookDialogFragment.Companion.newInstance(viewModel.getGroup().getName(),viewModel.getGroup().getDescription());
+                    SettingAndAddNewVocabularyBookDialogFragment.Companion.newInstance((byte)0, viewModel.getGroup().getName(),viewModel.getGroup().getDescription());
             dialogFragment.show(getChildFragmentManager(), "MODIFYVELOCABULARYBOOK");
         } else if (id == R.id.setLearning) {
             int learningStatus = viewModel.getGroup().isLearning();

@@ -24,7 +24,10 @@ import com.kite.mnemoai.ui.dialog.newlearningwordsetting.NewLearningWordSettingD
 import com.kite.mnemoai.ui.dialog.vocabularyselect.VocabularySelectDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -55,13 +58,14 @@ public class VocabularyFragment extends Fragment{
         binding.newLearningWordLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DialogFragment dialogFragment = new NewLearningWordSettingDialogFragment(new NewLearningWordSettingDialogFragment.IConfirmListener() {
-                    @Override
-                    public void onConfirm(int count) {
-                        viewModel.setNewLearningWordCount(count);
-                    }
-                });
-                dialogFragment.show(getParentFragmentManager(), "NEWLEARNINGCOUNTSETTING");
+                NewLearningWordSettingDialogFragment dialogFragment = NewLearningWordSettingDialogFragment.Companion.newInstance(viewModel.getNewLearningWordCount());
+                dialogFragment.show(getChildFragmentManager(), "NEWLEARNINGCOUNTSETTING");
+            }
+        });
+        getChildFragmentManager().setFragmentResultListener(NewLearningWordSettingDialogFragment.NEW_LEARNING_COUNT_SETTING, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                viewModel.setNewLearningWordCount(result.getInt("new_learning_count", 20));
             }
         });
 
@@ -95,12 +99,22 @@ public class VocabularyFragment extends Fragment{
         binding.addVocabularyTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showVocabularySelectDialog();
+                viewModel.getVocabularySelectedInfo(vocabularySelectInfos -> {
+                    VocabularySelectDialogFragment dialogFragment = VocabularySelectDialogFragment.Companion.newInstance(vocabularySelectInfos);
+                    dialogFragment.show(getParentFragmentManager(), "vocabularySelect");
+                });
+            }
+        });
+
+        getChildFragmentManager().setFragmentResultListener(VocabularySelectDialogFragment.VOCABULARY_BOOK_SELECT, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                viewModel.addLearningGroups(Arrays.stream(Objects.requireNonNull(result.getLongArray("ids"))).boxed().collect(Collectors.toList()));
             }
         });
 
         binding.addNewVocabularyBookBtn.setOnClickListener(v -> {
-            SettingAndAddNewVocabularyBookDialogFragment dialogFragment = new SettingAndAddNewVocabularyBookDialogFragment();
+            SettingAndAddNewVocabularyBookDialogFragment dialogFragment = SettingAndAddNewVocabularyBookDialogFragment.Companion.newInstance((byte)1, null, null);
             dialogFragment.show(getChildFragmentManager(), "ADDNEWVOCABULARYBOOK");
         });
 
@@ -170,24 +184,5 @@ public class VocabularyFragment extends Fragment{
     private void setupToolbar(){
         MainActivity mainActivity = (MainActivity) requireActivity();
         mainActivity.setTitleText(R.string.vocabulary_book);
-    }
-
-    private void showVocabularySelectDialog() {
-        viewModel.getVocabularySelectedInfo(vocabularySelectInfos -> {
-            DialogFragment dialogFragment = new VocabularySelectDialogFragment(
-                    vocabularySelectInfos,
-                    new VocabularySelectDialogFragment.IVocabularySelectListener() {
-                        @Override
-                        public void onConfirm(List<Long> ids) {
-                            viewModel.addLearningGroups(ids);
-                        }
-                        @Override
-                        public void onNavigate(DialogFragment dialogFragment) {
-                            // 跳转逻辑
-                        }
-                    }
-            );
-            dialogFragment.show(getParentFragmentManager(), "vocabularySelect");
-        });
     }
 }

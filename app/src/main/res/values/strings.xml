@@ -54,7 +54,7 @@
     <string name="get_ai_mnemonic_error">获取 AI 助记失败，请稍后再试</string>
     <string name="setting_title_api_key">API key</string>
     <string name="name">名称:</string>
-    <string name="description">描述</string>
+    <string name="description">描述:</string>
     <string name="add_new_vocabulary">添加新单词本</string>
     <string name="change_vocabulary_ook">修改单词本</string>
     <string name="join_learning">加入学习</string>
@@ -80,4 +80,7 @@
     <string name="blurTimes_count">模糊%d次</string>
     <string name="forgetTimes_count">忘记%d次</string>
     <string name="ai_thinking">AI思考中……</string>
+    <string name="add_learning_vocabulary_book">添加学习词汇</string>
+    <string name="choose_vocabulary_book">选择单词本</string>
+    <string name="modify_vocabulary_book">修改单词本</string>
 </resources>

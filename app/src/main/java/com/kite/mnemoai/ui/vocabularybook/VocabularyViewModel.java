@@ -99,8 +99,8 @@ public class VocabularyViewModel extends ViewModel {
         groupRepository.addNewOrModifyVocabularyBook(new GroupEntity(name, desc, 0, timestamp));
     }
 
-    public void performSearch(String searchText, IRepositoryCallback<List<WordListItem>> callback){
-        wordRepository.performSearch(searchText, callback);
+    public int getNewLearningWordCount() {
+        return newLearningWordCount;
     }
 
     public static final ViewModelInitializer<VocabularyViewModel> initializer = new ViewModelInitializer<>(

@@ -209,12 +209,16 @@ public class ReciteWordFragment extends Fragment{
         if(aiMnemonicLoadingState instanceof LoadingState.Loading){
             bannerControl.show();
             binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setText(getResources().getString(R.string.ai_thinking));
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner.setBackgroundColor(MaterialColors.getColor(binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner, com.google.android.material.R.attr.colorPrimaryContainer));
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setTextColor(MaterialColors.getColor(binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
         } else if (aiMnemonicLoadingState instanceof LoadingState.Success) {
             bannerControl.hide();
         }else if(aiMnemonicLoadingState instanceof LoadingState.Error){
             data = ((LoadingState.Error) aiMnemonicLoadingState).getException().getMessage();
             bannerControl.startTimer(3000);
             binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setText(data);
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner.setBackgroundColor(MaterialColors.getColor(binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner, com.google.android.material.R.attr.colorErrorContainer));
+            binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV.setTextColor(MaterialColors.getColor(binding.statusReciteWordOK.aiMnemonic.AIGenerateResultTV, com.google.android.material.R.attr.colorOnErrorContainer));
         }
 
         if(currentWordExtract == null){
@@ -223,7 +227,7 @@ public class ReciteWordFragment extends Fragment{
         }else{
             binding.statusReciteWordOK.aiMnemonic.extractContent.setVisibility(View.VISIBLE);
             binding.statusReciteWordOK.aiMnemonic.noExtractContent.setVisibility(View.GONE);
-            int textColor = MaterialColors.getColor(view, com.google.android.material.R.attr.colorOnSurface);
+            int textColor = MaterialColors.getColor(view, R.attr.colorOnSurface);
             binding.statusReciteWordOK.aiMnemonic.coreImageTV.setText(currentWordExtract.getExtract().getCoreImage());
             binding.statusReciteWordOK.aiMnemonic.affixTV.setText(currentWordExtract.getExtract().getAffix().toString());
             binding.statusReciteWordOK.aiMnemonic.explainTV.setText(currentWordExtract.getExtract().getExplain());

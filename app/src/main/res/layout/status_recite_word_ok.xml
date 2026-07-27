@@ -45,7 +45,6 @@
 
     <ViewFlipper
         android:id="@+id/wordCardVF"
-        android:transitionGroup="false"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:inAnimation="@anim/slide_in_right"

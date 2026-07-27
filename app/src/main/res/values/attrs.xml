@@ -25,6 +25,7 @@
     <attr name="wordAwaitingLearning" format="color|reference"/>
     <attr name="wordReviewing" format="color|reference"/>
     <attr name="wordMastered" format="color|reference"/>
+
     <attr name="colorPrimary" format="color|reference"/>
     <attr name="colorOnPrimary" format="color|reference"/>
     <attr name="colorPrimaryContainer" format="color|reference"/>
@@ -34,6 +35,8 @@
     <attr name="colorTertiary" format="color|reference"/>
 
     <attr name="statusBarBackground" format="color|reference"/>
+
+    <attr name="colorOnSurface" format="color|reference"/>
 
     <attr name="colorSurfaceContainerLowest" format="color|reference"/>
 

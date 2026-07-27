@@ -5,47 +5,87 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/apiKeyTitleTV"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/setting_title_api_key"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="@string/setting_title_api_key"
+            android:textSize="@dimen/text_size_title_medium"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/titleDivider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:dividerColor="?attr/colorOutlineVariant" />
+    </LinearLayout>
 
     <EditText
         android:id="@+id/apiKeyET"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="2:1"
-        android:background="@drawable/bg_corner"
         android:gravity="center"
         android:minHeight="80dp"
-        app:layout_constraintBottom_toTopOf="@+id/apiKeyCancelBtn"
+        android:padding="16dp"
+        android:backgroundTint="@android:color/transparent"
+        android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apiKeyTitleTV" />
+        app:layout_constraintTop_toBottomOf="@+id/dialogTitle" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/apiKeyCancelBtn"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/apiKeyConfirmBtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/apiKeyET">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/apiKeyConfirmBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/apiKeyCancelBtn" />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            app:dividerColor="?attr/colorOutlineVariant" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/cancelBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:text="@string/cancel"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_size_body_medium" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                app:dividerColor="?attr/colorOutlineVariant" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirmBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:backgroundTint="@android:color/transparent"
+                android:text="@string/confirm"
+                android:textColor="?attr/colorOnSurface" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 

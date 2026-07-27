@@ -68,4 +68,15 @@
     <style name="TextAppearance.MnemoAI" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="CustomAlertDialog" parent="">
+        <item name="shapeAppearanceOverlay">
+            @style/CustomDialogShape
+        </item>
+    </style>
+
+    <style name="CustomDialogShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
 </resources>
