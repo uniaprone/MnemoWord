@@ -7,15 +7,14 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kite.mnemoai.MainActivity
 import com.kite.mnemoai.R
 import com.kite.mnemoai.data.model.WordListItem
 import com.kite.mnemoai.data.repository.IRepositoryCallback
 import com.kite.mnemoai.databinding.FragmentSearchBinding
 import com.kite.mnemoai.ui.WordListAdapter
-import com.kite.mnemoai.ui.search.SearchViewModel
+import com.kite.mnemoai.ui.main.MainViewModel
+import androidx.navigation.findNavController
 
 class SearchFragment: Fragment() {
     override fun onCreateView(
@@ -23,16 +22,20 @@ class SearchFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class]
+        mainViewModel.settitle(resources.getString(R.string.search))
+        mainViewModel.setShowNavIcon(false)
+
         val binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
         val viewModel: SearchViewModel = ViewModelProvider(
             this,
-            ViewModelProvider.Factory.from(SearchViewModel.Companion.initializer)
+            ViewModelProvider.Factory.from(SearchViewModel.initializer)
         )[SearchViewModel::class.java]
 
         val adapter = WordListAdapter { word ->
             val args = Bundle()
             args.putLong("word_id", word.id)
-            Navigation.findNavController(binding.searchResultRV).navigate(
+            binding.searchResultRV.findNavController().navigate(
                 R.id.action_searchFragment_to_wordDetailFragment, args
             )
         }
@@ -65,19 +68,5 @@ class SearchFragment: Fragment() {
         })
 
         return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewInit()
-    }
-
-    private fun viewInit() {
-        setupToolbar()
-    }
-
-    private fun setupToolbar() {
-        val mainActivity = requireActivity() as MainActivity
-        mainActivity.setTitleText(R.string.search)
     }
 }

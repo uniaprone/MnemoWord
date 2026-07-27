@@ -1,30 +1,28 @@
-package com.kite.mnemoai;
+package com.kite.mnemoai.ui.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.navigation.NavBackStackEntry;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.viewmodel.ViewModelInitializer;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.core.splashscreen.SplashScreen;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationBarView;
+import com.kite.mnemoai.R;
 import com.kite.mnemoai.databinding.ActivityMainBinding;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 //        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
-
+        MainViewModel viewmodel = new ViewModelProvider(this).get(MainViewModel.class);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -57,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
                 });
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
+
+        viewmodel.getUiState().observe(this, new Observer<MainUIState>() {
+            @Override
+            public void onChanged(MainUIState mainUIState) {
+                if(mainUIState == null) return;
+                Objects.requireNonNull(getSupportActionBar()).setTitle(mainUIState.getTitle());
+                Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(mainUIState.isShowNavIcon());
+            }
+        });
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
         assert navHostFragment != null;

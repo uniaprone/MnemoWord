@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kite.mnemoai.R
-import com.kite.mnemoai.adapter.AlterWordListAdapter
+import com.kite.mnemoai.ui.changevocabularybookword.AlterWordListAdapter
 import com.kite.mnemoai.databinding.FragmentChangeVocabularyBookWordBinding
 import com.kite.mnemoai.ui.WordListAdapter
 import com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
@@ -28,7 +28,7 @@ class ChangeVocabularyBookWordFragment: Fragment() {
         val binding = FragmentChangeVocabularyBookWordBinding.inflate(inflater, container, false)
         val viewModel = ViewModelProvider(
             this, ViewModelProvider.Factory.from(
-                ChangeVocabularyBookWordViewModel.Companion.initializer
+                ChangeVocabularyBookWordViewModel.initializer
             )
         )[ChangeVocabularyBookWordViewModel::class.java]
 

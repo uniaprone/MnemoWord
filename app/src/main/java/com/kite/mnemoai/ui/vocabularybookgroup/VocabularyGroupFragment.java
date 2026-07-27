@@ -22,7 +22,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.LearningStatusWordAdapter;
 import com.kite.mnemoai.data.model.WordListItem;
@@ -39,6 +39,8 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
         binding = FragmentVocabularyGroupBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
                 .get(VocabularyGroupViewModel.class);

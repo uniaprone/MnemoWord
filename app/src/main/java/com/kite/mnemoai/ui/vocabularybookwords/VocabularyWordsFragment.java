@@ -14,11 +14,12 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.ui.WordListAdapter;
 import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.databinding.FragmentCollectionLearningWordsBinding;
+import com.kite.mnemoai.ui.main.MainViewModel;
 import com.kite.mnemoai.ui.vocabularybookgroup.VocabularyGroupUIState;
 import com.kite.mnemoai.utils.StringConvert;
 import com.kite.mnemoai.ui.vocabularybookgroup.VocabularyGroupViewModel;
@@ -41,6 +42,9 @@ public class VocabularyWordsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.setShowNavIcon(true);
+
         binding = FragmentCollectionLearningWordsBinding.inflate(inflater, container, false);
         int status = getArguments().getInt("status", 0);
         viewModel = new ViewModelProvider(requireParentFragment(), ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
@@ -84,35 +88,17 @@ public class VocabularyWordsFragment extends Fragment {
                 }
                 wordListAdapter.setWords(wordListItems);
                 if(vocabularyGroupUIState.getGroup() == null || vocabularyGroupUIState.getGroup().getName() == null) return;
-                setupTitle(StringConvert.convertVocabularyName(vocabularyGroupUIState.getGroup().getName()));
+                mainViewModel.settitle(vocabularyGroupUIState.getGroup().getName());
+
             }
         });
 
         return binding.getRoot();
     }
 
-    public void onResume() {
-        super.onResume();
-        viewInit();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    private void viewInit(){
-        setupToolbar();
-    }
-
-    private void setupToolbar(){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText("");
-    }
-
-    private void setupTitle(String title){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText(title);
     }
 }

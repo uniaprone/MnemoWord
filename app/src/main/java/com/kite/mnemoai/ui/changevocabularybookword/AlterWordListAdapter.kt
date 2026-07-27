@@ -1,6 +1,5 @@
-package com.kite.mnemoai.adapter
+package com.kite.mnemoai.ui.changevocabularybookword
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,8 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
 import com.kite.mnemoai.R
 import com.kite.mnemoai.databinding.ItemAlterWordListBinding
-import com.kite.mnemoai.ui.changevocabularybookword.VocabularyBookChangedWord
-import com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
 
 class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Unit):
     ListAdapter<VocabularyBookChangedWord, AlterWordListAdapter.AlterWordViewHolder>(VocabularyBookChangedWord.DIFF_CALLBACK) {
@@ -33,7 +30,7 @@ class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Un
     class AlterWordViewHolder(
         private val binding: ItemAlterWordListBinding,
         private var listener: (VocabularyBookChangedWord) -> Unit
-    ) :RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
         var word: VocabularyBookChangedWord? = null
         init {
             binding.alterWordListItemCardView.setOnClickListener {
@@ -58,9 +55,9 @@ class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Un
             );
             when(word.operation){
                 ChangeVocabularyBookWordUIState.ChangeType.ADD ->
-                    binding.alterWordListItemCardView.setBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, R.attr.colorPrimary))
+                    binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, R.attr.colorPrimaryContainer))
                 ChangeVocabularyBookWordUIState.ChangeType.REMOVE ->
-                    binding.alterWordListItemCardView.setBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, R.attr.colorTertiary))
+                    binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, com.google.android.material.R.attr.colorTertiaryContainer))
             }
 
         }

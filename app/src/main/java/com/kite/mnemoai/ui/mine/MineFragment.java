@@ -15,15 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.color.MaterialColors;
-import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.adapter.MineAdapter;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.databinding.FragmentMineBinding;
 import com.kite.mnemoai.ui.dialog.apikeysetting.ApiKeySettingDialogFragment;
 import com.kite.mnemoai.stateholder.BannerControl;
-
-import org.jetbrains.annotations.NotNull;
+import com.kite.mnemoai.ui.main.MainViewModel;
 
 public class MineFragment extends Fragment {
     private FragmentMineBinding binding;
@@ -32,6 +31,10 @@ public class MineFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.settitle(getResources().getString(R.string.mine));
+        mainViewModel.setShowNavIcon(false);
+
         binding = FragmentMineBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MineViewModel.initializer)).get(MineViewModel.class);
         bannerControl = new BannerControl(binding.infoFL, getLifecycle());
@@ -97,23 +100,8 @@ public class MineFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        viewInit();
-    }
-
-    @Override
     public void onDestroy() {
         binding = null;
         super.onDestroy();
-    }
-
-    private void viewInit(){
-        setupToolbar();
-    }
-
-    private void setupToolbar(){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText(R.string.mine);
     }
 }

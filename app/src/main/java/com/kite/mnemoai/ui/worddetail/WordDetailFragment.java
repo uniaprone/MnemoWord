@@ -39,6 +39,7 @@ import com.kite.mnemoai.databinding.ItemPhraseBinding;
 import com.kite.mnemoai.stateholder.BannerControl;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryAdapter;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryItem;
+import com.kite.mnemoai.ui.main.MainViewModel;
 import com.kite.mnemoai.ui.model.LoadingState;
 import com.kite.mnemoai.ui.reciteword.ReciteWordUIState;
 import com.kite.mnemoai.utils.TimeUtilKt;
@@ -70,6 +71,10 @@ public class WordDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.settitle(getResources().getString(R.string.word_detail));
+        mainViewModel.setShowNavIcon(true);
+
         binding = FragmentWordDetailBinding.inflate(inflater, container, false);
         bannerControl = new BannerControl(binding.aiMnemonic.AIGenerateBanner, this.getLifecycle());
         binding.aiMnemonic.generateAIMnemonicChip.setOnClickListener(new View.OnClickListener() {

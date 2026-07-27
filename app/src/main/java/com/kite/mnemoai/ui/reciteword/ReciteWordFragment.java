@@ -1,14 +1,12 @@
 package com.kite.mnemoai.ui.reciteword;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -21,10 +19,9 @@ import androidx.transition.TransitionManager;
 import androidx.transition.TransitionSet;
 
 import com.google.android.material.color.MaterialColors;
-import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity;
-import com.kite.mnemoai.data.local.entity.ReviewWordEntity;
 import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.model.ExampleSentence;
 import com.kite.mnemoai.data.model.Phrase;
@@ -35,12 +32,11 @@ import com.kite.mnemoai.databinding.ItemPhraseBinding;
 import com.kite.mnemoai.stateholder.BannerControl;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryAdapter;
 import com.kite.mnemoai.ui.adapter.ReviewHistoryItem;
+import com.kite.mnemoai.ui.main.MainViewModel;
 import com.kite.mnemoai.ui.model.LoadingState;
-import com.kite.mnemoai.utils.DensityUtilKt;
 import com.kite.mnemoai.utils.TimeUtilKt;
 
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +56,10 @@ public class ReciteWordFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.settitle(getResources().getString(R.string.recite_word));
+        mainViewModel.setShowNavIcon(false);
+
         binding = FragmentReciteWordBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(ReciteWordViewModel.initializer)).get(ReciteWordViewModel.class);
         viewModel.setDailyDayPlanWordEntities();
@@ -189,11 +189,6 @@ public class ReciteWordFragment extends Fragment{
 //        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
-    public void onResume() {
-        super.onResume();
-        viewInit();
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -295,13 +290,4 @@ public class ReciteWordFragment extends Fragment{
 //        }
 //        return false;
 //    }
-
-    private void viewInit(){
-        setupToolbar();
-    }
-
-    private void setupToolbar(){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText(R.string.recite_word);
-    }
 }

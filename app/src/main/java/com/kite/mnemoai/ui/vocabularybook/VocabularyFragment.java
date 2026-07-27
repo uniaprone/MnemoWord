@@ -8,24 +8,25 @@ import android.view.ViewGroup;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.kite.mnemoai.MainActivity;
+import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.model.DailyStatistic;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
 import com.kite.mnemoai.ui.dialog.settingandaddnewvocabularybook.SettingAndAddNewVocabularyBookDialogFragment;
 import com.kite.mnemoai.ui.dialog.newlearningwordsetting.NewLearningWordSettingDialogFragment;
 import com.kite.mnemoai.ui.dialog.vocabularyselect.VocabularySelectDialogFragment;
+import com.kite.mnemoai.ui.main.MainUIState;
+import com.kite.mnemoai.ui.main.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -50,10 +51,14 @@ public class VocabularyFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        MainViewModel mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        mainViewModel.settitle(getResources().getString(R.string.vocabulary_book));
+        mainViewModel.setShowNavIcon(false);
+
         binding = FragmentVocabularyBinding.inflate(inflater, container, false);
-        assert getActivity() != null;
         viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyViewModel.initializer))
                 .get(VocabularyViewModel.class);
+
 
         binding.newLearningWordLL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,11 +156,6 @@ public class VocabularyFragment extends Fragment{
 //        requireActivity().addMenuProvider(this, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
-    public void onResume() {
-        super.onResume();
-        viewInit();
-    }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -177,12 +177,4 @@ public class VocabularyFragment extends Fragment{
 //        return false;
 //    }
 
-    private void viewInit(){
-        setupToolbar();
-    }
-
-    private void setupToolbar(){
-        MainActivity mainActivity = (MainActivity) requireActivity();
-        mainActivity.setTitleText(R.string.vocabulary_book);
-    }
 }
