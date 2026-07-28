@@ -101,6 +101,7 @@ public class MineViewModel extends ViewModel {
             @Override
             public void onComplete(LoadingState<String> stringLoadingState) {
                 apiTestState = stringLoadingState;
+                updateUIStatus();
                 if(apiTestState instanceof LoadingState.Success){
                     saveApiKey(apiKey);
                 }
@@ -109,6 +110,7 @@ public class MineViewModel extends ViewModel {
             @Override
             public void onError(Throwable t) {
                 apiTestState = new LoadingState.Error(t);
+                updateUIStatus();
             }
         });
     }

@@ -74,7 +74,7 @@ public interface WordDao {
 //            "   LIMIT :newCount")
 //    List<WordEntity> selectTodayNewLearningWordEntities(int newCount);
 
-    @Query("SELECT w.* " +
+    @Query("SELECT DISTINCT w.* " +
             "   FROM words w " +
             "   INNER JOIN word_group wg ON wg.word_id = w.id " +
             "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
@@ -85,7 +85,7 @@ public interface WordDao {
             "   LIMIT :newCount")
     List<WordEntity> selectTodayNewLearningWordEntities(int newCount, String date);
 
-    @Query("SELECT w.* " +
+    @Query("SELECT DISTINCT w.* " +
             "   FROM words w " +
             "   INNER JOIN word_group wg ON wg.word_id = w.id " +
             "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
@@ -95,16 +95,6 @@ public interface WordDao {
             "   ORDER BY RANDOM() " +
             "   LIMIT :newCount")
     List<WordEntity> addTodayNewLearningWordEntities(int newCount, String date, List<Long> addedWordIds);
-
-    @Query("SELECT w.* " +
-            "   FROM words w " +
-            "   INNER JOIN word_group wg ON wg.word_id = w.id " +
-            "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
-            "   LEFT JOIN word_review r ON r.id = w.id " +
-            "   WHERE r.id IS NULL" +
-            "   ORDER BY RANDOM() " +
-            "   LIMIT :newCount")
-    LiveData<List<WordEntity>> selectTodayNewLearningWordEntitiesLiveData(int newCount);
 
     @Query("SELECT w.* " +
             "   FROM words w " +

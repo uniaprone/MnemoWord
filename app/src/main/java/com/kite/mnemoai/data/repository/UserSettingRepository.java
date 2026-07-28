@@ -29,6 +29,7 @@ public class UserSettingRepository {
     private DayPlanWordDao dayPlanWordDao;
     private WordDao wordDao;
     private final MediatorLiveData<UserSetting> _userSettingMediatorLiveData = new MediatorLiveData<>();
+    private final Object lock = new Object();
     public UserSettingRepository(Application app) {
         this.context = ((MainApplication) app).getApplicationContext();
         this.executor = MainApplication.getEXECUTOR_SERVICE();
@@ -83,25 +84,27 @@ public class UserSettingRepository {
 
     public void setNewLearningWordCount(int targetCount){
         executor.execute(() -> {
-            String date = LocalDate.now().toString();
-            List<DayPlanWordEntity> dayPlanWordEntities = dayPlanWordDao.queryDayPlanWordsByDate(date);
-            int planCount = (int) dayPlanWordEntities.stream()
-                    .filter(dayPlanWordEntity -> dayPlanWordEntity.getType() == 0).count();
-            int finishCount = (int) dayPlanWordEntities.stream()
-                    .filter(dayPlanWordEntity -> dayPlanWordEntity.getType() == 0 && dayPlanWordEntity.getStatus() == 1).count();
+            synchronized (lock){
+                String date = LocalDate.now().toString();
+                List<DayPlanWordEntity> dayPlanWordEntities = dayPlanWordDao.queryDayPlanWordsByDate(date);
+                int planCount = (int) dayPlanWordEntities.stream()
+                        .filter(dayPlanWordEntity -> dayPlanWordEntity.getType() == 0).count();
+                int finishCount = (int) dayPlanWordEntities.stream()
+                        .filter(dayPlanWordEntity -> dayPlanWordEntity.getType() == 0 && dayPlanWordEntity.getStatus() == 1).count();
 
-            if(targetCount > planCount){
-                addNewLearningDayPlanWordEntities(targetCount - planCount);
-            } else if (targetCount < planCount) {
-                if(targetCount > finishCount){
-                    removeNewLearningDayPlanWordEntities(planCount - targetCount);
+                if(targetCount > planCount){
+                    addNewLearningDayPlanWordEntities(targetCount - planCount);
+                } else if (targetCount < planCount) {
+                    if(targetCount > finishCount){
+                        removeNewLearningDayPlanWordEntities(planCount - targetCount);
+                    }
                 }
+                SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
+                int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                String apiKey = sp.getString("api_key", "");
+                UserSetting userSetting = new UserSetting(targetCount, lightDarkModel, apiKey);
+                updateUserSetting(userSetting);
             }
-            SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
-            int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            String apiKey = sp.getString("api_key", "");
-            UserSetting userSetting = new UserSetting(targetCount, lightDarkModel, apiKey);
-            updateUserSetting(userSetting);
         });
     }
 
@@ -117,7 +120,8 @@ public class UserSettingRepository {
 
     private void addNewLearningDayPlanWordEntities(int learningCount){
         String date = LocalDate.now().toString();
-        List<WordEntity> newLearningWordEntities = wordDao.selectTodayNewLearningWordEntities(learningCount, date);
+        List<Long> ids = dayPlanWordDao.getTodayNewLearningWordsId(date);
+        List<WordEntity> newLearningWordEntities = wordDao.addTodayNewLearningWordEntities(learningCount, date, ids);
         List<DayPlanWordEntity> allDayPlanWordEntities = newLearningWordEntities.stream()
                 .map(wordEntity -> new DayPlanWordEntity(wordEntity.getId(), date, 0, 0, 0, 0, 0, null))
                 .collect(Collectors.toList());

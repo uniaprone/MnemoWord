@@ -44,10 +44,19 @@ class ApiKeySettingDialogFragment: DialogFragment() {
 
     override fun onStart() {
         super.onStart()
+
+        // 1. 关键：设置 Dialog 窗口的软输入模式为“总是可见”
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+
+        // 2. 您的原有逻辑，确保 EditText 获得焦点并弹出键盘
         binding.apiKeyET.post {
-            binding.apiKeyET.requestFocus()
-            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.showSoftInput(binding.apiKeyET, InputMethodManager.SHOW_IMPLICIT)
+            binding.apiKeyET.let {
+                it.requestFocus()
+                it.isFocusable = true
+                it.isFocusableInTouchMode = true
+                val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(it, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
     }
 }
