@@ -1,6 +1,13 @@
 package com.kite.mnemoai.ui.reciteword;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +17,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -68,7 +76,7 @@ public class ReciteWordFragment extends Fragment{
         mainViewModel.setShowNavIcon(false);
 
         binding = FragmentReciteWordBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(ReciteWordViewModel.initializer)).get(ReciteWordViewModel.class);
+        viewModel = new ViewModelProvider(this, ReciteWordViewModel.Companion.getFactory()).get(ReciteWordViewModel.class);
         viewModel.setDailyDayPlanWordEntities();
 
         bannerControl = new BannerControl(binding.statusReciteWordOK.aiMnemonic.AIGenerateBanner, getLifecycle());
@@ -128,9 +136,9 @@ public class ReciteWordFragment extends Fragment{
                         List<WordDetailInfo> original = reciteWordUIState.getReciteWordItemStatusOrder();
                         if(original != null && !original.isEmpty()){
                             WordDetailInfo currentReciteWord = original.get(0);
-                            if(viewModel.isShowNext()){
+                            if(viewModel.isShowNext){
                                 TransitionManager.endTransitions(binding.statusReciteWordOK.wordContentCL);
-                                viewModel.setShowNext(false);
+                                viewModel.isShowNext = false;
                                 binding.statusReciteWordOK.wordCardVF.showNext();
                                 viewModel.startReciteStatistics();
                                 viewModel.resetShowState();
@@ -266,7 +274,46 @@ public class ReciteWordFragment extends Fragment{
                 ItemExampleSentenceBinding exampleSentenceBinding = ItemExampleSentenceBinding.inflate(
                         inflater, binding.statusReciteWordOK.aiMnemonic.exampleSentenceLL, false
                 );
-                exampleSentenceBinding.exampleSentenceTV.setText(exampleSentence.getSentence());
+                SpannableStringBuilder builder = new SpannableStringBuilder();
+                String sentence = exampleSentence.getSentence();
+                String word = currentWordExtract.getExtract().getWord();
+
+                int wordStartIndex = sentence.indexOf(word);
+                if (wordStartIndex == -1) {
+                    // 单词不在例句中，直接显示原句
+                    builder.append(sentence);
+                } else {
+                    // 1. 追加单词前的部分
+                    builder.append(sentence.substring(0, wordStartIndex));
+                    // 2. 记录单词在 builder 中的起始位置
+                    int start = builder.length();
+                    // 3. 追加单词
+                    builder.append(word);
+                    // 4. 记录结束位置
+                    int end = builder.length();
+                    // 5. 设置样式（颜色 + 粗体）
+                    builder.setSpan(
+                            new ForegroundColorSpan(MaterialColors.getColor(
+                                    exampleSentenceBinding.exampleSentenceTV,
+                                    R.attr.colorPrimary)),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    builder.setSpan(
+                            new RelativeSizeSpan(1.2f),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    builder.setSpan(
+                            new StyleSpan(Typeface.BOLD),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    // 6. 追加单词后的部分
+                    builder.append(sentence.substring(wordStartIndex + word.length()));
+                }
+
+                exampleSentenceBinding.exampleSentenceTV.setText(builder);
                 exampleSentenceBinding.exampleSentenceTV.setTextColor(textColor);
                 exampleSentenceBinding.exampleSentenceTranslateTV.setText(exampleSentence.getTranslation());
                 exampleSentenceBinding.exampleSentenceTranslateTV.setTextColor(textColor);
@@ -278,7 +325,46 @@ public class ReciteWordFragment extends Fragment{
                 ItemPhraseBinding itemPhraseBinding = ItemPhraseBinding.inflate(
                         inflater, binding.statusReciteWordOK.aiMnemonic.phraseLL, false
                 );
-                itemPhraseBinding.phraseTV.setText(phrase.toString());
+                SpannableStringBuilder builder = new SpannableStringBuilder();
+                String sentence = phrase.toString();
+                String word = currentWordExtract.getExtract().getWord();
+
+                int wordStartIndex = sentence.indexOf(word);
+                if (wordStartIndex == -1) {
+                    // 单词不在例句中，直接显示原句
+                    builder.append(sentence);
+                } else {
+                    // 1. 追加单词前的部分
+                    builder.append(sentence.substring(0, wordStartIndex));
+                    // 2. 记录单词在 builder 中的起始位置
+                    int start = builder.length();
+                    // 3. 追加单词
+                    builder.append(word);
+                    // 4. 记录结束位置
+                    int end = builder.length();
+                    // 5. 设置样式（颜色 + 粗体）
+                    builder.setSpan(
+                            new ForegroundColorSpan(MaterialColors.getColor(
+                                    itemPhraseBinding.phraseTV,
+                                    R.attr.colorPrimary)),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    builder.setSpan(
+                            new RelativeSizeSpan(1.2f),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    builder.setSpan(
+                            new StyleSpan(Typeface.BOLD),
+                            start, end,
+                            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                    );
+                    // 6. 追加单词后的部分
+                    builder.append(sentence.substring(wordStartIndex + word.length()));
+                }
+
+                itemPhraseBinding.phraseTV.setText(builder);
                 itemPhraseBinding.phraseTV.setTextColor(textColor);
                 binding.statusReciteWordOK.aiMnemonic.phraseLL.addView(itemPhraseBinding.getRoot());
             }

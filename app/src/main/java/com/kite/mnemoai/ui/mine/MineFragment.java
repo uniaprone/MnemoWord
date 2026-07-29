@@ -35,7 +35,7 @@ public class MineFragment extends Fragment {
         mainViewModel.setShowNavIcon(false);
 
         binding = FragmentMineBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(MineViewModel.initializer)).get(MineViewModel.class);
+        viewModel = new ViewModelProvider(this, MineViewModel.Companion.getFactory()).get(MineViewModel.class);
         bannerControl = new BannerControl(binding.infoFL, getLifecycle());
 
         RecyclerView recyclerView = binding.settingRV;
@@ -51,12 +51,7 @@ public class MineFragment extends Fragment {
         getChildFragmentManager().setFragmentResultListener(ApiKeySettingDialogFragment.API_KEY_SETTING, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                String apiKey = result.getString("api_key");
-                bannerControl.show();
-                binding.settingInfoTV.setText("正在测试API Key是否可用");
-                binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
-                binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
-                viewModel.apiKeyTest(apiKey);
+                viewModel.apiKeyTest(result.getString("api_key", ""));
             }
         });
 
@@ -69,7 +64,12 @@ public class MineFragment extends Fragment {
                 if(mineUIState == null) return;
                 adapter.setMineBaseItems(mineUIState.getMineBaseItems());
                 if(mineUIState.getApiTestState() != null){
-                    if(mineUIState.getApiTestState() instanceof LoadingState.Success){
+                    if(mineUIState.getApiTestState() instanceof LoadingState.Loading){
+                        bannerControl.show();
+                        binding.settingInfoTV.setText("正在测试API Key是否可用");
+                        binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
+                        binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
+                    }else if(mineUIState.getApiTestState() instanceof LoadingState.Success){
                         binding.settingInfoTV.setText(((LoadingState.Success<String>) mineUIState.getApiTestState()).getData());
                         binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorPrimaryContainer));
                         binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));

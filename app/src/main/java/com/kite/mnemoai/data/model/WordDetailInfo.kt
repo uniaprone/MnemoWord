@@ -15,7 +15,7 @@ data class WordDetailInfo(
         parentColumn = "id",
         entityColumn = "word_id"
     )
-    var wordTranslation: List<WordTranslation>,
+    var wordTranslation: MutableList<WordTranslation>,
     @Relation(
         parentColumn = "id",
         entityColumn = "word_id"

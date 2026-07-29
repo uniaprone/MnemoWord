@@ -23,9 +23,9 @@ import com.kite.mnemoai.data.local.entity.WordEntity;
 import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.model.WordExtract;
 import com.kite.mnemoai.data.model.WordListItem;
-import com.kite.mnemoai.data.network.DeepseekRequestBody;
-import com.kite.mnemoai.data.network.DeepseekResponseBody;
-import com.kite.mnemoai.data.network.DeepseekService;
+import com.kite.mnemoai.data.network.deepseek.model.DeepseekRequestBody;
+import com.kite.mnemoai.data.network.deepseek.model.DeepseekResponseBody;
+import com.kite.mnemoai.data.network.deepseek.DeepseekService;
 import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.ui.model.LoadingState;
 
@@ -151,61 +151,61 @@ public class WordRepository {
 //        });
 //    }
 
-    public void fetchWordExtract(WordEntity word, String apiKey, IRepositoryCallback<LoadingState<String>> callback){
-        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    executors.execute(() -> {
-                        String wordExtractString = response.body().getChoices().get(0).getMessage().getContent();
-                        Log.d("接收的json数据", wordExtractString);
-                        Gson gson = new Gson();
-                        try{
-                            WordExtract wordExtract = gson.fromJson(wordExtractString, WordExtract.class);
-                            wordExtractDao.insertWordExtractEntity(new WordExtractEntity(word.getId(), Converters.stringToWordExtract(wordExtractString)));
-                            handler.post(() -> callback.onComplete(new LoadingState.Success<>("获取成功")));
-                        } catch (JsonSyntaxException e) {
-                            handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
-                        }
+//    public void fetchWordExtract(WordEntity word, String apiKey, IRepositoryCallback<LoadingState<String>> callback){
+//        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(word.getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
+//            @Override
+//            public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
+//                if(response.isSuccessful() && response.body() != null){
+//                    executors.execute(() -> {
+//                        String wordExtractString = response.body().getChoices().get(0).getMessage().getContent();
+//                        Log.d("接收的json数据", wordExtractString);
+//                        Gson gson = new Gson();
+//                        try{
+//                            WordExtract wordExtract = gson.fromJson(wordExtractString, WordExtract.class);
+//                            wordExtractDao.insertWordExtractEntity(new WordExtractEntity(word.getId(), Converters.stringToWordExtract(wordExtractString)));
+//                            handler.post(() -> callback.onComplete(new LoadingState.Success<>("获取成功")));
+//                        } catch (JsonSyntaxException e) {
+//                            handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
+//                        }
+//
+//                    });
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<DeepseekResponseBody> call, Throwable t) {
+//                handler.post(() -> callback.onError(new NetworkErrorException("网络异常")));
+//            }
+//        });
+//    }
 
-                    });
-                }
-            }
-            @Override
-            public void onFailure(Call<DeepseekResponseBody> call, Throwable t) {
-                handler.post(() -> callback.onError(new NetworkErrorException("网络异常")));
-            }
-        });
-    }
-
-    public void fetchWordExtract(WordDetailInfo wordDetailInfo, String apiKey, IRepositoryCallback<WordExtractEntity> callback){
-        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordDetailInfo.getWordEntity().getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
-                if(response.isSuccessful() && response.body() != null){
-                    executors.execute(() -> {
-                        String wordExtractString = response.body().getChoices().get(0).getMessage().getContent();
-                        Log.d("接收的json数据", wordExtractString);
-                        try{
-                            WordExtract wordExtract = Converters.stringToWordExtract(wordExtractString);
-                            WordExtractEntity wordExtractEntity = new WordExtractEntity(wordDetailInfo.getWordEntity().getId(), wordExtract);
-                            wordExtractDao.insertWordExtractEntity(wordExtractEntity);
-                            handler.post(() -> callback.onComplete(wordExtractEntity));
-                        }catch (JsonSyntaxException e){
-                            handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
-                        }
-
-                    });
-                }else{
-                    handler.post(() -> callback.onError(new NetworkErrorException(String.valueOf(response.errorBody()))));
-                }
-            }
-            @Override
-            public void onFailure(Call<DeepseekResponseBody> call, Throwable t) {
-                callback.onError(null);
-            }
-        });
-    }
+//    public void fetchWordExtract(WordDetailInfo wordDetailInfo, String apiKey, IRepositoryCallback<WordExtractEntity> callback){
+//        DeepseekService.Factory.getInstance().getDeepseekResponseBody(new DeepseekRequestBody(wordDetailInfo.getWordEntity().getWord(), false), "Bearer " + apiKey).enqueue(new Callback<>() {
+//            @Override
+//            public void onResponse(Call<DeepseekResponseBody> call, Response<DeepseekResponseBody> response) {
+//                if(response.isSuccessful() && response.body() != null){
+//                    executors.execute(() -> {
+//                        String wordExtractString = response.body().getChoices().get(0).getMessage().getContent();
+//                        Log.d("接收的json数据", wordExtractString);
+//                        try{
+//                            WordExtract wordExtract = Converters.stringToWordExtract(wordExtractString);
+//                            WordExtractEntity wordExtractEntity = new WordExtractEntity(wordDetailInfo.getWordEntity().getId(), wordExtract);
+//                            wordExtractDao.insertWordExtractEntity(wordExtractEntity);
+//                            handler.post(() -> callback.onComplete(wordExtractEntity));
+//                        }catch (JsonSyntaxException e){
+//                            handler.post(() -> callback.onError(new JsonSyntaxException("接收数据格式错误")));
+//                        }
+//
+//                    });
+//                }else{
+//                    handler.post(() -> callback.onError(new NetworkErrorException(String.valueOf(response.errorBody()))));
+//                }
+//            }
+//            @Override
+//            public void onFailure(Call<DeepseekResponseBody> call, Throwable t) {
+//                callback.onError(null);
+//            }
+//        });
+//    }
 
     public void apiKeyValidTest(String apiKey, IRepositoryCallback<LoadingState<String>> callback){
         DeepseekService.Factory.getInstance().deepseekConnectiveTest(new DeepseekRequestBody("hello",false), "Bearer " + apiKey).enqueue(new Callback<DeepseekResponseBody>() {

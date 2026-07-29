@@ -1,11 +1,9 @@
-package com.kite.mnemoai.data.network;
+package com.kite.mnemoai.data.network.deepseek.model;
 
-import com.google.gson.annotations.SerializedName;
+import com.kite.mnemoai.data.network.PromptConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import kotlinx.serialization.Serializable;
 
 public class DeepseekRequestBody {
 

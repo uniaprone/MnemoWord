@@ -1,4 +1,4 @@
-package com.kite.mnemoai.data.network;
+package com.kite.mnemoai.data.network.deepseek.model;
 
 public class Message{
     private String content;

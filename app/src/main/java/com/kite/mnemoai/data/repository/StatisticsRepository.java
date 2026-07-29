@@ -58,7 +58,7 @@ public class StatisticsRepository {
 
     public void rememberWord(ReciteWordViewModel.ReciteStatistics reciteStatistics){
         executor.execute(() -> {
-            long wordId = reciteStatistics.getWordId();
+            long wordId = reciteStatistics.wordId;
             String dateTime = LocalDateTime.now().toString();
             LocalDate date= LocalDate.now();
             DayPlanWordEntity dayPlanWordEntity = dayPlanWordDao.queryDayPlanWordBywordIdAndDate(wordId, date.toString());

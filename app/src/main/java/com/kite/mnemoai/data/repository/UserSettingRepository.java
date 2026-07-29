@@ -82,6 +82,14 @@ public class UserSettingRepository {
         });
     }
 
+    public UserSetting getUserSettingSync(){
+        SharedPreferences sp = context.getSharedPreferences("user_settings", Context.MODE_PRIVATE);
+        int newStudyCount = sp.getInt("study_word_count", 20);
+        int lightDarkModel = sp.getInt("light_dark_model", AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        String apiKey = sp.getString("api_key", "");
+        return new UserSetting(newStudyCount, lightDarkModel, apiKey);
+    }
+
     public void setNewLearningWordCount(int targetCount){
         executor.execute(() -> {
             synchronized (lock){

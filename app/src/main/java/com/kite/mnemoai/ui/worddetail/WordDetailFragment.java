@@ -89,7 +89,7 @@ public class WordDetailFragment extends Fragment {
                 checkAndRequestPermission();
             }
         });
-        viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(WordDetailViewModel.initializer)).get(WordDetailViewModel.class);
+        viewModel = new ViewModelProvider(this,WordDetailViewModel.Companion.getFactory()).get(WordDetailViewModel.class);
 
         reviewRV = binding.aiMnemonic.studyHistoryItemsRV;
         reviewHistoryAdapter = new ReviewHistoryAdapter();
@@ -97,7 +97,7 @@ public class WordDetailFragment extends Fragment {
         reviewRV.setLayoutManager(new LinearLayoutManager(this.getContext()));
         reviewRV.setItemAnimator(null);
 
-        viewModel.getUiState().observe(getViewLifecycleOwner(), wordDetailUIState -> {
+        viewModel.uiState.observe(getViewLifecycleOwner(), wordDetailUIState -> {
             if(wordDetailUIState == null || wordDetailUIState.getWordDetailInfo() == null) return;
 
             TransitionManager.beginDelayedTransition(binding.aiMnemonic.getRoot(),

@@ -1,5 +1,8 @@
-package com.kite.mnemoai.data.network;
+package com.kite.mnemoai.data.network.deepseek;
 
+
+import com.kite.mnemoai.data.network.deepseek.model.DeepseekRequestBody;
+import com.kite.mnemoai.data.network.deepseek.model.DeepseekResponseBody;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -11,9 +14,6 @@ import retrofit2.http.POST;
 public interface DeepseekService {
 
     String DEEPSEEK_BASE_URL = "https://api.deepseek.com";
-
-    @POST("chat/completions")
-    Call<DeepseekResponseBody> getDeepseekResponseBody(@Body DeepseekRequestBody body, @Header("Authorization") String authorization);
 
     @POST("chat/completions")
     Call<DeepseekResponseBody> deepseekConnectiveTest(@Body DeepseekRequestBody body, @Header("Authorization") String authorization);

@@ -11,6 +11,8 @@ import androidx.core.os.HandlerCompat;
 
 import com.kite.mnemoai.data.local.AppDatabase;
 import com.kite.mnemoai.data.local.UserSetting;
+import com.kite.mnemoai.data.network.AiServiceProvider;
+import com.kite.mnemoai.data.repository.AiMnemonicRepository;
 import com.kite.mnemoai.data.repository.GroupRepository;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.StatisticsRepository;
@@ -19,6 +21,8 @@ import com.kite.mnemoai.data.repository.WordRepository;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import kotlinx.coroutines.Dispatchers;
 
 public class MainApplication extends Application {
     private static final int NUMBER_OF_THREAD = 4;
@@ -30,6 +34,7 @@ public class MainApplication extends Application {
     private WordRepository wordRepository;
     private StatisticsRepository statisticsRepository;
     private UserSettingRepository userSettingRepository;
+    private AiMnemonicRepository aiMnemonicRepository;
 
     @Override
     public void onCreate() {
@@ -63,6 +68,8 @@ public class MainApplication extends Application {
 
             }
         });
+        aiMnemonicRepository = new AiMnemonicRepository((Application) appContext, userSettingRepository, AiServiceProvider.INSTANCE, Dispatchers.getIO());
+
     }
     public static ExecutorService getEXECUTOR_SERVICE() {
         return EXECUTOR_SERVICE;
@@ -90,5 +97,9 @@ public class MainApplication extends Application {
 
     public UserSettingRepository getUserSettingRepository() {
         return userSettingRepository;
+    }
+
+    public AiMnemonicRepository getAiMnemonicRepository() {
+        return aiMnemonicRepository;
     }
 }
