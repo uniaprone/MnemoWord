@@ -2,7 +2,6 @@ package com.kite.mnemoai.ui.worddetail;
 
 import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.ui.model.LoadingState;
-import com.kite.mnemoai.ui.reciteword.WordDetailStatus;
 
 public class WordDetailUIState {
     private WordDetailInfo wordDetailInfo;

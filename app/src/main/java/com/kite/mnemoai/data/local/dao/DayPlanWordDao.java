@@ -1,5 +1,6 @@
 package com.kite.mnemoai.data.local.dao;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
@@ -38,7 +39,7 @@ public interface DayPlanWordDao {
     DayPlanWordEntity queryDayPlanWordBywordIdAndDate(long wordId, String date);
 
     @Query("SELECT COUNT(word_id) FROM day_plan_word WHERE date = :date")
-    LiveData<Integer> getAllPlanCountByDate(String date);
+    LiveData<Integer> getAllPlanCountByDate(@NonNull String date);
 
     @Query("SELECT COUNT(word_id) FROM day_plan_word " +
             "WHERE status = 1 AND date = :date")

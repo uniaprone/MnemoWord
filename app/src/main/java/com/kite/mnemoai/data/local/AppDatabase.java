@@ -20,6 +20,8 @@ import com.kite.mnemoai.data.local.entity.ReviewWordEntity;
 import com.kite.mnemoai.data.local.entity.WordEntity;
 import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.local.entity.WordGroupEntity;
+import com.kite.mnemoai.data.local.entity.WordMeaningEntity;
+import com.kite.mnemoai.data.local.entity.WordPosEntity;
 
 @Database(
         entities = {GroupEntity.class,
@@ -28,7 +30,9 @@ import com.kite.mnemoai.data.local.entity.WordGroupEntity;
                 WordGroupEntity.class,
                 ReviewWordEntity.class,
                 DayPlanEntity.class,
-                DayPlanWordEntity.class},
+                DayPlanWordEntity.class,
+                WordPosEntity.class,
+                WordMeaningEntity.class},
         version = 1
 )
 public abstract class AppDatabase extends RoomDatabase {

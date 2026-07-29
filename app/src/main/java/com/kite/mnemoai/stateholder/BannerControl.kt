@@ -85,6 +85,15 @@ class BannerControl(val bannerView: View, val lifecycle: Lifecycle): LifecycleEv
         }
     }
 
+    fun forceHide(){
+        if(isShowing){
+            bannerView.visibility = View.GONE
+            bannerView.translationY = 0f
+            isShowing = false
+            bannerView.animate().setListener(null);
+        }
+    }
+
     // 清理资源，防止内存泄漏
     private fun onDestroy() {
         mainHandler.removeCallbacksAndMessages(null)

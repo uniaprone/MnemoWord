@@ -9,13 +9,13 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.viewmodel.ViewModelInitializer;
 
 import com.kite.mnemoai.MainApplication;
-import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.data.repository.IRepositoryCallback;
 import com.kite.mnemoai.data.repository.UserSettingRepository;
 import com.kite.mnemoai.data.repository.WordRepository;
 import com.kite.mnemoai.ui.model.LoadingState;
-import com.kite.mnemoai.ui.reciteword.WordDetailStatus;
+
+import java.util.Collections;
 
 public class WordDetailViewModel extends ViewModel {
     private MediatorLiveData<WordDetailUIState> uiState = new MediatorLiveData<>();
@@ -35,9 +35,13 @@ public class WordDetailViewModel extends ViewModel {
         }
         uiState.addSource(wordRepository.getWordDetailInfoLiveDataById(wordId), wordDetailInfo -> {
             String phonetic = "\\" + wordDetailInfo.getWordEntity().getPhonetic() + "\\";
-            String translation = wordDetailInfo.getWordEntity().getTranslation().replace("\\n", " ");
             wordDetailInfo.getWordEntity().setPhonetic(phonetic);
-            wordDetailInfo.getWordEntity().setTranslation(translation);
+
+            wordDetailInfo.getWordTranslation().forEach(wordTranslation ->
+                    wordTranslation.getWordMeanings().forEach(wordMeaningEntity -> wordMeaningEntity.setMeaning(wordMeaningEntity.getMeaning() + ";"))
+            );
+            Collections.sort(wordDetailInfo.getWordTranslation());
+
             this.wordDetailInfo = wordDetailInfo;
             updateUIState();
         });

@@ -4,11 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-import org.jetbrains.annotations.NotNull;
-
 @Entity(tableName = "day_plan_word", primaryKeys = {"date", "word_id"})
 public class DayPlanWordEntity {
-    @NotNull
+    @NonNull
     private String date;
     @ColumnInfo(name = "word_id")
     private long wordId;
@@ -42,11 +40,12 @@ public class DayPlanWordEntity {
         this.completeTime = completeTime;
     }
 
+    @NonNull
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(@NonNull String date) {
         this.date = date;
     }
 

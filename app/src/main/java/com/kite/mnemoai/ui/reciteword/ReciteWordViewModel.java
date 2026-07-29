@@ -25,6 +25,7 @@ import com.kite.mnemoai.ui.model.LoadingState;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -90,11 +91,13 @@ public class ReciteWordViewModel extends ViewModel {
         _uiState.addSource(wordRepository.getUnfinishWordDetailInfoLiveData(), wordDetailInfos -> {
             wordDetailInfos.forEach(wordDetailInfo -> {
                 String phonetic = "\\" + wordDetailInfo.getWordEntity().getPhonetic() + "\\";
-                String translation = wordDetailInfo.getWordEntity().getTranslation().replace("\\n", " ");
                 wordDetailInfo.getWordEntity().setPhonetic(phonetic);
-                wordDetailInfo.getWordEntity().setTranslation(translation);
-            });
 
+                wordDetailInfo.getWordTranslation().forEach(wordTranslation ->
+                        wordTranslation.getWordMeanings().forEach(wordMeaningEntity -> wordMeaningEntity.setMeaning(wordMeaningEntity.getMeaning() + ";"))
+                );
+                Collections.sort(wordDetailInfo.getWordTranslation());
+            });
             updateOrderData(wordDetailInfos);
             updateUIStatus();
         });
@@ -214,6 +217,7 @@ public class ReciteWordViewModel extends ViewModel {
     public void resetShowState(){
         this.isShowTranslation = false;
         this.isShowDetail = false;
+        this.aiMnemonicLoadingState = null;
         updateUIStatus();
     }
     @SuppressWarnings("unchecked")
