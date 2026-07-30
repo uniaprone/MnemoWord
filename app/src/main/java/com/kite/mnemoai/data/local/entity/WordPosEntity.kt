@@ -14,10 +14,7 @@ import androidx.room.PrimaryKey
         childColumns = ["word_id"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [
-        Index(value = ["word_id"]),
-        Index(value = ["word_id", "pos"], unique = true)
-    ]
+    indices = [Index(value = ["word_id", "pos"], unique = true)]
 )
 data class WordPosEntity(
     @PrimaryKey(autoGenerate = true)

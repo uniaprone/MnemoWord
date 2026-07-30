@@ -59,11 +59,11 @@ public class VocabularyGroupViewModel extends ViewModel {
     }
 
     public void setVocabularyBookLearningStatus(int status){
-        groupRepository.setVocabularyBookLearningStatus(getGroup().getId(), status);
+        groupRepository.setVocabularyBookLearningStatus(group.getId(), status);
     }
 
     public void deleteGroup(){
-        groupRepository.deleteGroup(getGroup().getId());
+        groupRepository.deleteGroup(group.getId());
     }
 
     public LiveData<VocabularyGroupUIState> getUiState(){

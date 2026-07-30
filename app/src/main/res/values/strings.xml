@@ -84,4 +84,5 @@
     <string name="choose_vocabulary_book">选择单词本</string>
     <string name="modify_vocabulary_book">修改单词本</string>
     <string name="word_detail">单词详情</string>
+    <string name="word_form_info">词形变化</string>
 </resources>

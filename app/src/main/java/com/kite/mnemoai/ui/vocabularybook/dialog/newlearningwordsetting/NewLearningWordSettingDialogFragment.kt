@@ -1,4 +1,4 @@
-package com.kite.mnemoai.ui.dialog.newlearningwordsetting
+package com.kite.mnemoai.ui.vocabularybook.dialog.newlearningwordsetting
 
 import android.app.Dialog
 import android.content.Context

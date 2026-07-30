@@ -5,6 +5,7 @@ import androidx.room.Relation
 import com.kite.mnemoai.data.local.entity.DayPlanWordEntity
 import com.kite.mnemoai.data.local.entity.WordEntity
 import com.kite.mnemoai.data.local.entity.WordExtractEntity
+import com.kite.mnemoai.data.local.entity.WordFormEntity
 import com.kite.mnemoai.data.local.entity.WordPosEntity
 
 data class WordDetailInfo(
@@ -16,6 +17,12 @@ data class WordDetailInfo(
         entityColumn = "word_id"
     )
     var wordTranslation: MutableList<WordTranslation>,
+    @Relation(
+        entity = WordFormEntity::class,
+        parentColumn = "id",
+        entityColumn = "word_id"
+    )
+    var wordForm: MutableList<WordFormEntity>,
     @Relation(
         parentColumn = "id",
         entityColumn = "word_id"

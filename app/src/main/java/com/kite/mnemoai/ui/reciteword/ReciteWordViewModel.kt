@@ -79,6 +79,7 @@ class ReciteWordViewModel(
                 if (newPlanMap.get(wordId) == null) {
                     iterator.remove()
                     isShowNext = true
+                    resetShowState()
                 }
             }
 
@@ -86,15 +87,15 @@ class ReciteWordViewModel(
                 this.reciteWordDetailInfoItemUIState!!.stream()
                     .collect(
                         Collectors.toMap(
-                            Function { status: WordDetailInfo? -> status!!.wordEntity.getId() },
+                            Function { status: WordDetailInfo? -> status!!.wordEntity.id },
                             Function.identity<WordDetailInfo?>()
                         )
                     )
 
             // 2. 新列表中存在，旧列表中不存在
             for (newPlan in newPlans) {
-                val worldId = newPlan.wordEntity.getId()
-                val oldStatus = oldWordDetailInfoMap.get(worldId)
+                val worldId = newPlan.wordEntity.id
+                val oldStatus = oldWordDetailInfoMap[worldId]
                 if (oldStatus == null) {
                     val orderSize = this.reciteWordDetailInfoItemUIState!!.size
                     if (orderSize == 0) {
@@ -104,6 +105,7 @@ class ReciteWordViewModel(
                         this.reciteWordDetailInfoItemUIState!!.add(insertIndex, newPlan)
                     }
                     isShowNext = true
+                    resetShowState()
                 } else {
                     //赋新值
                     oldStatus.wordEntity = newPlan.wordEntity

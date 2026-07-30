@@ -2,6 +2,7 @@ package com.kite.mnemoai.data.repository
 
 import android.content.Context
 import android.util.Log
+import com.google.gson.JsonSyntaxException
 import com.kite.mnemoai.MainApplication
 import com.kite.mnemoai.data.local.AppDatabase
 import com.kite.mnemoai.data.local.Converters
@@ -47,11 +48,15 @@ class AiMnemonicRepository(
             when (networkResult) {
                 is NetworkResult.Success -> {
                     Log.d("接收的json数据", networkResult.data + "")
-                    val wordExtract = Converters.stringToWordExtract(networkResult.data)
-                    val wordExtractEntity =
-                        WordExtractEntity(wordDetailInfo.wordEntity.id, wordExtract)
-                    wordExtractDao.insertWordExtractEntity(wordExtractEntity)
-                    LoadingState.Success("测试成功，API Key可用")
+                    try {
+                        val wordExtract = Converters.stringToWordExtract(networkResult.data)
+                        val wordExtractEntity =
+                            WordExtractEntity(wordDetailInfo.wordEntity.id, wordExtract)
+                        wordExtractDao.insertWordExtractEntity(wordExtractEntity)
+                        LoadingState.Success("测试成功，API Key可用")
+                    }catch (e: JsonSyntaxException){
+                        LoadingState.Error(IllegalArgumentException("接收数据格式错误！"))
+                    }
                 }
 
                 is NetworkResult.Error -> {

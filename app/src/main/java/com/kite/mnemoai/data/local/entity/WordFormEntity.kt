@@ -7,19 +7,21 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "word_meaning",
+    tableName = "word_form",
     foreignKeys = [ForeignKey(
-        entity = WordPosEntity::class,
+        entity = WordEntity::class,
         parentColumns = ["id"],
-        childColumns = ["pos_id"],
+        childColumns = ["word_id"],
         onDelete = ForeignKey.CASCADE
     )],
-    indices = [Index(value = ["pos_id", "meaning"], unique = true)]
+    indices = [Index(value = ["word_id", "type_code"], unique = true)]
 )
-data class WordMeaningEntity(
+data class WordFormEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
-    @ColumnInfo(name = "pos_id")
-    val posId:Long,
-    var meaning: String
+    @ColumnInfo("word_id")
+    val wordId:Long,
+    @ColumnInfo(name = "type_code")
+    val typeCode: String,
+    val form: String
 )

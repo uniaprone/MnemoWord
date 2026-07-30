@@ -10,19 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.model.DailyStatistic;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
 import com.kite.mnemoai.ui.dialog.settingandaddnewvocabularybook.SettingAndAddNewVocabularyBookDialogFragment;
-import com.kite.mnemoai.ui.dialog.newlearningwordsetting.NewLearningWordSettingDialogFragment;
+import com.kite.mnemoai.ui.vocabularybook.dialog.newlearningwordsetting.NewLearningWordSettingDialogFragment;
 import com.kite.mnemoai.ui.dialog.vocabularyselect.VocabularySelectDialogFragment;
-import com.kite.mnemoai.ui.main.MainUIState;
 import com.kite.mnemoai.ui.main.MainViewModel;
 
 import java.util.ArrayList;

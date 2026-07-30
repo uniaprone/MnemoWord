@@ -12,6 +12,46 @@
     android:id="@+id/wordDetailLL"
     android:background="?attr/colorSurfaceContainer">
 
+        <!-- 词形信息-->
+        <LinearLayout
+            android:id="@+id/wordForm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="4dp"
+            android:background="?attr/colorSurfaceContainerLowest">
+                <LinearLayout
+                    android:id="@+id/wordFormLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="8dp"
+                            android:text="@string/word_form_info"
+                            android:textSize="@dimen/text_size_title_medium"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="wrap_content"
+                            android:layout_height="0.5dp"
+                            app:dividerColor="?attr/colorOutlineVariant"/>
+                </LinearLayout>
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/wordFormFBL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:orientation="horizontal"
+                    app:flexWrap="wrap"
+                    app:justifyContent="flex_start"
+                    app:alignItems="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/wordPosTV"
+                    app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
         <!-- 助记信息-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -95,7 +135,7 @@
                                             android:textSize="@dimen/text_size_body_medium"
                                             android:gravity="center"
                                             android:padding="8dp"/>
-                                </FrameLayout>
+                        </FrameLayout>
                         <LinearLayout
                             android:id="@+id/noExtractContent"
                             android:layout_width="match_parent"
@@ -282,7 +322,6 @@
                         </LinearLayout>
                 </LinearLayout>
         </LinearLayout>
-
         <!-- 学习历史-->
         <LinearLayout
             android:id="@+id/studyHistoryTitle"

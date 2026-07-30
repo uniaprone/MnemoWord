@@ -80,7 +80,7 @@ public class GroupRepository {
 
     public void addAlterWords(long groupId, List<Long> ids){
         executors.execute(() -> {
-            List<WordGroupEntity> wordGroupEntities = ids.stream().map((id) -> new WordGroupEntity(groupId, id)).collect(Collectors.toList());
+            List<WordGroupEntity> wordGroupEntities = ids.stream().map(id -> new WordGroupEntity(id, groupId)).collect(Collectors.toList());
             wordGroupDao.insertWordGroups(wordGroupEntities);
         });
     }
