@@ -1,6 +1,10 @@
 package com.kite.mnemoai.ui.reciteword
 
+import android.os.Bundle
+import android.os.Parcel
+import android.os.Parcelable
 import android.os.SystemClock
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
@@ -27,7 +31,6 @@ import com.kite.mnemoai.data.repository.WordRepository
 import com.kite.mnemoai.ui.model.LoadingState
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.util.Collections
 import java.util.Random
 import java.util.function.Consumer
 import java.util.function.Function
@@ -41,12 +44,12 @@ class ReciteWordViewModel(
     private val statisticsRepository: StatisticsRepository,
     private val userSettingRepository: UserSettingRepository,
     private val aiMnemonicRepository: AiMnemonicRepository,
-    savedStateHandle: SavedStateHandle?
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MediatorLiveData<ReciteWordUIState?>()
     private var reciteStage: ReciteStage? = null
     private var reciteWordDetailInfoItemUIState: MutableList<WordDetailInfo>? = null
-    val reciteStatistics: MutableList<ReciteStatistics> = ArrayList<ReciteStatistics>()
+    private var reciteStatistics: MutableList<ReciteStatistics> = ArrayList<ReciteStatistics>()
     private var totalProgress = 0
     private var currentProgress = 0
     @JvmField
@@ -58,6 +61,62 @@ class ReciteWordViewModel(
     private val date: LocalDate = LocalDate.now()
     private var apiKey: String? = null
     private var hasSetDailyPlanWord = false
+
+    init {
+        _uiState.addSource<Int?>(wordRepository.getDailyReciteStatus(), Observer { status: Int? ->
+            when (status) {
+                0 -> this.reciteStage = ReciteStage.NO_VOCABULARY
+                1 -> this.reciteStage = ReciteStage.FINISH
+                2 -> this.reciteStage = ReciteStage.IN_PROGRESS
+            }
+            updateUIStatus()
+        })
+
+        _uiState.addSource<UserSetting?>(
+            userSettingRepository.userSettingLiveData,
+            Observer { userSetting: UserSetting? ->
+                this.apiKey = userSetting!!.apiKey
+                updateUIStatus()
+                if (!hasSetDailyPlanWord) {
+                    wordRepository.setDailyDayPlanWordEntities(userSetting.newLearningWordCount)
+                    hasSetDailyPlanWord = true
+                }
+            })
+
+        _uiState.addSource<MutableList<WordDetailInfo>?>(
+            wordRepository.getUnfinishWordDetailInfoLiveData(),
+            Observer { wordDetailInfos: MutableList<WordDetailInfo>? ->
+                wordDetailInfos!!.forEach(Consumer { wordDetailInfo: WordDetailInfo? ->
+                    val phonetic = "\\" + wordDetailInfo!!.wordEntity.phonetic + "\\"
+                    wordDetailInfo.wordEntity.phonetic = phonetic
+
+                    wordDetailInfo.wordTranslation.forEach(Consumer { wordTranslation: WordTranslation? ->
+                        wordTranslation!!.wordMeanings.forEach(
+                            Consumer { wordMeaningEntity: WordMeaningEntity? ->
+                                wordMeaningEntity!!.meaning = wordMeaningEntity.meaning + ";"
+                            })
+                    }
+                    )
+                    wordDetailInfo.wordTranslation.sort()
+                })
+                updateOrderData(wordDetailInfos)
+                updateUIStatus()
+            })
+
+        _uiState.addSource<Int?>(
+            statisticsRepository.getAllPlanCountByDate(date.toString()),
+            Observer { allPlanCount: Int? ->
+                this.totalProgress = allPlanCount!!
+                updateUIStatus()
+            })
+
+        _uiState.addSource<Int?>(
+            statisticsRepository.getFinishedPlanCountByDate(date.toString()),
+            Observer { finishedPlanCount: Int? ->
+                this.currentProgress = finishedPlanCount!!
+                updateUIStatus()
+            })
+    }
 
     private fun updateOrderData(newPlans: MutableList<WordDetailInfo>) {
         if (this.reciteWordDetailInfoItemUIState == null) {
@@ -224,13 +283,13 @@ class ReciteWordViewModel(
         val position = minPos + random.nextInt(maxPos - minPos + 1)
         this.reciteWordDetailInfoItemUIState!!.add(position, blured)
         this.isShowNext = true
-        updateReciteStatistics(blured.wordEntity.getId(), 1)
+        updateReciteStatistics(blured.wordEntity.id, 1)
         updateUIStatus()
     }
 
     fun forgetWord() {
         if (this.reciteWordDetailInfoItemUIState == null || this.reciteWordDetailInfoItemUIState!!.isEmpty()) return
-        val forgot = this.reciteWordDetailInfoItemUIState!!.get(0)
+        val forgot = this.reciteWordDetailInfoItemUIState!![0]
         resetShowState()
 
         this.reciteWordDetailInfoItemUIState!!.remove(forgot)
@@ -281,7 +340,7 @@ class ReciteWordViewModel(
     }
 
     fun updateReciteStatistics(wordId: Long, type: Int) {
-        //type修改类型， 0 - 模糊， 1 - 忘记， 2 - 记住
+        //type修改类型， 0 - 模糊， 1 - 忘记， 2 - 记住, 3 - 结束计时
         for (i in this.reciteStatistics.indices) {
             val currentReciteStatistics = this.reciteStatistics[i]
             if (currentReciteStatistics.wordId == wordId) {
@@ -293,68 +352,28 @@ class ReciteWordViewModel(
                     currentReciteStatistics.addLearningTime(SystemClock.elapsedRealtime() - currentReciteStatistics.startLearningTime)
                 } else if (type == 2) {
                     currentReciteStatistics.addLearningTime(SystemClock.elapsedRealtime() - currentReciteStatistics.startLearningTime)
+                } else if (type == 3) {
+                    currentReciteStatistics.addLearningTime(SystemClock.elapsedRealtime() - currentReciteStatistics.startLearningTime)
                 }
             }
         }
     }
 
-    init {
-        _uiState.addSource<Int?>(wordRepository.getDailyReciteStatus(), Observer { status: Int? ->
-            when (status) {
-                0 -> this.reciteStage = ReciteStage.NO_VOCABULARY
-                1 -> this.reciteStage = ReciteStage.FINISH
-                2 -> this.reciteStage = ReciteStage.IN_PROGRESS
-            }
-            updateUIStatus()
-        })
-
-        _uiState.addSource<UserSetting?>(
-            userSettingRepository.userSettingLiveData,
-            Observer { userSetting: UserSetting? ->
-                this.apiKey = userSetting!!.apiKey
-                updateUIStatus()
-                if (!hasSetDailyPlanWord) {
-                    wordRepository.setDailyDayPlanWordEntities(userSetting.newLearningWordCount)
-                    hasSetDailyPlanWord = true
-                }
-            })
-
-        _uiState.addSource<MutableList<WordDetailInfo>?>(
-            wordRepository.getUnfinishWordDetailInfoLiveData(),
-            Observer { wordDetailInfos: MutableList<WordDetailInfo>? ->
-                wordDetailInfos!!.forEach(Consumer { wordDetailInfo: WordDetailInfo? ->
-                    val phonetic = "\\" + wordDetailInfo!!.wordEntity.phonetic + "\\"
-                    wordDetailInfo.wordEntity.phonetic = phonetic
-
-                    wordDetailInfo.wordTranslation.forEach(Consumer { wordTranslation: WordTranslation? ->
-                        wordTranslation!!.wordMeanings.forEach(
-                            Consumer { wordMeaningEntity: WordMeaningEntity? ->
-                                wordMeaningEntity!!.meaning = wordMeaningEntity.meaning + ";"
-                            })
-                    }
-                    )
-                    wordDetailInfo.wordTranslation.sort()
-                })
-                updateOrderData(wordDetailInfos)
-                updateUIStatus()
-            })
-
-        _uiState.addSource<Int?>(
-            statisticsRepository.getAllPlanCountByDate(date.toString()),
-            Observer { allPlanCount: Int? ->
-                this.totalProgress = allPlanCount!!
-                updateUIStatus()
-            })
-
-        _uiState.addSource<Int?>(
-            statisticsRepository.getFinishedPlanCountByDate(date.toString()),
-            Observer { finishedPlanCount: Int? ->
-                this.currentProgress = finishedPlanCount!!
-                updateUIStatus()
-            })
+    fun stopReciteStatistics(){
+        if (this.reciteWordDetailInfoItemUIState == null || this.reciteWordDetailInfoItemUIState!!.isEmpty()) return
+        val currentReciteStatistics = this.reciteWordDetailInfoItemUIState!![0]
+        updateReciteStatistics(currentReciteStatistics.wordEntity.id, 3)
     }
 
-    class ReciteStatistics(@JvmField val wordId: Long, var startLearningTime: Long) {
+    data class ReciteStatistics(val wordId: Long, var startLearningTime: Long): Parcelable {
+        constructor(parcel: Parcel): this(
+            parcel.readLong(),
+            0,
+        ){
+            this.blurCount = parcel.readInt()
+            this.forgetCount = parcel.readInt()
+            this.learningTime = parcel.readLong()
+        }
         var blurCount: Int = 0
             private set
         var forgetCount: Int = 0
@@ -363,15 +382,35 @@ class ReciteWordViewModel(
             private set
 
         fun addLearningTime(time: Long) {
-            this.learningTime = this.learningTime + time
+            this.learningTime += time
         }
 
         fun addBlurCount() {
-            blurCount = blurCount + 1
+            blurCount += 1
         }
 
         fun addForgetCount() {
-            forgetCount = forgetCount + 1
+            forgetCount += 1
+        }
+
+        override fun describeContents(): Int = 0
+
+        override fun writeToParcel(p0: Parcel, p1: Int) {
+            p0.writeLong(wordId)
+            p0.writeLong(startLearningTime)
+            p0.writeInt(blurCount)      // 写入额外字段
+            p0.writeInt(forgetCount)
+            p0.writeLong(learningTime)
+        }
+
+        companion object CREATOR: Parcelable.Creator<ReciteStatistics?> {
+            override fun createFromParcel(p0: Parcel): ReciteStatistics {
+                return ReciteStatistics(p0)
+            }
+
+            override fun newArray(p0: Int): Array<out ReciteStatistics?> {
+                return arrayOfNulls(p0)
+            }
         }
     }
 

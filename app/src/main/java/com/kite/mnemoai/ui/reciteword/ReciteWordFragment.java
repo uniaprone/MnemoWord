@@ -413,7 +413,19 @@ public class ReciteWordFragment extends Fragment{
         }
     }
 
-//    @Override
+    @Override
+    public void onStart() {
+        viewModel.startReciteStatistics();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        viewModel.stopReciteStatistics();
+        super.onStop();
+    }
+
+    //    @Override
 //    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
 //        menuInflater.inflate(R.menu.app_bar_menu, menu);
 //    }

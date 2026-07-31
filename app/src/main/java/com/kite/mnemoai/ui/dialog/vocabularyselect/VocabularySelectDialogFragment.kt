@@ -63,9 +63,11 @@ class VocabularySelectDialogFragment: DialogFragment() {
         }?:throw IllegalStateException("页面不存在")
     }
 
-    data class VocabularySelectInfo(var id: Long, @JvmField var name: String?, @JvmField var description: String?, ):
-        Parcelable {
-
+    data class VocabularySelectInfo(
+        var id: Long,
+        @JvmField var name: String?,
+        @JvmField var description: String?
+    ): Parcelable {
         constructor(parcel: Parcel) : this(
             parcel.readLong(),
             parcel.readString() ?: "",

@@ -58,7 +58,7 @@ public class StatisticsRepository {
 
     public void rememberWord(ReciteWordViewModel.ReciteStatistics reciteStatistics){
         executor.execute(() -> {
-            long wordId = reciteStatistics.wordId;
+            long wordId = reciteStatistics.getWordId();
             String dateTime = LocalDateTime.now().toString();
             LocalDate date= LocalDate.now();
             DayPlanWordEntity dayPlanWordEntity = dayPlanWordDao.queryDayPlanWordBywordIdAndDate(wordId, date.toString());
@@ -73,10 +73,24 @@ public class StatisticsRepository {
                 if(reviewWordEntity != null){
                     int reviewCount = reviewWordEntity.getReviewCount() + 1;
                     reviewWordEntity.setReviewCount(reviewCount);
-                    reviewWordEntity.setNextReviewTime(MemoryAlgorithm.calculateNextReviewDate(reviewCount, date));
+                    reviewWordEntity.setNextReviewTime(
+                            MemoryAlgorithm.calculateNextReviewDate(
+                                    reviewCount,
+                                    reciteStatistics.getBlurCount(),
+                                    reciteStatistics.getForgetCount(),
+                                    reciteStatistics.getLearningTime(),
+                                    date
+                            ).toString()
+                    );
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }else{
-                    reviewWordEntity = new ReviewWordEntity(wordId, 1, 0, MemoryAlgorithm.calculateNextReviewDate(0, date));
+                    reviewWordEntity =
+                            new ReviewWordEntity(wordId, 1, 0,
+                                    MemoryAlgorithm.calculateNextReviewDate(0, reciteStatistics.getBlurCount(),
+                                            reciteStatistics.getForgetCount(),
+                                            reciteStatistics.getLearningTime(),
+                                            date).toString()
+                            );
                     reviewWordDao.insertReviewWord(reviewWordEntity);
                 }
             }
