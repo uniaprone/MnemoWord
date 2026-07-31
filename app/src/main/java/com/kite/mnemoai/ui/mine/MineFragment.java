@@ -1,6 +1,9 @@
 package com.kite.mnemoai.ui.mine;
 
 import android.os.Bundle;
+import android.transition.ChangeBounds;
+import android.transition.TransitionManager;
+import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +65,7 @@ public class MineFragment extends Fragment {
             @Override
             public void onChanged(MineUIState mineUIState) {
                 if(mineUIState == null) return;
+                TransitionManager.beginDelayedTransition(binding.getRoot(), new TransitionSet().addTransition(new ChangeBounds()));
                 adapter.setMineBaseItems(mineUIState.getMineBaseItems());
                 if(mineUIState.getApiTestState() != null){
                     if(mineUIState.getApiTestState() instanceof LoadingState.Loading){
@@ -75,7 +79,7 @@ public class MineFragment extends Fragment {
                         binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnPrimaryContainer));
                         bannerControl.startTimer(3000);
                     } else if (mineUIState.getApiTestState() instanceof LoadingState.Error) {
-                        binding.settingInfoTV.setText("测试失败，请稍后再试");
+                        binding.settingInfoTV.setText(((LoadingState.Error) mineUIState.getApiTestState()).getException().getMessage());
                         binding.infoFL.setBackgroundColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorErrorContainer));
                         binding.settingInfoTV.setTextColor(MaterialColors.getColor(binding.settingInfoTV, com.google.android.material.R.attr.colorOnErrorContainer));
                         bannerControl.startTimer(3000);

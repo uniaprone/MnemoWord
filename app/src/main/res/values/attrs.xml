@@ -34,9 +34,13 @@
     <attr name="colorSecondary" format="color|reference"/>
     <attr name="colorTertiary" format="color|reference"/>
 
+    <attr name="colorErrorContainer" format="color|reference"/>
+    <attr name="colorOnErrorContainer" format="color|reference"/>
+
     <attr name="statusBarBackground" format="color|reference"/>
 
     <attr name="colorOnSurface" format="color|reference"/>
+    <attr name="colorOnSurfaceVariant" format="color|reference"/>
 
     <attr name="colorSurfaceContainerLowest" format="color|reference"/>
 

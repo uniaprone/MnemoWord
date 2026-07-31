@@ -6,9 +6,6 @@ import java.util.List;
 
 public class WordExtract {
     private String word;
-    @SerializedName("core_image")
-    private String coreImage;
-
     @SerializedName("phrases")
     private List<Phrase> phrase;
     @SerializedName("example_sentences")
@@ -18,9 +15,8 @@ public class WordExtract {
 
     private String explain;
 
-    public WordExtract(String word, String coreImage, String explain, List<Phrase> phrase, List<ExampleSentence> exampleSentence, Affix affix) {
+    public WordExtract(String word, String explain, List<Phrase> phrase, List<ExampleSentence> exampleSentence, Affix affix) {
         this.word = word;
-        this.coreImage = coreImage;
         this.explain = explain;
         this.phrase = phrase;
         this.exampleSentence = exampleSentence;
@@ -33,14 +29,6 @@ public class WordExtract {
 
     public void setAffix(Affix affix) {
         this.affix = affix;
-    }
-
-    public String getCoreImage() {
-        return coreImage;
-    }
-
-    public void setCoreImage(String coreImage) {
-        this.coreImage = coreImage;
     }
 
     public List<ExampleSentence> getExampleSentence() {
