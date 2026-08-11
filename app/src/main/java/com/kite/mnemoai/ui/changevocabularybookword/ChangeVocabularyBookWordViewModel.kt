@@ -13,11 +13,14 @@ import com.kite.mnemoai.data.repository.GroupRepository
 import com.kite.mnemoai.data.repository.IRepositoryCallback
 import com.kite.mnemoai.data.repository.WordRepository
 import com.kite.mnemoai.ui.changevocabularybookword.VocabularyBookChangedWord
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class ChangeVocabularyBookWordViewModel(
-    val wordRepository: WordRepository,
-    val groupRepository: GroupRepository,
-    val savedStateHandle: SavedStateHandle
+@HiltViewModel
+class ChangeVocabularyBookWordViewModel @Inject constructor(
+    private val wordRepository: WordRepository,
+    private val groupRepository: GroupRepository,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val _uiStatus: MutableLiveData<ChangeVocabularyBookWordUIState> = MutableLiveData()
     val uiStatus: LiveData<ChangeVocabularyBookWordUIState> get() = _uiStatus
@@ -121,21 +124,4 @@ class ChangeVocabularyBookWordViewModel(
     private fun updateUIStatus(){
         _uiStatus.value = ChangeVocabularyBookWordUIState(groupId, operationType, searchText, optionalWords, alterWords)
     }
-
-
-    companion object{
-        val initializer = ViewModelInitializer(
-            ChangeVocabularyBookWordViewModel::class.java
-        ) {
-            val app =
-                this[ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY] as MainApplication
-            val savedStateHandle = createSavedStateHandle()
-            ChangeVocabularyBookWordViewModel(
-                app.wordRepository,
-                app.groupRepository,
-                savedStateHandle
-            )
-        }
-    }
-
 }

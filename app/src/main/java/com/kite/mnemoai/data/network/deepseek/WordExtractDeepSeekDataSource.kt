@@ -9,11 +9,10 @@ import com.kite.mnemoai.data.network.RetrofitClient
 import com.kite.mnemoai.data.network.WordExtractDataSource
 import com.kite.mnemoai.data.network.WordExtractRequest
 import com.kite.mnemoai.data.network.deepseek.model.DeepseekRequestBody
+import javax.inject.Inject
 
-class WordExtractDeepSeekDataSource(
-    val wordExtractDeepSeekService: WordExtractDeepSeekService = RetrofitClient.deepseekRetrofit.create(
-        WordExtractDeepSeekService::class.java
-    ),
+class WordExtractDeepSeekDataSource @Inject constructor(
+    val wordExtractDeepSeekService: WordExtractDeepSeekService,
 ): WordExtractDataSource {
     override fun generateWordExtract(apiKey: String, wordExtractRequest: WordExtractRequest): NetworkResult<String> {
         val deepseekRequestBody = DeepseekRequestBody(wordExtractRequest.word, wordExtractRequest.isEnableThinking)
@@ -25,9 +24,7 @@ class WordExtractDeepSeekDataSource(
                 val deepseekResponseBody = it.body()
                 val wordExtractString: String? =
                     deepseekResponseBody?.choices?.get(0)?.message?.content
-
                 return NetworkResult.Success(wordExtractString?:"")
-
             }
         }
         return NetworkResult.Error(IllegalArgumentException("请检查网络或密钥是否有效!"))

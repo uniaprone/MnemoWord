@@ -64,6 +64,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ReciteWordFragment extends Fragment{
     private FragmentReciteWordBinding binding;
     private ReciteWordViewModel viewModel;
@@ -81,7 +84,7 @@ public class ReciteWordFragment extends Fragment{
         mainViewModel.setShowNavIcon(false);
 
         binding = FragmentReciteWordBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this, ReciteWordViewModel.Companion.getFactory()).get(ReciteWordViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ReciteWordViewModel.class);
         viewModel.setDailyDayPlanWordEntities();
 
         bannerControl = new BannerControl(binding.statusReciteWordOK.AIGenerateBanner, getLifecycle());
@@ -146,6 +149,7 @@ public class ReciteWordFragment extends Fragment{
                                 TransitionManager.endTransitions(binding.statusReciteWordOK.wordContentCL);
                                 binding.statusReciteWordOK.wordTranslationLL.setVisibility(View.GONE);
                                 binding.statusReciteWordOK.showWordDefinitionLL.setVisibility(View.VISIBLE);
+                                bannerControl.forceHide();
                                 binding.statusReciteWordOK.aiMnemonic.getRoot().setVisibility(View.GONE);
                                 binding.statusReciteWordOK.aiChipGroup.setVisibility(View.GONE);
                                 binding.statusReciteWordOK.detailDivider.setVisibility(View.GONE);

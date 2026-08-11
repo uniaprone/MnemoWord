@@ -1,7 +1,6 @@
 package com.kite.mnemoai.ui.vocabularybookwords;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,19 +14,19 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kite.mnemoai.ui.main.MainActivity;
 import com.kite.mnemoai.R;
-import com.kite.mnemoai.ui.WordListAdapter;
+import com.kite.mnemoai.ui.adapter.WordListAdapter;
 import com.kite.mnemoai.data.model.WordListItem;
 import com.kite.mnemoai.databinding.FragmentCollectionLearningWordsBinding;
-import com.kite.mnemoai.ui.main.MainViewModel;
 import com.kite.mnemoai.ui.vocabularybookgroup.VocabularyGroupUIState;
-import com.kite.mnemoai.utils.StringConvert;
 import com.kite.mnemoai.ui.vocabularybookgroup.VocabularyGroupViewModel;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class VocabularyWordsFragment extends Fragment {
     private FragmentCollectionLearningWordsBinding binding;
     private VocabularyGroupViewModel viewModel;
@@ -45,8 +44,7 @@ public class VocabularyWordsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCollectionLearningWordsBinding.inflate(inflater, container, false);
         int status = getArguments().getInt("status", 0);
-        viewModel = new ViewModelProvider(requireParentFragment(), ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
-                .get(VocabularyGroupViewModel.class);
+        viewModel = new ViewModelProvider(requireParentFragment()).get(VocabularyGroupViewModel.class);
 
         RecyclerView recyclerView = binding.wordRecycleView;
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));

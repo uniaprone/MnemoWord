@@ -15,6 +15,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.kite.mnemoai.MainApplication
 import com.kite.mnemoai.data.local.UserSetting
+import com.kite.mnemoai.data.local.entity.WordExtractEntity
 import com.kite.mnemoai.data.local.entity.WordMeaningEntity
 import com.kite.mnemoai.data.model.WordDetailInfo
 import com.kite.mnemoai.data.model.WordTranslation
@@ -23,14 +24,17 @@ import com.kite.mnemoai.data.repository.AiMnemonicRepository
 import com.kite.mnemoai.data.repository.UserSettingRepository
 import com.kite.mnemoai.data.repository.WordRepository
 import com.kite.mnemoai.ui.model.LoadingState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.Collections
 import java.util.function.Consumer
+import javax.inject.Inject
 
-class WordDetailViewModel(
-    val wordRepository: WordRepository,
-    val userSettingRepository: UserSettingRepository,
-    val aiMnemonicRepository: AiMnemonicRepository,
+@HiltViewModel
+class WordDetailViewModel @Inject constructor(
+    private val wordRepository: WordRepository,
+    private val userSettingRepository: UserSettingRepository,
+    private val aiMnemonicRepository: AiMnemonicRepository,
     savedStateHandle: SavedStateHandle?
 ) : ViewModel() {
     @JvmField
@@ -85,13 +89,4 @@ class WordDetailViewModel(
             })
     }
 
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[AndroidViewModelFactory.APPLICATION_KEY] as MainApplication
-                val savedStateHandle = createSavedStateHandle()
-                WordDetailViewModel(app.wordRepository, app.userSettingRepository, app.aiMnemonicRepository,savedStateHandle)
-            }
-        }
-    }
 }

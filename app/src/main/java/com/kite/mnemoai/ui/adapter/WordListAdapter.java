@@ -1,4 +1,4 @@
-package com.kite.mnemoai.ui;
+package com.kite.mnemoai.ui.adapter;
 
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;

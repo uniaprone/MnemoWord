@@ -9,32 +9,32 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kite.mnemoai.R
 import com.kite.mnemoai.data.model.WordListItem
 import com.kite.mnemoai.data.repository.IRepositoryCallback
 import com.kite.mnemoai.databinding.FragmentSearchBinding
-import com.kite.mnemoai.ui.WordListAdapter
+import com.kite.mnemoai.ui.adapter.WordListAdapter
 import com.kite.mnemoai.ui.main.MainViewModel
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment: Fragment() {
+    private val mainViewModel: MainViewModel by activityViewModels()
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var binding: FragmentSearchBinding
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mainViewModel = ViewModelProvider(requireActivity())[MainViewModel::class]
         mainViewModel.settitle(resources.getString(R.string.search))
         mainViewModel.setShowNavIcon(true)
 
         binding = FragmentSearchBinding.inflate(layoutInflater, container, false)
-        val viewModel: SearchViewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.Factory.from(SearchViewModel.initializer)
-        )[SearchViewModel::class.java]
 
         val adapter = WordListAdapter { word ->
             val args = Bundle()

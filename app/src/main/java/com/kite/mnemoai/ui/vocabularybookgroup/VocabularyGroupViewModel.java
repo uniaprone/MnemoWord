@@ -18,6 +18,11 @@ import com.kite.mnemoai.data.repository.WordRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class VocabularyGroupViewModel extends ViewModel {
     private MediatorLiveData<VocabularyGroupUIState> uiState = new MediatorLiveData<>();
     private WordRepository wordRepository;
@@ -25,6 +30,7 @@ public class VocabularyGroupViewModel extends ViewModel {
     private GroupEntity group;
     private List<WordListItem> words;
 
+    @Inject
     public VocabularyGroupViewModel(WordRepository wordRepository, GroupRepository groupRepository, SavedStateHandle savedStateHandle) {
         this.wordRepository = wordRepository;
         this.groupRepository = groupRepository;
@@ -70,13 +76,4 @@ public class VocabularyGroupViewModel extends ViewModel {
         return uiState;
     }
 
-    public static final ViewModelInitializer<VocabularyGroupViewModel> initializer = new ViewModelInitializer<>(
-            VocabularyGroupViewModel.class,
-            creationExtras -> {
-                MainApplication app = (MainApplication) creationExtras.get(APPLICATION_KEY);
-                assert app != null;
-                SavedStateHandle savedStateHandle = createSavedStateHandle(creationExtras);
-                return new VocabularyGroupViewModel(app.getWordRepository(), app.getGroupRepository(), savedStateHandle);
-            }
-    );
 }

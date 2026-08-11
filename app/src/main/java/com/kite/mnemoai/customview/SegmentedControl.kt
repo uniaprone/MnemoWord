@@ -6,18 +6,16 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import androidx.core.view.contains
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginEnd
-import androidx.core.view.marginLeft
 import androidx.core.view.marginStart
-import androidx.core.view.marginTop
 import androidx.core.view.updateLayoutParams
 import androidx.transition.ChangeBounds
 import androidx.transition.Transition
-import androidx.transition.TransitionListenerAdapter
 import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
@@ -35,37 +33,34 @@ class SegmentedControl @JvmOverloads constructor(
     val Float.dp: Float
         get() = this * Resources.getSystem().displayMetrics.density
     private val binding = ViewSegmentedControlBinding.inflate(LayoutInflater.from(context), this, true)
-    private var selectedIndex = -1
+    private var segmentTitles: Array<String> = emptyArray()
+    private var thumbBackground: Drawable
     private var listener: ((Int) -> Unit)? = null
 
     init {
-        binding.thumb.background = createBackground()
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.SegmentedControl,
+            0, 0
+        ).apply {
+            try{
+                val titlesResId  = getResourceId(R.styleable.SegmentedControl_segmentTitle, -1)
+                if(titlesResId  != -1){
+                    segmentTitles = resources.getStringArray(titlesResId)
+                }
+
+                thumbBackground = ContextCompat.getDrawable(context,
+                    getResourceId(R.styleable.SegmentedControl_thumbBackground, -1))?:createBackground()
+            } finally {
+              recycle()
+            }
+        }
+        binding.thumb.background = thumbBackground
+        init()
     }
 
-    private fun createBackground(): Drawable = MaterialShapeDrawable().apply {
-            fillColor =
-                ColorStateList.valueOf(
-                    MaterialColors.getColor(
-                        context,
-                        R.attr.colorPrimary,
-                        Color.BLACK
-                    )
-                )
-
-            shapeAppearanceModel =
-                ShapeAppearanceModel.builder()
-                    .setAllCornerSizes(4f.dp)
-                    .build()
-    }
-
-    fun setOnSelectionChangedListener(listener: (Int) -> Unit) {
-        this.listener = listener
-    }
-
-    fun setItems(selectedIndex: Int = -1, vararg titles: String){
-        this.selectedIndex = selectedIndex
-        binding.container.removeAllViews()
-        titles.forEachIndexed { index, title ->
+    fun init(){
+        segmentTitles.forEachIndexed { index, title ->
             val button: MaterialButton = MaterialButton(context).apply {
                 text = title
                 isCheckable = false
@@ -97,88 +92,148 @@ class SegmentedControl @JvmOverloads constructor(
             }
             binding.container.addView(button)
         }
-        refreshButtons()
-        val actualHeight = binding.container.height // 或者 binding.container.measuredHeight
-
-        if (actualHeight > 0) {
-            binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
-                height = actualHeight
-            }
-            // 如果不在动画中，需手动触发布局
-            binding.thumb.requestLayout()
-        }
-
-        post {
-            if (selectedIndex != -1){
-
-                updateThumb(false)
-            }
-        }
-        requestLayout()
+        post{}
     }
 
-    private fun updateThumb(animate: Boolean) {
-        var startMargin = context.dpToPx(4)
-        for (i in 0 until selectedIndex) {
-            startMargin += binding.container.getChildAt(i).width +
-                    binding.container.getChildAt(selectedIndex).marginStart +
-                    binding.container.getChildAt(selectedIndex).marginEnd
-        }
-        val thumbWidth = binding.container.getChildAt(selectedIndex).width +
-                binding.container.getChildAt(selectedIndex).marginStart +
-                binding.container.getChildAt(selectedIndex).marginEnd
+    fun setDefaultSelection(index:Int){
+        refreshButtons(index)
+        updateThumb(index, false)
+    }
 
-        if (animate) {
-            TransitionManager.endTransitions(binding.root)
-            val transition = ChangeBounds().apply {
-                duration = 300
-                addListener(object: Transition.TransitionListener {
-                    override fun onTransitionStart(p0: Transition) {
-                        refreshButtons()
-                    }
-                    override fun onTransitionEnd(p0: Transition) {
-                        if(selectedIndex == -1) return
-                         listener?.invoke(selectedIndex)
-                    }
-                    override fun onTransitionCancel(p0: Transition) {}
-                    override fun onTransitionPause(p0: Transition) {}
-                    override fun onTransitionResume(p0: Transition) {}
+    fun setSelectedIndex(index: Int) {
+        refreshButtons(index)
+        updateThumb(index, true)
+    }
+    private fun createBackground(): Drawable = MaterialShapeDrawable().apply {
+        fillColor =
+            ColorStateList.valueOf(
+                MaterialColors.getColor(
+                    context,
+                    R.attr.colorPrimary,
+                    Color.BLACK
+                )
+            )
 
-                })
+        shapeAppearanceModel =
+            ShapeAppearanceModel.builder()
+                .setAllCornerSizes(4f.dp)
+                .build()
+    }
+
+    fun setOnSelectionChangedListener(listener: (Int) -> Unit) {
+        this.listener = listener
+    }
+
+//    fun setItems(selectedIndex: Int = -1, vararg titles: String){
+//        this.selectedIndex = selectedIndex
+//        binding.container.removeAllViews()
+//        titles.forEachIndexed { index, title ->
+//            val button: MaterialButton = MaterialButton(context).apply {
+//                text = title
+//                isCheckable = false
+//                backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+//                strokeWidth = 0
+//                insetTop = 0
+//                insetBottom = 0
+//
+//                minHeight = 0
+//                minimumHeight = 0
+//                minWidth = 0
+//                minimumWidth = 0
+//
+//                setPadding(context.dpToPx(4), context.dpToPx(4), context.dpToPx(4), context.dpToPx(4))
+//
+//                cornerRadius = 0
+//
+//                rippleColor = null
+//                layoutParams = LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.WRAP_CONTENT,
+//                    LinearLayout.LayoutParams.MATCH_PARENT
+//                ).apply {
+//                    setMargins(context.dpToPx(4), context.dpToPx(4), context.dpToPx(4), context.dpToPx(4))
+//                }
+//
+//                setOnClickListener {
+//                    setSelectedIndex(index)
+//                }
+//            }
+//            binding.container.addView(button)
+//        }
+//        refreshButtons()
+//        val actualHeight = binding.container.height // 或者 binding.container.measuredHeight
+//
+//        if (actualHeight > 0) {
+//            binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
+//                height = actualHeight
+//            }
+//            // 如果不在动画中，需手动触发布局
+//            binding.thumb.requestLayout()
+//        }
+//
+//        post {
+//            if (selectedIndex != -1){
+//                updateThumb(1, false)
+//            }
+//        }
+//        requestLayout()
+//    }
+
+    private fun updateThumb(index: Int, animate: Boolean) {
+        binding.container.post {
+            var startMargin = context.dpToPx(4)
+            for (i in 0 until index) {
+                startMargin += binding.container.getChildAt(i).measuredWidth +
+                        binding.container.getChildAt(index).marginStart +
+                        binding.container.getChildAt(index).marginEnd
             }
-            TransitionManager.beginDelayedTransition(binding.root, transition)
-        }
+            val thumbWidth = binding.container.getChildAt(index).width +
+                    binding.container.getChildAt(index).marginStart +
+                    binding.container.getChildAt(index).marginEnd
+            if (animate) {
+                val transition = ChangeBounds().apply {
+                    duration = 300
+                    addListener(object: Transition.TransitionListener {
+                        override fun onTransitionStart(p0: Transition) {
+                            refreshButtons(index)
+                        }
+                        override fun onTransitionEnd(p0: Transition) {
+                            if (binding.root.isAttachedToWindow) {
+                                TransitionManager.endTransitions(binding.root)
+                            }
+                            listener?.invoke(index)
+                        }
+                        override fun onTransitionCancel(p0: Transition) {}
+                        override fun onTransitionPause(p0: Transition) {}
+                        override fun onTransitionResume(p0: Transition) {}
 
-        binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
-            width = thumbWidth
-            height = binding.container.height
-            marginStart = startMargin
-            topMargin = context.dpToPx(4)
-        }
-
-        if (!animate) {
-            binding.thumb.requestLayout()
-            if(selectedIndex == -1) return
-            listener?.invoke(selectedIndex)
+                    })
+                }
+                TransitionManager.beginDelayedTransition(binding.root, transition)
+                binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
+                    width = thumbWidth
+                    height = binding.container.height
+                    marginStart = startMargin
+                    topMargin = context.dpToPx(4)
+                }
+            }else{
+                binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
+                    width = thumbWidth
+                    height = binding.container.height
+                    marginStart = startMargin
+                    topMargin = context.dpToPx(4)
+                }
+            }
         }
     }
 
-    private fun refreshButtons() {
+    private fun refreshButtons(index: Int) {
         for (i in 0 until binding.container.childCount) {
             val button = binding.container.getChildAt(i) as MaterialButton
-            if (i == selectedIndex) {
+            if (i == index) {
                 button.setTextColor(MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorOnPrimary))
             } else {
                 button.setTextColor(MaterialColors.getColor(binding.root, com.google.android.material.R.attr.colorOnSurface))
             }
         }
     }
-
-    fun setSelectedIndex(index: Int) {
-        selectedIndex = index
-        if(selectedIndex == -1) return
-
-        updateThumb(true)
-    }
-
 }

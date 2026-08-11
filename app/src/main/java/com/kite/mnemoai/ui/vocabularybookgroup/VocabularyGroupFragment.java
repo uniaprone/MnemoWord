@@ -33,6 +33,9 @@ import com.kite.mnemoai.ui.main.MainViewModel;
 
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class VocabularyGroupFragment extends Fragment implements MenuProvider{
     private static final String MODIFY_KEY = "modifyVocabularyBookConfirm";
     private FragmentVocabularyGroupBinding binding;
@@ -46,8 +49,7 @@ public class VocabularyGroupFragment extends Fragment implements MenuProvider{
         mainViewModel.setShowNavIcon(true);
 
         binding = FragmentVocabularyGroupBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyGroupViewModel.initializer))
-                .get(VocabularyGroupViewModel.class);
+        viewModel = new ViewModelProvider(this).get(VocabularyGroupViewModel.class);
 
         return binding.getRoot();
     }

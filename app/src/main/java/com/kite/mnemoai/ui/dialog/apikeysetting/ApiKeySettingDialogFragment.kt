@@ -29,8 +29,8 @@ class ApiKeySettingDialogFragment: DialogFragment() {
                 val bundle = Bundle().apply {
                     putString("api_key", apiKey)
                 }
-                parentFragmentManager.setFragmentResult(API_KEY_SETTING, bundle)
                 dismiss()
+                parentFragmentManager.setFragmentResult(API_KEY_SETTING, bundle)
             }
 
             binding.cancelBtn.setOnClickListener {

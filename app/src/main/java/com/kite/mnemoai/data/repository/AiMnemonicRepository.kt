@@ -1,10 +1,7 @@
 package com.kite.mnemoai.data.repository
 
-import android.content.Context
 import android.util.Log
 import com.google.gson.JsonSyntaxException
-import com.kite.mnemoai.MainApplication
-import com.kite.mnemoai.data.local.AppDatabase
 import com.kite.mnemoai.data.local.Converters
 import com.kite.mnemoai.data.local.dao.WordExtractDao
 import com.kite.mnemoai.data.local.entity.WordExtractEntity
@@ -12,23 +9,24 @@ import com.kite.mnemoai.data.model.WordDetailInfo
 import com.kite.mnemoai.data.network.AiServiceProvider
 import com.kite.mnemoai.data.network.NetworkResult
 import com.kite.mnemoai.data.network.WordExtractRequest
+import com.kite.mnemoai.di.Dispatcher
+import com.kite.mnemoai.di.MaiDispatcher
 import com.kite.mnemoai.ui.model.LoadingState
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AiMnemonicRepository(
-    private val context: Context,
+@Singleton
+class AiMnemonicRepository @Inject constructor(
+    private val wordExtractDao: WordExtractDao,
     private val userSettingRepository: UserSettingRepository,
-    private val aiServiceProvider: AiServiceProvider = AiServiceProvider,
-    private val iODispatcher: CoroutineDispatcher = Dispatchers.IO,
-
+    private val aiServiceProvider: AiServiceProvider,
+    @param:Dispatcher(MaiDispatcher.IO) private val iODispatcher: CoroutineDispatcher
 ) {
-    private var db: AppDatabase = (context as MainApplication).appDatabase
-    private var wordExtractDao: WordExtractDao = db.wordExtractDao()
     suspend fun apiKeyTest(apiKey: String, wordExtractRequest: WordExtractRequest): LoadingState<String>{
         return withContext(iODispatcher){
-            val networkResult: NetworkResult<String> = aiServiceProvider.getDataSource().generateWordExtract(apiKey, wordExtractRequest)
+            val networkResult: NetworkResult<String> = aiServiceProvider.getWordExtractDataSourceImp().generateWordExtract(apiKey, wordExtractRequest)
             when (networkResult) {
                 is NetworkResult.Success -> {
                     LoadingState.Success("测试成功，API Key可用")
@@ -44,7 +42,7 @@ class AiMnemonicRepository(
     suspend fun generateWordExtract(wordDetailInfo: WordDetailInfo, wordExtractRequest: WordExtractRequest): LoadingState<String>{
         return withContext(iODispatcher){
             val userSetting = userSettingRepository.getUserSettingSync()
-            val networkResult: NetworkResult<String> = aiServiceProvider.getDataSource().generateWordExtract(userSetting.apiKey, wordExtractRequest)
+            val networkResult: NetworkResult<String> = aiServiceProvider.getWordExtractDataSourceImp().generateWordExtract(userSetting.apiKey, wordExtractRequest)
             when (networkResult) {
                 is NetworkResult.Success -> {
                     Log.d("接收的json数据", networkResult.data + "")

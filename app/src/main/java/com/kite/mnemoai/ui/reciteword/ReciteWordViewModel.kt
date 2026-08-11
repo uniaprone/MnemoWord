@@ -1,50 +1,42 @@
 package com.kite.mnemoai.ui.reciteword
 
-import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.os.SystemClock
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.kite.mnemoai.MainApplication
 import com.kite.mnemoai.data.local.UserSetting
+import com.kite.mnemoai.data.local.entity.WordExtractEntity
 import com.kite.mnemoai.data.local.entity.WordMeaningEntity
 import com.kite.mnemoai.data.model.WordDetailInfo
 import com.kite.mnemoai.data.model.WordTranslation
 import com.kite.mnemoai.data.network.WordExtractRequest
 import com.kite.mnemoai.data.repository.AiMnemonicRepository
-import com.kite.mnemoai.data.repository.GroupRepository
 import com.kite.mnemoai.data.repository.IRepositoryCallback
 import com.kite.mnemoai.data.repository.StatisticsRepository
 import com.kite.mnemoai.data.repository.UserSettingRepository
 import com.kite.mnemoai.data.repository.WordRepository
 import com.kite.mnemoai.ui.model.LoadingState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Random
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.stream.Collectors
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class ReciteWordViewModel(
+@HiltViewModel
+class ReciteWordViewModel @Inject constructor(
     private val wordRepository: WordRepository,
-    private val groupRepository: GroupRepository?,
     private val statisticsRepository: StatisticsRepository,
     private val userSettingRepository: UserSettingRepository,
     private val aiMnemonicRepository: AiMnemonicRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MediatorLiveData<ReciteWordUIState?>()
     private var reciteStage: ReciteStage? = null
@@ -81,11 +73,12 @@ class ReciteWordViewModel(
                     wordRepository.setDailyDayPlanWordEntities(userSetting.newLearningWordCount)
                     hasSetDailyPlanWord = true
                 }
-            })
+            }
+        )
 
-        _uiState.addSource<MutableList<WordDetailInfo>?>(
+        _uiState.addSource(
             wordRepository.getUnfinishWordDetailInfoLiveData(),
-            Observer { wordDetailInfos: MutableList<WordDetailInfo>? ->
+            Observer { wordDetailInfos ->
                 wordDetailInfos!!.forEach(Consumer { wordDetailInfo: WordDetailInfo? ->
                     val phonetic = "\\" + wordDetailInfo!!.wordEntity.phonetic + "\\"
                     wordDetailInfo.wordEntity.phonetic = phonetic
@@ -95,22 +88,23 @@ class ReciteWordViewModel(
                             Consumer { wordMeaningEntity: WordMeaningEntity? ->
                                 wordMeaningEntity!!.meaning = wordMeaningEntity.meaning + ";"
                             })
-                    }
+                        }
                     )
                     wordDetailInfo.wordTranslation.sort()
                 })
                 updateOrderData(wordDetailInfos)
                 updateUIStatus()
-            })
+            }
+        )
 
-        _uiState.addSource<Int?>(
+        _uiState.addSource(
             statisticsRepository.getAllPlanCountByDate(date.toString()),
             Observer { allPlanCount: Int? ->
                 this.totalProgress = allPlanCount!!
                 updateUIStatus()
             })
 
-        _uiState.addSource<Int?>(
+        _uiState.addSource(
             statisticsRepository.getFinishedPlanCountByDate(date.toString()),
             Observer { finishedPlanCount: Int? ->
                 this.currentProgress = finishedPlanCount!!
@@ -204,16 +198,6 @@ class ReciteWordViewModel(
 
     val uiState: LiveData<ReciteWordUIState?>
         get() = _uiState
-
-    fun showTranslation() {
-        this.isShowTranslation = true
-        updateUIStatus()
-    }
-
-    private fun showDetail() {
-        this.isShowDetail = true
-        updateUIStatus()
-    }
 
     fun showAll() {
         this.isShowTranslation = true
@@ -410,23 +394,6 @@ class ReciteWordViewModel(
 
             override fun newArray(p0: Int): Array<out ReciteStatistics?> {
                 return arrayOfNulls(p0)
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[AndroidViewModelFactory.APPLICATION_KEY] as MainApplication
-                val savedStateHandle = createSavedStateHandle()
-                ReciteWordViewModel(
-                    app.wordRepository,
-                    app.groupRepository,
-                    app.statisticsRepository,
-                    app.userSettingRepository,
-                    app.aiMnemonicRepository,
-                    savedStateHandle
-                )
             }
         }
     }

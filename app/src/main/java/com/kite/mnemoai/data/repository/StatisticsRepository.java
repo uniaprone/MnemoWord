@@ -23,20 +23,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class StatisticsRepository {
-    private AppDatabase db;
     private DayPlanDao dayPlanDao;
     private DayPlanWordDao dayPlanWordDao;
     private ReviewWordDao reviewWordDao;
     private ExecutorService executor;
     private Handler handler;
 
-    public StatisticsRepository(Application app, Handler handler) {
-        this.db = ((MainApplication) app).getAppDatabase();
-        this.executor = MainApplication.getEXECUTOR_SERVICE();
-        this.dayPlanDao = db.dayPlanDao();
-        this.dayPlanWordDao = db.dayPlanWordDao();
-        this.reviewWordDao = db.reviewWordDao();
+    @Inject
+    public StatisticsRepository(
+            Handler handler,
+            ExecutorService executor,
+            DayPlanWordDao dayPlanWordDao,
+            DayPlanDao dayPlanDao,
+            ReviewWordDao reviewWordDao
+    ) {
+        this.executor = executor;
+        this.dayPlanDao = dayPlanDao;
+        this.dayPlanWordDao = dayPlanWordDao;
+        this.reviewWordDao = reviewWordDao;
         this.handler = handler;
     }
 

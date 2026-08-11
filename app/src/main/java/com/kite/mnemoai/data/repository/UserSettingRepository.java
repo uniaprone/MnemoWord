@@ -21,21 +21,30 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
+@Singleton
 public class UserSettingRepository {
     private Context context;
     private ExecutorService executor;
-    private AppDatabase db;
     private DayPlanWordDao dayPlanWordDao;
     private WordDao wordDao;
     private final MediatorLiveData<UserSetting> _userSettingMediatorLiveData = new MediatorLiveData<>();
     private final Object lock = new Object();
-    public UserSettingRepository(Application app) {
-        this.context = ((MainApplication) app).getApplicationContext();
-        this.executor = MainApplication.getEXECUTOR_SERVICE();
-        this.db = ((MainApplication) app).getAppDatabase();
-        this.dayPlanWordDao = db.dayPlanWordDao();
-        this.wordDao = db.wordDao();
+    @Inject
+    public UserSettingRepository(
+            @ApplicationContext Context context,
+            ExecutorService executors,
+            DayPlanWordDao dayPlanWordDao,
+            WordDao wordDao
+    ) {
+        this.context = context;
+        this.executor = executors;
+        this.dayPlanWordDao = dayPlanWordDao;
+        this.wordDao = wordDao;
         init();
     }
 

@@ -1,5 +1,6 @@
 package com.kite.mnemoai.ui.worddetail;
 
+import com.kite.mnemoai.data.local.entity.WordExtractEntity;
 import com.kite.mnemoai.data.model.WordDetailInfo;
 import com.kite.mnemoai.ui.model.LoadingState;
 

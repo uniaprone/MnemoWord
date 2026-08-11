@@ -1,6 +1,7 @@
 package com.kite.mnemoai.ui.vocabularybook;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.kite.mnemoai.R;
 import com.kite.mnemoai.data.model.DailyStatistic;
+import com.kite.mnemoai.data.repository.StatisticsRepository;
 import com.kite.mnemoai.databinding.FragmentVocabularyBinding;
 import com.kite.mnemoai.ui.dialog.settingandaddnewvocabularybook.SettingAndAddNewVocabularyBookDialogFragment;
 import com.kite.mnemoai.ui.vocabularybook.dialog.newlearningwordsetting.NewLearningWordSettingDialogFragment;
@@ -27,12 +29,18 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 
+@AndroidEntryPoint
 public class VocabularyFragment extends Fragment{
     private FragmentVocabularyBinding binding;
     private VocabularyViewModel viewModel;
+    @Inject
+    StatisticsRepository statisticsRepository;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,9 +61,7 @@ public class VocabularyFragment extends Fragment{
         mainViewModel.setShowNavIcon(false);
 
         binding = FragmentVocabularyBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(VocabularyViewModel.initializer))
-                .get(VocabularyViewModel.class);
-
+        viewModel = new ViewModelProvider(this).get(VocabularyViewModel.class);
 
         binding.newLearningWordLL.setOnClickListener(new View.OnClickListener() {
             @Override

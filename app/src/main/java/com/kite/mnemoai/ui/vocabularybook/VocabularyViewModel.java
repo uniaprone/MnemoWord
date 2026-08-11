@@ -2,6 +2,8 @@ package com.kite.mnemoai.ui.vocabularybook;
 
 import static androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
@@ -23,6 +25,11 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class VocabularyViewModel extends ViewModel {
     private MediatorLiveData<VocabularyUIState> uiState = new MediatorLiveData<>();
     private WordRepository wordRepository;
@@ -34,6 +41,7 @@ public class VocabularyViewModel extends ViewModel {
     private DailyStatistic dailyStatistic;
     private int newLearningWordCount;
 
+    @Inject
     public VocabularyViewModel(WordRepository wordRepository, GroupRepository groupRepository, StatisticsRepository statisticsRepository, UserSettingRepository userSettingRepository){
         this.wordRepository = wordRepository;
         this.groupRepository = groupRepository;
@@ -102,14 +110,5 @@ public class VocabularyViewModel extends ViewModel {
     public int getNewLearningWordCount() {
         return newLearningWordCount;
     }
-
-    public static final ViewModelInitializer<VocabularyViewModel> initializer = new ViewModelInitializer<>(
-            VocabularyViewModel.class,
-            creationExtras -> {
-                MainApplication app = (MainApplication) creationExtras.get(APPLICATION_KEY);
-                assert app != null;
-                return new VocabularyViewModel(app.getWordRepository(), app.getGroupRepository(), app.getStatisticsRepository(), app.getUserSettingRepository());
-            }
-    );
 
 }

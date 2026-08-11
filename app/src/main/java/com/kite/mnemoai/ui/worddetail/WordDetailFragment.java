@@ -62,6 +62,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class WordDetailFragment extends Fragment {
     private FragmentWordDetailBinding binding;
     private WordDetailViewModel viewModel;
@@ -98,7 +101,7 @@ public class WordDetailFragment extends Fragment {
                 checkAndRequestPermission();
             }
         });
-        viewModel = new ViewModelProvider(this,WordDetailViewModel.Companion.getFactory()).get(WordDetailViewModel.class);
+        viewModel = new ViewModelProvider(this).get(WordDetailViewModel.class);
 
         reviewRV = binding.aiMnemonic.studyHistoryItemsRV;
         reviewHistoryAdapter = new ReviewHistoryAdapter();

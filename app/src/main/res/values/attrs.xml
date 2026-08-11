@@ -8,6 +8,10 @@
         <attr name="ringStrokeWidth" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SegmentedControl">
+        <attr name="segmentTitle" format="reference"/>
+        <attr name="thumbBackground" format="reference"/>
+    </declare-styleable>
     <!-- 忘记按钮 -->
     <attr name="choiceForgetBackground" format="color|reference" />
     <attr name="choiceForgetText" format="color|reference" /> <!-- 文本和图标共用 -->
@@ -43,5 +47,4 @@
     <attr name="colorOnSurfaceVariant" format="color|reference"/>
 
     <attr name="colorSurfaceContainerLowest" format="color|reference"/>
-
 </resources>

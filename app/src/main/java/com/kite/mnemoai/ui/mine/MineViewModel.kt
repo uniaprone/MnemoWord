@@ -23,41 +23,30 @@ import com.kite.mnemoai.ui.mine.model.MineSelectorItem
 import com.kite.mnemoai.ui.mine.model.MineSelectorItem.OnOptionSelectedListener
 import com.kite.mnemoai.ui.mine.model.MineTextItem
 import com.kite.mnemoai.ui.model.LoadingState
+import com.kite.mnemoai.ui.mine.model.ThemeType
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MineViewModel(
-    app: Application,
-    private val wordRepository: WordRepository,
+@HiltViewModel
+class MineViewModel @Inject constructor(
     private val userSettingRepository: UserSettingRepository,
     private val aiMnemonicRepository: AiMnemonicRepository
 ) : ViewModel() {
     private val _uiStatus = MediatorLiveData<MineUIState?>()
-    private val mineBaseItems: MutableList<MineBaseItem?> = ArrayList<MineBaseItem?>()
+    private var dayNightMode: Int = -1
+    private var apiKey: String? = null
     private var apiTestState: LoadingState<String?>? = null
 
-    private fun convertLightDarkModelToOption(lightDarkModel: Int): Int {
-        return when (lightDarkModel) {
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> {
-                0
-            }
-            AppCompatDelegate.MODE_NIGHT_NO -> {
-                1
-            }
-            else -> {
-                2
-            }
-        }
-    }
-
-    private fun getThemeLastSelectedIndex(title: String?, lastSelectedIndex: Int): Int {
-        for (mineBaseItem in mineBaseItems) {
-            if (mineBaseItem is MineSelectorItem) {
-                if (mineBaseItem.title == title) {
-                    return mineBaseItem.selected
-                }
-            }
-        }
-        return lastSelectedIndex
+    init {
+        _uiStatus.addSource(
+            userSettingRepository.userSettingLiveData,
+            Observer { userSetting: UserSetting ->
+                dayNightMode = userSetting.lightDarkModel
+                apiKey = userSetting.apiKey
+                updateUIStatus()
+            })
     }
 
     fun apiKeyTest(apiKey: String) {
@@ -77,70 +66,29 @@ class MineViewModel(
     }
 
     private fun updateUIStatus() {
-        _uiStatus.value = MineUIState(mineBaseItems, apiTestState)
+        _uiStatus.value = MineUIState(dayNightMode, apiKey, apiTestState)
     }
 
     val uIStatus: LiveData<MineUIState?>
         get() = _uiStatus
 
-    private fun saveLightDarkModel(index: Int) {
-        userSettingRepository.setLightDarkModel(index)
+    fun saveLightDarkModel(lightDarkModel: Int) {
+        dayNightMode = convertLightDarkModelToOption(lightDarkModel)
+        userSettingRepository.setLightDarkModel(lightDarkModel)
+        updateUIStatus()
     }
 
-    init {
-        _uiStatus.addSource<UserSetting?>(
-            userSettingRepository.userSettingLiveData,
-            Observer { userSetting: UserSetting? ->
-                val newList: MutableList<MineBaseItem?> = ArrayList<MineBaseItem?>()
-                val themeSetting = MineSelectorItem(
-                    app.resources.getString(R.string.light_dark_model),
-                    listOf<String?>(
-                        app.getResources().getString(R.string.fallow_system),
-                        app.getResources().getString(R.string.light_model),
-                        app.getResources().getString(R.string.dark_model)
-                    ),
-                    convertLightDarkModelToOption(userSetting!!.lightDarkModel),
-                    getThemeLastSelectedIndex(
-                        app.getResources().getString(R.string.light_dark_model),
-                        convertLightDarkModelToOption(userSetting.lightDarkModel)
-                    ),
-                    OnOptionSelectedListener { index: Int ->
-                        val lightDarkModel = userSetting.lightDarkModel
-                        if (index == 0) {
-                            if (lightDarkModel == -1) return@OnOptionSelectedListener
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                            saveLightDarkModel(-1)
-                        } else if (index == 1) {
-                            if (lightDarkModel == 1) return@OnOptionSelectedListener
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                            saveLightDarkModel(1)
-                        } else {
-                            if (lightDarkModel == 2) return@OnOptionSelectedListener
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                            saveLightDarkModel(2)
-                        }
-                    })
-                newList.add(0, themeSetting)
-
-                val apiKeySetting = MineTextItem(
-                    app.getResources().getString(R.string.setting_title_api_key),
-                    userSetting.apiKey
-                )
-                newList.add(1, apiKeySetting)
-
-                mineBaseItems.clear()
-                mineBaseItems.addAll(newList)
-                updateUIStatus()
-            })
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val app = this[AndroidViewModelFactory.APPLICATION_KEY] as MainApplication
-                MineViewModel(app, app.wordRepository, app.userSettingRepository, app.aiMnemonicRepository)
+    fun convertLightDarkModelToOption(lightDarkModel: Int): Int {
+        return when (lightDarkModel) {
+            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> {
+                0
+            }
+            AppCompatDelegate.MODE_NIGHT_NO -> {
+                1
+            }
+            else -> {
+                2
             }
         }
-
     }
 }

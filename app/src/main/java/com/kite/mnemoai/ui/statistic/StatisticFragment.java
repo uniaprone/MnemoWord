@@ -20,6 +20,9 @@ import com.kite.mnemoai.ui.main.MainViewModel;
 
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class StatisticFragment extends Fragment {
     private FragmentStatisticBinding binding;
     @Nullable
@@ -30,7 +33,7 @@ public class StatisticFragment extends Fragment {
         mainViewModel.setShowNavIcon(false);
 
         binding = FragmentStatisticBinding.inflate(inflater, container, false);
-        StatisticViewModel viewModel = new ViewModelProvider(this, ViewModelProvider.Factory.from(StatisticViewModel.initializer)).get(StatisticViewModel.class);
+        StatisticViewModel viewModel = new ViewModelProvider(this).get(StatisticViewModel.class);
         viewModel.getStudyStatistic(new IRepositoryCallback<List<StudyStatistic>>() {
             @Override
             public void onComplete(List<StudyStatistic> studyStatistics) {

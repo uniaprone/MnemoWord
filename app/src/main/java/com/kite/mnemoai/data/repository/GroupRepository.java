@@ -1,12 +1,7 @@
 package com.kite.mnemoai.data.repository;
 
-import android.app.Application;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Transformations;
 
-import com.kite.mnemoai.MainApplication;
-import com.kite.mnemoai.data.local.AppDatabase;
 import com.kite.mnemoai.data.local.dao.GroupDao;
 import com.kite.mnemoai.data.local.dao.WordGroupDao;
 import com.kite.mnemoai.data.local.entity.GroupEntity;
@@ -17,22 +12,23 @@ import com.kite.mnemoai.ui.vocabularybook.LearningVocabularyBookItem;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Handler;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class GroupRepository {
-    private AppDatabase db;
     private GroupDao groupDao;
     private WordGroupDao wordGroupDao;
 
     private ExecutorService executors;
-    private Handler handler;
 
-    public GroupRepository(Application app) {
-        this.executors = MainApplication.getEXECUTOR_SERVICE();
-        this.db = ((MainApplication) app).getAppDatabase();
-        this.groupDao = db.groupDao();
-        this.wordGroupDao = db.wordGroupDao();
+    @Inject
+    public GroupRepository(ExecutorService executors, GroupDao groupDao, WordGroupDao wordGroupDao) {
+        this.executors = executors;
+        this.groupDao = groupDao;
+        this.wordGroupDao = wordGroupDao;
     }
 
     public LiveData<List<GroupDetail>> getAllGroupLiveData(){

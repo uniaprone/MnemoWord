@@ -8,30 +8,24 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kite.mnemoai.R
-import com.kite.mnemoai.ui.changevocabularybookword.AlterWordListAdapter
 import com.kite.mnemoai.databinding.FragmentChangeVocabularyBookWordBinding
-import com.kite.mnemoai.ui.WordListAdapter
-import com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
-import com.kite.mnemoai.ui.changevocabularybookword.ChangeVocabularyBookWordViewModel
+import com.kite.mnemoai.ui.adapter.WordListAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ChangeVocabularyBookWordFragment: Fragment() {
-
+    private val viewModel: ChangeVocabularyBookWordViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         val binding = FragmentChangeVocabularyBookWordBinding.inflate(inflater, container, false)
-        val viewModel = ViewModelProvider(
-            this, ViewModelProvider.Factory.from(
-                ChangeVocabularyBookWordViewModel.initializer
-            )
-        )[ChangeVocabularyBookWordViewModel::class.java]
 
         binding.optionalWordsTV.text = resources.getString(R.string.add_words)
         binding.changeWordsTV.text = resources.getString(R.string.adding_removing_words)

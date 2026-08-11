@@ -1,16 +1,16 @@
 package com.kite.mnemoai.data.network
 
 import com.kite.mnemoai.data.network.deepseek.WordExtractDeepSeekDataSource
+import com.kite.mnemoai.data.repository.UserSettingRepository
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.concurrent.Volatile
 
-object AiServiceProvider {
-    @Volatile
-    private var currentDataSource: WordExtractDataSource = WordExtractDeepSeekDataSource()
-    public fun switchTo(aiServiceType: AiServiceType){
-        when(aiServiceType){
-            AiServiceType.DEEPSEEK -> WordExtractDeepSeekDataSource()
-        }
+@Singleton
+class AiServiceProvider @Inject constructor(
+    private val wordExtractDataSourceImp: WordExtractDataSource
+){
+    fun getWordExtractDataSourceImp(): WordExtractDataSource{
+        return wordExtractDataSourceImp
     }
-
-    fun getDataSource(): WordExtractDataSource = currentDataSource
 }

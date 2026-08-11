@@ -24,6 +24,9 @@ import com.kite.mnemoai.databinding.ActivityMainBinding;
 
 import java.util.Objects;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private MaterialToolbar toolbar;
