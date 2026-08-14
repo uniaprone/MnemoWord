@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="action_vocabularyFragment_to_vocabularyGroupFragment" type="id"/>
+    <item name="action_vocabularyGroupFragment_to_changeVocabularyBookWordFragment" type="id"/>
+    <item name="action_vocabularyGroupFragment_to_wordDetailFragment" type="id"/>
+</resources>

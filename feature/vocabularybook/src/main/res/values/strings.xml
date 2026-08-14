@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="vocabulary_book">单词本</string>
+    <string name="learning">待学习</string>
+    <string name="reviewing">复习中</string>
+    <string name="mastered">已掌握</string>
+    <string name="my_group">我的分组</string>
+    <string name="search_word">搜索单词</string>
+    <string name="add">添加</string>
+    <string name="click_to_change">点击修改</string>
+    <string name="study_word_per_day">每日新学</string>
+    <string name="today_review_word">今日复习</string>
+    <string name="today_goal">今日目标</string>
+    <string name="study_progress">学习进度: </string>
+    <string name="study_word_count_today">已新学</string>
+    <string name="review_word_count_today">已复习</string>
+    <string name="word">词</string>
+</resources>

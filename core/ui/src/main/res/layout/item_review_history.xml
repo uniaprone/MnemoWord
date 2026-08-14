@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp"
+    android:background="?attr/colorSurfaceContainerLowest">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/studyDateTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/text_size_body_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2026年6月30日" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/learningTimeTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="@dimen/text_size_body_medium"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="学习时间： 3分10秒" />
+    </LinearLayout>
+
+
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:chipSpacingHorizontal="6dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/rememberTimesChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnPrimaryContainer"
+            android:textSize="@dimen/text_size_body_medium"
+            app:chipStartPadding="0dp"
+            app:chipEndPadding="0dp"
+            app:chipCornerRadius="20dp"
+            app:ensureMinTouchTargetSize="false"
+            app:chipBackgroundColor="?attr/colorPrimaryContainer"
+            tools:text="认识1次"/>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/blurTimesChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="模糊1次"
+            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textSize="@dimen/text_size_body_medium"
+            app:chipStartPadding="0dp"
+            app:chipEndPadding="0dp"
+            app:chipCornerRadius="20dp"
+            app:ensureMinTouchTargetSize="false"
+            app:chipBackgroundColor="?attr/colorSecondaryContainer"/>
+        <com.google.android.material.chip.Chip
+            android:id="@+id/forgetTimesChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="忘记1次"
+            android:textColor="?attr/colorOnTertiaryContainer"
+            android:textSize="@dimen/text_size_body_medium"
+            app:chipStartPadding="0dp"
+            app:chipEndPadding="0dp"
+            app:chipCornerRadius="20dp"
+            app:ensureMinTouchTargetSize="false"
+            app:chipBackgroundColor="?attr/colorTertiaryContainer"/>
+    </com.google.android.material.chip.ChipGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

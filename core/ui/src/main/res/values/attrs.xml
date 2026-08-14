@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SegmentedControl">
+        <attr name="segmentTitle" format="reference"/>
+        <attr name="thumbBackground" format="reference"/>
+    </declare-styleable>
+
+    <attr name="wordAwaitingLearning" format="color|reference"/>
+    <attr name="wordReviewing" format="color|reference"/>
+    <attr name="wordMastered" format="color|reference"/>
+</resources>

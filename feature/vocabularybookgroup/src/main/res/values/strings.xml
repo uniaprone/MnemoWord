@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_word">所有单词 %d</string>
+    <string name="learning_count">待学习: %d</string>
+    <string name="reviewing_count">复习中: %d</string>
+    <string name="mastered_count">已掌握: %d</string>
+    <string name="total_count">总词汇: %d</string>
+    <string name="learning">待学习</string>
+    <string name="reviewing">复习中</string>
+    <string name="mastered">已掌握</string>
+    <string name="join_learning">加入学习</string>
+    <string name="cancel_learning">取消学习</string>
+    <string name="change_vocabulary_ook">修改单词本</string>
+    <string name="add_remove_words">添加/移除单词</string>
+    <string name="delete_vocabulary_book">删除单词本</string>
+    <string name="add_new_vocabulary">添加新单词本</string>
+</resources>

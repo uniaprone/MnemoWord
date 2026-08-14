@@ -1,0 +1,68 @@
+package com.kite.mnemoai.changevocabularybookword
+
+import android.content.res.ColorStateList
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.color.MaterialColors
+import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
+import com.kite.mnemoai.ui.R
+import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.VocabularyBookChangedWord
+import com.kite.mnemoai.changevocabularybookword.databinding.ItemAlterWordListBinding
+
+class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Unit):
+    ListAdapter<VocabularyBookChangedWord, AlterWordListAdapter.AlterWordViewHolder>(
+        VocabularyBookChangedWord.Companion.DIFF_CALLBACK) {
+
+    override fun onCreateViewHolder(
+        p0: ViewGroup,
+        p1: Int
+    ): AlterWordViewHolder {
+        val binding = ItemAlterWordListBinding.inflate(LayoutInflater.from(p0.context), p0, false)
+        return AlterWordViewHolder(binding, listener)
+    }
+
+    override fun onBindViewHolder(
+        p0: AlterWordViewHolder,
+        p1: Int
+    ) {
+        p0.bind(getItem(p1))
+    }
+
+    class AlterWordViewHolder(
+        private val binding: ItemAlterWordListBinding,
+        private var listener: (VocabularyBookChangedWord) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+        var word: VocabularyBookChangedWord? = null
+        init {
+            binding.alterWordListItemCardView.setOnClickListener {
+                word?.let { listener(it) }
+            }
+        }
+        fun bind(word: VocabularyBookChangedWord){
+            this.word = word;
+            binding.wordTextView.text = word.word
+            binding.phoneticTextView.text = word.phonetic
+            binding.meaningTextView.text = word.translation;
+
+            val color = when(word.reviewState){
+                0 -> MaterialColors.getColor(binding.statusView, R.attr.wordAwaitingLearning)
+                1 -> MaterialColors.getColor(binding.statusView, R.attr.wordReviewing)
+                2 -> MaterialColors.getColor(binding.statusView, R.attr.wordMastered)
+                else -> MaterialColors.getColor(binding.statusView, R.attr.wordAwaitingLearning)
+            }
+
+            binding.statusView.setBackgroundTintList(
+                    ColorStateList.valueOf(color)
+            );
+            when(word.operation){
+                ChangeVocabularyBookWordUIState.ChangeType.ADD ->
+                    binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, com.google.android.material.R.attr.colorPrimaryContainer))
+                ChangeVocabularyBookWordUIState.ChangeType.REMOVE ->
+                    binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, com.google.android.material.R.attr.colorTertiaryContainer))
+            }
+
+        }
+    }
+}

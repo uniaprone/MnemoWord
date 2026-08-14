@@ -10,6 +10,24 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/data" />
+            <option value="$PROJECT_DIR$/core/database" />
+            <option value="$PROJECT_DIR$/core/datastore" />
+            <option value="$PROJECT_DIR$/core/model" />
+            <option value="$PROJECT_DIR$/core/network" />
+            <option value="$PROJECT_DIR$/core/ui" />
+            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/changevocabularybookword" />
+            <option value="$PROJECT_DIR$/feature/mine" />
+            <option value="$PROJECT_DIR$/feature/reciteword" />
+            <option value="$PROJECT_DIR$/feature/search" />
+            <option value="$PROJECT_DIR$/feature/statistic" />
+            <option value="$PROJECT_DIR$/feature/vocabularybook" />
+            <option value="$PROJECT_DIR$/feature/vocabularybookgroup" />
+            <option value="$PROJECT_DIR$/feature/worddetail" />
+            <option value="$PROJECT_DIR$/shared-ui" />
           </set>
         </option>
       </GradleProjectSettings>

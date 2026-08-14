@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/modifyGroup"
+        android:title="@string/change_vocabulary_ook"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/setLearning"
+        android:title="@string/join_learning"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/alterWords"
+        android:title="@string/add_remove_words"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/deleteVocabularyBook"
+        android:title="@string/delete_vocabulary_book"
+        app:showAsAction="never"/>
+</menu>

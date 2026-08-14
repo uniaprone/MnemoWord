@@ -1,0 +1,24 @@
+package com.kite.mnemoai.database.dao;
+
+import kotlinx.coroutines.flow.Flow;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.TypeConverters;
+
+import com.kite.mnemoai.database.Converters;
+import com.kite.mnemoai.database.model.WordExtractEntity;
+
+@TypeConverters({Converters.class})
+@Dao
+public interface WordExtractDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertWordExtractEntity(WordExtractEntity wordExtractEntity);
+
+    @Query("SELECT * FROM word_extract WHERE word_id = :id")
+    public Flow<WordExtractEntity> getWordExtractEntityJsonLiveDataById(long id);
+
+    @Query("SELECT * FROM word_extract WHERE word_id = :id")
+    public WordExtractEntity getWordExtractEntityJsonById(long id);
+}

@@ -2,16 +2,11 @@ package com.kite.mnemoai
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import com.kite.mnemoai.data.local.UserSetting
-import com.kite.mnemoai.data.network.AiServiceProvider
-import com.kite.mnemoai.data.repository.AiMnemonicRepository
-import com.kite.mnemoai.data.repository.GroupRepository
-import com.kite.mnemoai.data.repository.IRepositoryCallback
-import com.kite.mnemoai.data.repository.StatisticsRepository
-import com.kite.mnemoai.data.repository.UserSettingRepository
-import com.kite.mnemoai.data.repository.WordRepository
+import com.kite.mnemoai.model.repository.UserSettingRepository
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -19,29 +14,21 @@ class MainApplication : Application() {
     @Inject
     lateinit var userSettingRepository: UserSettingRepository
 
+    private val applicationScope = CoroutineScope(Dispatchers.IO)
+
     override fun onCreate() {
         super.onCreate()
-        applyDayNightModel()
+        applicationScope.launch {
+            applyDayNightModel()
+        }
     }
 
-    private fun applyDayNightModel(){
-        userSettingRepository.getUserSetting(object : IRepositoryCallback<UserSetting?> {
-            override fun onComplete(userSetting: UserSetting?) {
-                if (userSetting == null) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                    return
-                }
-                if (userSetting.lightDarkModel == -1) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                } else if (userSetting.lightDarkModel == 1) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                } else if (userSetting.lightDarkModel == 2) {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-            }
-
-            override fun onError(t: Throwable?) {
-            }
-        })
+    private suspend fun applyDayNightModel() {
+        val userSetting = userSettingRepository.getUserSettingSync()
+        when (userSetting.lightDarkModel) {
+            -1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        }
     }
 }
