@@ -40,11 +40,11 @@ class SearchFragment : Fragment() {
 
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        adapter = WordListAdapter { word ->
+        adapter = WordListAdapter { wordItem ->
             val args = Bundle()
-            args.putLong("word_id", word.id)
+            args.putLong("word_id", wordItem.id)
             findNavController().navigate(
-                com.kite.mnemoai.search.R.id.action_searchFragment_to_wordDetailFragment, args
+                R.id.action_searchFragment_to_wordDetailFragment, args
             )
         }
         binding.searchResultRV.layoutManager = LinearLayoutManager(context)
@@ -53,7 +53,7 @@ class SearchFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
-                    adapter.setWords(state.words)
+                    adapter.submitList(state.words.toList())
                 }
             }
         }
@@ -62,11 +62,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(p0: String?): Boolean = true
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if (!newText.isNullOrEmpty()) {
-                    viewModel.searchWord(newText)
-                } else {
-                    adapter.setWords(emptyList())
-                }
+                viewModel.onQueryChanged(newText ?: "")
                 return true
             }
         })

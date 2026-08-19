@@ -6,14 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.color.MaterialColors
-import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
 import com.kite.mnemoai.ui.R
-import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.VocabularyBookChangedWord
 import com.kite.mnemoai.changevocabularybookword.databinding.ItemAlterWordListBinding
 
 class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Unit):
     ListAdapter<VocabularyBookChangedWord, AlterWordListAdapter.AlterWordViewHolder>(
-        VocabularyBookChangedWord.Companion.DIFF_CALLBACK) {
+        VocabularyBookChangedWord.DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(
         p0: ViewGroup,
@@ -57,9 +55,9 @@ class AlterWordListAdapter(val listener: (word: VocabularyBookChangedWord) -> Un
                     ColorStateList.valueOf(color)
             );
             when(word.operation){
-                ChangeVocabularyBookWordUIState.ChangeType.ADD ->
+                ChangeType.ADD ->
                     binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, com.google.android.material.R.attr.colorPrimaryContainer))
-                ChangeVocabularyBookWordUIState.ChangeType.REMOVE ->
+                ChangeType.REMOVE ->
                     binding.alterWordListItemCardView.setCardBackgroundColor( MaterialColors.getColor(binding.alterWordListItemCardView, com.google.android.material.R.attr.colorTertiaryContainer))
             }
 

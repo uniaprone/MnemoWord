@@ -1,4 +1,4 @@
-﻿﻿package com.kite.mnemoai.vocabularybook
+﻿package com.kite.mnemoai.vocabularybook
 
 import android.view.LayoutInflater
 import android.view.View

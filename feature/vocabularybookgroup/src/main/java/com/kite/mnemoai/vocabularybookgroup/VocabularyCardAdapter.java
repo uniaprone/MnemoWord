@@ -66,7 +66,6 @@ public class VocabularyCardAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public void binding(GroupDetail groupDetail){
             Resources resources = binding.getRoot().getResources();
             String groupName = groupDetail.getGroup().getName();
-            groupName = StringConvert.convertVocabularyName(groupName);
             binding.vocabularyGroupTV.setText(groupName);
             String totalCount = resources.getString(R.string.total_count, groupDetail.getTotalWords());
             binding.totalCountTV.setText(totalCount);

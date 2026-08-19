@@ -28,7 +28,6 @@ public class VocabularySelectAdapter extends RecyclerView.Adapter<VocabularySele
 
         public void binding(VocabularySelectDialogFragment.VocabularySelectInfo vocabularySelectInfo){
             String groupName = vocabularySelectInfo.name;
-            groupName = StringConvert.convertVocabularyName(groupName);
             binding.vocabularyNameTV.setText(groupName);
             binding.vocabularyDescribe.setText(vocabularySelectInfo.description);
             if(vocabularySelectInfo.isSelect){

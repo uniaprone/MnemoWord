@@ -65,23 +65,10 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class WordDetailFragment extends Fragment {
     private FragmentWordDetailBinding binding;
     private WordDetailViewModel viewModel;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
     private RecyclerView reviewRV;
     private ReviewHistoryAdapter reviewHistoryAdapter;
     private BannerControl bannerControl;
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGrand -> {
-            if (isGrand) {
-                viewModel.fetchWordExtract();
-            } else {
-                showPermissionDeniedMessage();
-            }
-        });
-    }
 
     @Nullable
     @Override
@@ -92,7 +79,7 @@ public class WordDetailFragment extends Fragment {
 
         binding = FragmentWordDetailBinding.inflate(inflater, container, false);
         bannerControl = new BannerControl(binding.AIGenerateBanner, this.getLifecycle());
-        binding.generateAIMnemonicChip.setOnClickListener(v -> checkAndRequestPermission());
+        binding.generateAIMnemonicChip.setOnClickListener(v -> viewModel.fetchWordExtract());
         viewModel = new ViewModelProvider(this).get(WordDetailViewModel.class);
 
         reviewRV = binding.aiMnemonic.studyHistoryItemsRV;
@@ -303,28 +290,5 @@ public class WordDetailFragment extends Fragment {
                     reviewHistoryAdapter.submitList(new ArrayList<>(reviewHistoryItems))
             );
         }
-    }
-
-    private void checkAndRequestPermission() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.INTERNET) == PackageManager.PERMISSION_GRANTED) {
-            viewModel.fetchWordExtract();
-        } else if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), Manifest.permission.INTERNET)) {
-            showRationaleDialog();
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.INTERNET);
-        }
-    }
-
-    public void showPermissionDeniedMessage() {
-        Toast.makeText(getContext(), "无法获取ai助记信息", Toast.LENGTH_SHORT).show();
-    }
-
-    private void showRationaleDialog() {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("需要相机权限")
-                .setMessage("我们需要相机权限来扫描二维码")
-                .setPositiveButton("允许", (dialog, which) -> requestPermissionLauncher.launch(Manifest.permission.CAMERA))
-                .setNegativeButton("取消", null)
-                .show();
     }
 }

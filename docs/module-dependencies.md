@@ -57,17 +57,14 @@ graph TD
     %% feature → core 依赖
     VB --> MODEL
     VB --> DATA
-    VB --> DATABASE
     VB --> UI
     VB --> COMMON
 
-    VBG --> DATABASE
     VBG --> DATA
     VBG --> MODEL
     VBG --> UI
     VBG --> COMMON
 
-    CVBW --> DATABASE
     CVBW --> DATA
     CVBW --> MODEL
     CVBW --> UI
@@ -79,13 +76,11 @@ graph TD
     SEARCH --> COMMON
 
     RECITE --> MODEL
-    RECITE --> DATABASE
     RECITE --> DATA
     RECITE --> UI
     RECITE --> COMMON
 
     WD --> MODEL
-    WD --> DATABASE
     WD --> DATA
     WD --> UI
     WD --> COMMON
@@ -95,7 +90,6 @@ graph TD
     MINE --> UI
     MINE --> COMMON
 
-    STAT --> DATABASE
     STAT --> DATA
     STAT --> MODEL
     STAT --> UI
@@ -188,12 +182,12 @@ graph TD
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | feature:search | ✓ | ✓ | - | ✓ | ✓ | - |
 | feature:mine | ✓ | ✓ | - | ✓ | ✓ | - |
-| feature:statistic | ✓ | ✓ | ✓ | ✓ | ✓ | - |
-| feature:reciteword | ✓ | ✓ | ✓ | ✓ | ✓ | - |
-| feature:worddetail | ✓ | ✓ | ✓ | ✓ | ✓ | - |
-| feature:changevocabularybookword | ✓ | ✓ | ✓ | ✓ | ✓ | - |
-| feature:vocabularybook | ✓ | ✓ | ✓ | ✓ | ✓ | - |
-| feature:vocabularybookgroup | ✓ | ✓ | ✓ | ✓ | ✓ | → changevocabularybookword |
+| feature:statistic | ✓ | ✓ | - | ✓ | ✓ | - |
+| feature:reciteword | ✓ | ✓ | - | ✓ | ✓ | - |
+| feature:worddetail | ✓ | ✓ | - | ✓ | ✓ | - |
+| feature:changevocabularybookword | ✓ | ✓ | - | ✓ | ✓ | - |
+| feature:vocabularybook | ✓ | ✓ | - | ✓ | ✓ | - |
+| feature:vocabularybookgroup | ✓ | ✓ | - | ✓ | ✓ | → changevocabularybookword |
 
 ## 五、关键架构原则
 
@@ -208,8 +202,7 @@ app → feature → core:data → core:database / core:network
 ### 解耦要点
 
 1. **feature 层不直接依赖 core:database**
-   - 仅 feature:vocabularybookgroup / changevocabularybookword / statistic 等历史遗留模块暂保留 database 依赖
-   - feature:vocabularybook 已完全迁移为依赖 core:model 的 Domain Model
+   - 所有 feature 模块已统一经由 core:data 访问数据（feature 代码零 database 引用，模块级依赖已全部移除）
 
 2. **core:data 不依赖任何 feature/ui**
    - Repository 通过 `asExternalModel()` 将 database Entity 转换为 Domain Model

@@ -1,4 +1,4 @@
-package com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword
+package com.kite.mnemoai.changevocabularybookword
 
 import androidx.recyclerview.widget.DiffUtil
 
@@ -8,7 +8,7 @@ data class VocabularyBookChangedWord(
     val phonetic: String?,
     val translation: String?,
     val reviewState: Int,
-    val operation: ChangeVocabularyBookWordUIState.ChangeType){
+    val operation: ChangeType){
 
     companion object{
          val DIFF_CALLBACK: DiffUtil.ItemCallback<VocabularyBookChangedWord> = object: DiffUtil.ItemCallback<VocabularyBookChangedWord>() {

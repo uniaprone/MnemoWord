@@ -4,9 +4,8 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
-public fun formatDuration(value: Float): String {
-    val longValue = value.toLong()
-    val duration = longValue.milliseconds
+fun formatDuration(value: Long): String {
+    val duration = value.milliseconds
     return duration.toComponents { hours, minutes, seconds, _ ->
         buildList {
             if (hours > 0) add("${hours}小时")

@@ -1,4 +1,4 @@
-﻿﻿package com.kite.mnemoai.ui
+﻿package com.kite.mnemoai.ui
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -122,67 +122,14 @@ class SegmentedControl @JvmOverloads constructor(
         this.listener = listener
     }
 
-//    fun setItems(selectedIndex: Int = -1, vararg titles: String){
-//        this.selectedIndex = selectedIndex
-//        binding.container.removeAllViews()
-//        titles.forEachIndexed { index, title ->
-//            val button: MaterialButton = MaterialButton(context).apply {
-//                text = title
-//                isCheckable = false
-//                backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-//                strokeWidth = 0
-//                insetTop = 0
-//                insetBottom = 0
-//
-//                minHeight = 0
-//                minimumHeight = 0
-//                minWidth = 0
-//                minimumWidth = 0
-//
-//                setPadding(context.dpToPx(4), context.dpToPx(4), context.dpToPx(4), context.dpToPx(4))
-//
-//                cornerRadius = 0
-//
-//                rippleColor = null
-//                layoutParams = LinearLayout.LayoutParams(
-//                    LinearLayout.LayoutParams.WRAP_CONTENT,
-//                    LinearLayout.LayoutParams.MATCH_PARENT
-//                ).apply {
-//                    setMargins(context.dpToPx(4), context.dpToPx(4), context.dpToPx(4), context.dpToPx(4))
-//                }
-//
-//                setOnClickListener {
-//                    setSelectedIndex(index)
-//                }
-//            }
-//            binding.container.addView(button)
-//        }
-//        refreshButtons()
-//        val actualHeight = binding.container.height // 或者 binding.container.measuredHeight
-//
-//        if (actualHeight > 0) {
-//            binding.thumb.updateLayoutParams<FrameLayout.LayoutParams> {
-//                height = actualHeight
-//            }
-//            // 如果不在动画中，需手动触发布局
-//            binding.thumb.requestLayout()
-//        }
-//
-//        post {
-//            if (selectedIndex != -1){
-//                updateThumb(1, false)
-//            }
-//        }
-//        requestLayout()
-//    }
 
     private fun updateThumb(index: Int, animate: Boolean) {
         binding.container.post {
             var startMargin = context.dpToPx(4)
             for (i in 0 until index) {
                 startMargin += binding.container.getChildAt(i).measuredWidth +
-                        binding.container.getChildAt(index).marginStart +
-                        binding.container.getChildAt(index).marginEnd
+                        binding.container.getChildAt(i).marginStart +
+                        binding.container.getChildAt(i).marginEnd
             }
             val thumbWidth = binding.container.getChildAt(index).width +
                     binding.container.getChildAt(index).marginStart +

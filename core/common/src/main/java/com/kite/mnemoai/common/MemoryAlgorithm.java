@@ -135,11 +135,11 @@ public class MemoryAlgorithm {
         // 学习时间分数
         double timeScore;
 
-        if (learningTimeSeconds <= 10) {
+        if (learningTimeSeconds <= 10_000) {
             timeScore = 0.0;
-        } else if (learningTimeSeconds <= 30) {
+        } else if (learningTimeSeconds <= 30_000) {
             timeScore = 0.4;
-        } else if (learningTimeSeconds <= 60) {
+        } else if (learningTimeSeconds <= 60_000) {
             timeScore = 0.7;
         } else {
             timeScore = 1.0;

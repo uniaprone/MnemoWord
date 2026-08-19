@@ -1,4 +1,4 @@
-﻿﻿package com.kite.mnemoai.mine
+﻿package com.kite.mnemoai.mine
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -129,8 +129,8 @@ class MineFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
-        super.onDestroy()
     }
 }

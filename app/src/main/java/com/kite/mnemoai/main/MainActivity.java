@@ -94,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onNavigateUp() {
         boolean isSuccess = navController.navigateUp();
-        if(isSuccess) Log.d("Navigationaaa", "返回成功: " + true);
-        else Log.d("Navigationaaa", "返回失败: " + false);
         return isSuccess;
     }
 }

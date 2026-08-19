@@ -1,4 +1,4 @@
-package com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword
+package com.kite.mnemoai.changevocabularybookword
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +23,7 @@ class ChangeVocabularyBookWordViewModel @Inject constructor(
     val uiStatus: LiveData<ChangeVocabularyBookWordUIState> get() = _uiStatus
 
     private var groupId: Long = -1
-    private var operationType = ChangeVocabularyBookWordUIState.ChangeType.ADD
+    private var operationType = ChangeType.ADD
     private var searchText: String = ""
     private var optionalWords = mutableListOf<WordItem>()
     private val alterWords = mutableListOf<VocabularyBookChangedWord>()
@@ -33,7 +33,7 @@ class ChangeVocabularyBookWordViewModel @Inject constructor(
         performOptionWordsSearch()
     }
 
-    fun setOperationType(type: ChangeVocabularyBookWordUIState.ChangeType) {
+    fun setOperationType(type: ChangeType) {
         this.operationType = type
         this.optionalWords.clear()
         updateUIStatus()
@@ -75,14 +75,15 @@ class ChangeVocabularyBookWordViewModel @Inject constructor(
     private fun performOptionWordsSearch() {
         viewModelScope.launch {
             val result = when (operationType) {
-                ChangeVocabularyBookWordUIState.ChangeType.ADD ->
+                ChangeType.ADD ->
                     wordRepository.addOptionWordsSearch(groupId, searchText)
-                ChangeVocabularyBookWordUIState.ChangeType.REMOVE ->
+                ChangeType.REMOVE ->
                     wordRepository.removeOptionWordsSearch(groupId, searchText)
             }
             if (result is Result.Success) {
+                val dealResult = result.data.map { wordItem -> wordItem.copy(phonetic = "/${wordItem.phonetic}/")  }
                 val idsToExclude = alterWords.map { it.id }.toSet()
-                optionalWords = result.data.filter { it.id !in idsToExclude }.toMutableList()
+                optionalWords = dealResult.filter { it.id !in idsToExclude }.toMutableList()
                 updateUIStatus()
             }
         }
@@ -90,14 +91,20 @@ class ChangeVocabularyBookWordViewModel @Inject constructor(
 
     fun applyAlterWords() {
         viewModelScope.launch {
-            val addIds = alterWords.filter { it.operation == ChangeVocabularyBookWordUIState.ChangeType.ADD }.map { it.id }
-            val removeIds = alterWords.filter { it.operation == ChangeVocabularyBookWordUIState.ChangeType.REMOVE }.map { it.id }
+            val addIds = alterWords.filter { it.operation == ChangeType.ADD }.map { it.id }
+            val removeIds = alterWords.filter { it.operation == ChangeType.REMOVE }.map { it.id }
             groupRepository.addAlterWords(groupId, addIds)
             groupRepository.removeAlterWords(groupId, removeIds)
         }
     }
 
     private fun updateUIStatus() {
-        _uiStatus.value = ChangeVocabularyBookWordUIState(groupId, operationType, searchText, optionalWords, alterWords)
+        _uiStatus.value = ChangeVocabularyBookWordUIState(
+            groupId,
+            operationType,
+            searchText,
+            optionalWords,
+            alterWords
+        )
     }
 }

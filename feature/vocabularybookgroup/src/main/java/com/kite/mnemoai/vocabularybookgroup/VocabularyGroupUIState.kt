@@ -6,7 +6,8 @@ import com.kite.mnemoai.model.word.WordItem
 data class VocabularyGroupUIState(
     val group: Group?,
     val words: List<WordItem>?,
-) {
-    constructor(words: List<WordItem>?) : this(null, words)
-    constructor(group: Group?) : this(group, null)
-}
+    val allCount: Long = 0,
+    val learningCount: Long = 0,
+    val reviewingCount: Long = 0,
+    val masteredCount: Long = 0,
+)

@@ -57,7 +57,15 @@ class VocabularyGroupViewModel @Inject constructor(
     }
 
     private fun updateUIState() {
-        _uiState.value = VocabularyGroupUIState(group, words)
+        val list = words.orEmpty()
+        _uiState.value = VocabularyGroupUIState(
+            group = group,
+            words = words,
+            allCount = list.size.toLong(),
+            learningCount = list.count { it.reviewState == 0 }.toLong(),
+            reviewingCount = list.count { it.reviewState == 1 }.toLong(),
+            masteredCount = list.count { it.reviewState == 2 }.toLong(),
+        )
     }
 
     fun getGroup(): Group? = group

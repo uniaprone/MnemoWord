@@ -12,9 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kite.mnemoai.changevocabularybookword.R
-import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.ChangeVocabularyBookWordUIState
-import com.kite.mnemoai.changevocabularybookword.ui.changevocabularybookword.ChangeVocabularyBookWordViewModel
 import com.kite.mnemoai.changevocabularybookword.databinding.FragmentChangeVocabularyBookWordBinding
 import com.kite.mnemoai.ui.WordListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,12 +28,13 @@ class ChangeVocabularyBookWordFragment: Fragment() {
 
         binding.optionalWordsTV.text = resources.getString(R.string.add_words)
         binding.changeWordsTV.text = resources.getString(R.string.adding_removing_words)
-        val optionalWordAdapter = WordListAdapter { wordListItem ->
-            viewModel.addAlterWords(wordListItem)
+        val optionalWordAdapter = WordListAdapter { wordItem ->
+            viewModel.addAlterWords(wordItem)
         }
         binding.optionalWordsRV.apply {
             layoutManager = LinearLayoutManager(this.context)
             adapter = optionalWordAdapter
+            itemAnimator = null
         }
         val alterWordsAdapter = AlterWordListAdapter { vocabularyBookChangedWord ->
             viewModel.removeAlterWords(vocabularyBookChangedWord)
@@ -44,6 +42,7 @@ class ChangeVocabularyBookWordFragment: Fragment() {
         binding.changeWordsRV.apply {
             layoutManager = LinearLayoutManager(this.context)
             adapter = alterWordsAdapter
+            itemAnimator = null
         }
         binding.wordChangeSV.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -65,11 +64,11 @@ class ChangeVocabularyBookWordFragment: Fragment() {
             popupMenu?.setOnMenuItemClickListener { item ->
                 when(item.itemId){
                     R.id.add_words -> {
-                        viewModel.setOperationType(ChangeVocabularyBookWordUIState.ChangeType.ADD)
+                        viewModel.setOperationType(ChangeType.ADD)
                         true
                     }
                     R.id.remove_word -> {
-                        viewModel.setOperationType(ChangeVocabularyBookWordUIState.ChangeType.REMOVE)
+                        viewModel.setOperationType(ChangeType.REMOVE)
                         true
                     }
                     else -> false
@@ -78,21 +77,22 @@ class ChangeVocabularyBookWordFragment: Fragment() {
             popupMenu?.show()
         }
 
-        binding.sortOptionMenu.setOnClickListener { v ->
-            val popupMenu = this.context?.let { PopupMenu(it, v) }
-            popupMenu?.inflate(R.menu.sort_menu)
-            popupMenu?.setOnMenuItemClickListener { item ->
-                when(item.itemId){
-                    R.id.operationSort -> {
-                        true
-                    }
-                    R.id.alphabeticalOrder -> {
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
+        // TODO: 排序功能暂未实现，先注释掉（含布局中的 sortOptionMenu）
+//        binding.sortOptionMenu.setOnClickListener { v ->
+//            val popupMenu = this.context?.let { PopupMenu(it, v) }
+//            popupMenu?.inflate(R.menu.sort_menu)
+//            popupMenu?.setOnMenuItemClickListener { item ->
+//                when(item.itemId){
+//                    R.id.operationSort -> {
+//                        true
+//                    }
+//                    R.id.alphabeticalOrder -> {
+//                        true
+//                    }
+//                    else -> false
+//                }
+//            }
+//        }
 
         binding.cancelBtn.setOnClickListener { v ->
             v.findNavController().navigateUp()
@@ -106,15 +106,15 @@ class ChangeVocabularyBookWordFragment: Fragment() {
         viewModel.uiStatus.observe(viewLifecycleOwner,
             Observer<ChangeVocabularyBookWordUIState> { value ->
                 when (value.operationType) {
-                    ChangeVocabularyBookWordUIState.ChangeType.ADD -> {
+                    ChangeType.ADD -> {
                         binding.optionalWordsTV.text = resources.getString(R.string.add_words)
-                        optionalWordAdapter.setWords(value.optionalWords)
+                        optionalWordAdapter.submitList(value.optionalWords.toList())
                         alterWordsAdapter.submitList(value.alterWords.toList())
                     }
 
-                    ChangeVocabularyBookWordUIState.ChangeType.REMOVE -> {
+                    ChangeType.REMOVE -> {
                         binding.optionalWordsTV.text = resources.getString(R.string.remove_words)
-                        optionalWordAdapter.setWords(value.optionalWords)
+                        optionalWordAdapter.submitList(value.optionalWords.toList())
                         alterWordsAdapter.submitList(value.alterWords.toList())
                     }
                 }
