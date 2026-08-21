@@ -3,7 +3,6 @@
     <style name="Theme.MnemoAI_start" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">?attr/colorPrimary</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logo</item>
-        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
         <item name="postSplashScreenTheme">@style/Theme.MnemoAI</item>
     </style>
 
@@ -37,23 +36,6 @@
 <!--        <item name="android:textColor">?attr/choiceRememberText</item>-->
         <item name="backgroundTint">?attr/colorPrimaryContainer</item>
         <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
-    </style>
-
-
-    <style name="Widget.MyApp.CardView.Primary" parent="Widget.Material3.CardView.Filled">
-    </style>
-
-    <style name="Widget.MyApp.CardView.Small" parent="Widget.MyApp.CardView.Primary">
-        <item name="cornerRadius">12dp</item>
-    </style>
-
-    <style name="Widget.MyApp.CardView.Middle" parent="Widget.MyApp.CardView.Primary">
-        <item name="cornerRadius">6dp</item>
-    </style>
-
-    <style name="Widget.MyApp.CardView.Large" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardElevation">0dp</item>
-        <item name="cornerRadius">24dp</item>
     </style>
 
     <style name="MySearchBarStyle" parent="Widget.Material3.SearchBar">
