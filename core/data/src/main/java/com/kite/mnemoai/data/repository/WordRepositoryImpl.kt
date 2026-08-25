@@ -21,6 +21,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
@@ -30,20 +31,24 @@ class WordRepositoryImpl @Inject constructor(
     private val dayPlanWordDao: DayPlanWordDao,
     @Dispatcher(MaiDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WordRepository {
+    override suspend fun addTodayNewLearningWordEntities(
+        count: Int,
+        date: String,
+        excludeWordIds: List<Long>
+    ): List<Long> = withContext(ioDispatcher){
+        wordDao.addTodayNewLearningWordEntities(count, date, excludeWordIds)
+    }
+
+    override suspend fun selectTodayReviewingWordEntities(date: String): List<Long> =
+        withContext(ioDispatcher) {
+            wordDao.selectTodayReviewingWordEntities(date)
+        }
 
     override fun observeWordListByGroupId(groupId: Long): Flow<Result<List<WordItem>>> =
         wordDao.getWordListItemLiveDataByGroupId(groupId)
             .map { Result.Success(it.asExternalModel()) as Result<List<WordItem>> }
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }
-
-    override suspend fun setDailyDayPlanWordEntities(learningCount: Int) {
-        withContext(ioDispatcher) {
-            WordRepositoryHelper.setDailyDayPlanWordEntities(
-                learningCount, wordDao, dayPlanWordDao
-            )
-        }
-    }
 
     override fun observeDailyReciteStatus(): Flow<Result<Int>> = flow<Result<Int>> {
         val date = java.time.LocalDate.now().toString()
@@ -74,7 +79,16 @@ class WordRepositoryImpl @Inject constructor(
     override fun observeUnfinishedWordDetailInfos(): Flow<Result<List<WordDetail>>> {
         val date = java.time.LocalDate.now().toString()
         return wordDao.getUnfinishWordDetailInfoLiveData(date)
-            .map { entities -> entities.map { it.asExternalModel() } }
+            .map { entities ->
+                entities.map { entity ->
+                    entity.asExternalModel().let { detail ->
+                        detail.copy(
+                            dayPlanWords = detail.dayPlanWords.filter { it.date != date },
+                            forms = detail.forms.filter { it.typeCode != "0" &&  it.typeCode != "1" }
+                        )
+                    }
+                }
+            }
             .map { Result.Success(it) as Result<List<WordDetail>> }
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }
@@ -82,7 +96,13 @@ class WordRepositoryImpl @Inject constructor(
 
     override fun observeWordDetailById(id: Long): Flow<Result<WordDetail?>> =
         wordDao.getWordDetailInfoLiveDataById(id)
-            .map { entity -> entity?.asExternalModel() }
+            .map { entity ->
+                entity.asExternalModel().let {
+                detail -> detail.copy(
+                    forms = detail.forms.filter { it.typeCode != "0" &&  it.typeCode != "1" }
+                    )
+                }
+            }
             .map { Result.Success(it) as Result<WordDetail?> }
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }

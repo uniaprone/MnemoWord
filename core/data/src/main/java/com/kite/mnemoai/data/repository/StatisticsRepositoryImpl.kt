@@ -2,15 +2,16 @@ package com.kite.mnemoai.data.repository
 
 import com.kite.mnemoai.common.Dispatcher
 import com.kite.mnemoai.common.MaiDispatcher
-import com.kite.mnemoai.common.MemoryAlgorithm
+import com.kite.mnemoai.data.mapper.asEntity
 import com.kite.mnemoai.data.mapper.asExternalModel
 import com.kite.mnemoai.database.dao.DayPlanDao
 import com.kite.mnemoai.database.dao.DayPlanWordDao
 import com.kite.mnemoai.database.dao.ReviewWordDao
-import com.kite.mnemoai.database.model.DayPlanWordEntity
-import com.kite.mnemoai.database.model.ReviewWordEntity
+import com.kite.mnemoai.database.model.asExternalModel
 import com.kite.mnemoai.model.Result
 import com.kite.mnemoai.model.dayplan.DayPlan
+import com.kite.mnemoai.model.dayplan.DayPlanWord
+import com.kite.mnemoai.model.dayplan.ReviewWord
 import com.kite.mnemoai.model.repository.ReciteStatistics
 import com.kite.mnemoai.model.repository.StatisticsRepository
 import com.kite.mnemoai.model.statistic.DailyStatistic
@@ -25,6 +26,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.map
 
 @Singleton
 class StatisticsRepositoryImpl @Inject constructor(
@@ -33,6 +35,22 @@ class StatisticsRepositoryImpl @Inject constructor(
     private val reviewWordDao: ReviewWordDao,
     @Dispatcher(MaiDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : StatisticsRepository {
+    override suspend fun getDayPlanWordsByDate(date: String): List<DayPlanWord> = withContext(ioDispatcher) {
+        dayPlanWordDao.queryDayPlanWordsByDate(date).map { it.asExternalModel() }
+    }
+
+    override suspend fun setReviewDayPlanWords(dayPlanWords: List<DayPlanWord>) = withContext(ioDispatcher){
+        dayPlanWordDao.insertReviewDayPlanWord(dayPlanWords.map { it.asEntity() })
+    }
+
+    override suspend fun addNewLearningDayPlanWords(dayPlanWords: List<DayPlanWord>) = withContext(ioDispatcher){
+        dayPlanWordDao.insertDayPlanWord(dayPlanWords.map { it.asEntity() })
+    }
+
+    override suspend fun deleteExceedDayPlanWords(removeCount: Int) = withContext(ioDispatcher) {
+        dayPlanWordDao.deleteRandomNewLearningWord(LocalDate.now().toString(), removeCount)
+    }
+
 
     override fun observeDayPlanByDate(date: String): Flow<Result<DayPlan?>> =
         dayPlanDao.getDayPlanEntityLiveData(date)
@@ -62,52 +80,38 @@ class StatisticsRepositoryImpl @Inject constructor(
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }
 
-    override suspend fun rememberWord(reciteStatistics: ReciteStatistics) = withContext(ioDispatcher) {
-        val wordId = reciteStatistics.wordId
-        val dateTime = LocalDateTime.now().toString()
-        val date = LocalDate.now()
+    override suspend fun getReviewWordById(wordId: Long): ReviewWord? =
+        withContext(ioDispatcher) {
+            reviewWordDao.getReviewWordEntityById(wordId)?.asExternalModel()
+        }
 
-        val dayPlanWordEntity = dayPlanWordDao.queryDayPlanWordBywordIdAndDate(wordId, date.toString())
-        if (dayPlanWordEntity != null) {
-            dayPlanWordEntity.status = 1
-            dayPlanWordEntity.blurCount = reciteStatistics.blurCount
-            dayPlanWordEntity.forgetCount = reciteStatistics.forgetCount
-            dayPlanWordEntity.learningTime = reciteStatistics.learningTime
-            dayPlanWordEntity.completeTime = dateTime
-            dayPlanWordDao.InsertDayPlanWord(dayPlanWordEntity)
+    override suspend fun saveWordReciteStatistic(reciteStatistics: ReciteStatistics) {
+        withContext(ioDispatcher){
+            val wordId = reciteStatistics.wordId
+            val date = LocalDate.now().toString()
+            val dateTime = LocalDateTime.now().toString()
 
-            val reviewWordEntity = reviewWordDao.getReviewWordEntityById(wordId)
-            if (reviewWordEntity != null) {
-                val reviewCount = reviewWordEntity.reviewCount + 1
-                reviewWordEntity.reviewCount = reviewCount
-                reviewWordEntity.nextReviewTime = MemoryAlgorithm.calculateNextReviewDate(
-                    reviewCount,
-                    reciteStatistics.blurCount,
-                    reciteStatistics.forgetCount,
-                    reciteStatistics.learningTime,
-                    date
-                ).toString()
-                reviewWordDao.insertReviewWord(reviewWordEntity)
-            } else {
-                val newReviewWordEntity = ReviewWordEntity(
-                    wordId, 1, 0,
-                    MemoryAlgorithm.calculateNextReviewDate(
-                        0,
-                        reciteStatistics.blurCount,
-                        reciteStatistics.forgetCount,
-                        reciteStatistics.learningTime,
-                        date
-                    ).toString()
-                )
-                reviewWordDao.insertReviewWord(newReviewWordEntity)
+            dayPlanWordDao.queryDayPlanWordBywordIdAndDate(wordId, date)?.let { entity ->
+                entity.status = 1
+                entity.blurCount = reciteStatistics.blurCount
+                entity.forgetCount = reciteStatistics.forgetCount
+                entity.learningTime = reciteStatistics.learningTime
+                entity.completeTime = dateTime
+                dayPlanWordDao.insertDayPlanWord(entity)
             }
+        }
+    }
+
+    override suspend fun saveReviewWord(reviewWord: ReviewWord) {
+        withContext(ioDispatcher){
+            reviewWordDao.insertReviewWord(reviewWord.asEntity())
         }
     }
 
     override suspend fun getStudyStatistic(): Result<List<StudyStatistic>> =
         withContext(ioDispatcher) {
             try {
-                Result.Success(dayPlanWordDao.getStudyStatistic().map { it.asExternalModel() })
+                Result.Success(dayPlanWordDao.studyStatistic.map { it.asExternalModel() })
             } catch (e: Exception) {
                 Result.Error(e)
             }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="8dp"
+    android:paddingVertical="8dp"
     android:background="?attr/colorSurfaceContainerLowest">
 
     <LinearLayout
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_size_body_large"
+            android:textSize="@dimen/text_size_body_medium"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="2026年6月30日" />
@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:textSize="@dimen/text_size_body_medium"
+            app:chipStrokeWidth="0dp"
             app:chipStartPadding="0dp"
             app:chipEndPadding="0dp"
             app:chipCornerRadius="20dp"
@@ -65,6 +66,7 @@
             tools:text="模糊1次"
             android:textColor="?attr/colorOnSecondaryContainer"
             android:textSize="@dimen/text_size_body_medium"
+            app:chipStrokeWidth="0dp"
             app:chipStartPadding="0dp"
             app:chipEndPadding="0dp"
             app:chipCornerRadius="20dp"
@@ -77,6 +79,7 @@
             tools:text="忘记1次"
             android:textColor="?attr/colorOnTertiaryContainer"
             android:textSize="@dimen/text_size_body_medium"
+            app:chipStrokeWidth="0dp"
             app:chipStartPadding="0dp"
             app:chipEndPadding="0dp"
             app:chipCornerRadius="20dp"

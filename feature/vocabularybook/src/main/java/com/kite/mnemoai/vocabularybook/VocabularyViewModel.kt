@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kite.domain.SetDailyReciteWordUseCase
 import com.kite.mnemoai.model.Result
 import com.kite.mnemoai.model.group.AllVocabularyBookItem
 import com.kite.mnemoai.model.group.Group
@@ -24,6 +25,7 @@ class VocabularyViewModel @Inject constructor(
     private val groupRepository: GroupRepository,
     private val statisticsRepository: StatisticsRepository,
     private val userSettingRepository: UserSettingRepository,
+    private val setDailyReciteWordUseCase: SetDailyReciteWordUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableLiveData<VocabularyUIState>()
@@ -52,11 +54,9 @@ class VocabularyViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            userSettingRepository.observeUserSetting().collect { result ->
-                if (result is Result.Success) {
-                    newLearningWordCount = result.data.newLearningWordCount
-                    updateUIState()
-                }
+            userSettingRepository.userSetting.collect { userSetting ->
+                newLearningWordCount = userSetting.newLearningWordCount
+                updateUIState()
             }
         }
         viewModelScope.launch {
@@ -81,6 +81,7 @@ class VocabularyViewModel @Inject constructor(
     fun setNewLearningWordCount(newLearningWordCount: Int) {
         viewModelScope.launch {
             userSettingRepository.setNewLearningWordCount(newLearningWordCount)
+            setDailyReciteWordUseCase()
         }
     }
 

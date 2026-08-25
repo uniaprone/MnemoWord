@@ -1,155 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/aiMnemonicNSV"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurfaceContainer"
+    android:clipChildren="false"
+    android:fillViewport="true">
     <LinearLayout
+        android:id="@+id/NestedScrollContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurfaceContainer"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurfaceContainerLowest"
-        android:orientation="vertical"
-        android:gravity="center">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/headerContainerCL"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <com.kite.mnemoai.ui.widget.WordView
+            android:id="@+id/reciteWordView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurfaceContainerLowest">
-
-            <LinearLayout
-                android:id="@+id/headerLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginVertical="8dp"
-                android:background="?attr/colorSurfaceContainerLowest"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/wordTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_headline_large"
-                    android:textStyle="bold"
-                    tools:text="bedroom" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/phoneticTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:gravity="center"
-                    tools:text="\'bedrum\" />
-
-            </LinearLayout>
-
-
-
-            <com.google.android.material.chip.ChipGroup
-                android:id="@+id/aiChipGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:chipSpacingHorizontal="4dp">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/generateAIMnemonicChip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/generate_mnemonic"
-                    android:textColor="?attr/colorOnTertiaryContainer"
-                    android:textSize="@dimen/text_size_body_small"
-                    app:chipBackgroundColor="?attr/colorTertiaryContainer"
-                    app:chipStrokeColor="?attr/colorOutline"
-                    app:chipCornerRadius="16dp"
-                    app:chipEndPadding="0dp"
-                    app:chipStartPadding="0dp"
-                    app:ensureMinTouchTargetSize="false" />
-
-                <!--                                <com.google.android.material.chip.Chip-->
-                <!--                                    android:id="@+id/communicateWithAIChip"-->
-                <!--                                    android:layout_width="wrap_content"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:text="@string/communicate_with_ai"-->
-                <!--                                    android:textColor="?attr/colorOnTertiaryContainer"-->
-                <!--                                    android:textSize="@dimen/text_size_body_small"-->
-                <!--                                    app:chipBackgroundColor="?attr/colorTertiaryContainer"-->
-                <!--                                    app:chipStrokeColor="?attr/colorOutline"-->
-                <!--                                    app:chipCornerRadius="16dp"-->
-                <!--                                    app:chipEndPadding="0dp"-->
-                <!--                                    app:chipStartPadding="0dp"-->
-                <!--                                    app:ensureMinTouchTargetSize="false" />-->
-            </com.google.android.material.chip.ChipGroup>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <LinearLayout
-            android:id="@+id/wordTranslationLL"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
+            android:layout_marginHorizontal="8dp"
             android:layout_marginBottom="8dp"
-            android:orientation="vertical"
-            android:visibility="gone"/>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/detailDivider"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            app:dividerColor="?attr/colorOutlineVariant"/>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <FrameLayout
-                android:id="@+id/AIGenerateBanner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimaryContainer"
-                android:visibility="gone"
-                tools:ignore="UselessParent">
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/AIGenerateResultTV"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:text="生成中......"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:gravity="center"
-                    android:padding="8dp"/>
-            </FrameLayout>
-        </FrameLayout>
-    </LinearLayout>
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/aiMnemonicNSV"
+            android:layout_gravity="center_vertical"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"/>
+        <com.kite.mnemoai.ui.widget.ExplainView
+            android:id="@+id/reciteExplainView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorSurfaceContainer"
-            android:clipChildren="false"
-            android:fillViewport="false">
-
-            <include
-                android:id="@+id/ai_mnemonic"
-                layout="@layout/ai_mnemonic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.core.widget.NestedScrollView>
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
+        <com.kite.mnemoai.ui.widget.ExampleSentenceView
+            android:id="@+id/recitTranslationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
+            app:highlightTextColor="?attr/colorPrimary"
+            app:highlightTextRelativeSize="1.1"
+            app:highlightTextStyle="BOLD"/>
+        <com.kite.mnemoai.ui.widget.PhraseView
+            android:id="@+id/recitePhraseView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
+            app:highlightTextColor="?attr/colorPrimary"
+            app:highlightTextRelativeSize="1.1"
+            app:highlightTextStyle="BOLD"/>
+        <com.kite.mnemoai.ui.widget.AffixView
+            android:id="@+id/reciteAffixView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
+        <com.kite.mnemoai.ui.widget.MorphologyView
+            android:id="@+id/reciteMorphologyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
+        <com.kite.mnemoai.ui.widget.ReviewHistoryView
+            android:id="@+id/reciteReviewHistoryView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

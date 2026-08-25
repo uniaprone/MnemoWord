@@ -1,9 +1,8 @@
 package com.kite.mnemoai.mine
 
-import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.data.ThemeType
 
 class MineUIState(
-    val dayNightMode: Int,
-    val apikey: String?,
-    val apiTestState: Result<String>?
+    val dayNightMode: ThemeType,
+    val apikey: String?
 )

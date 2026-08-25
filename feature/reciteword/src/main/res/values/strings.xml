@@ -2,5 +2,4 @@
 <resources>
     <string name="recite_word">背单词</string>
     <string name="number_progress">%d / %d 词</string>
-    <string name="ai_thinking">AI思考中……</string>
 </resources>

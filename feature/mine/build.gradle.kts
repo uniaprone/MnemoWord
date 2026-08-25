@@ -36,10 +36,12 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.material)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.preference.ktx)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

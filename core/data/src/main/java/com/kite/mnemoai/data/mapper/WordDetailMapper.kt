@@ -13,6 +13,7 @@ import com.kite.mnemoai.database.model.ExampleSentence as DbExampleSentence
 import com.kite.mnemoai.database.model.Affix as DbAffix
 import com.kite.mnemoai.database.model.AffixPart as DbAffixPart
 import com.kite.mnemoai.database.model.DayPlanWordEntity
+import com.kite.mnemoai.database.model.ReviewWordEntity
 import com.kite.mnemoai.model.word.Word
 import com.kite.mnemoai.model.word.WordPos
 import com.kite.mnemoai.model.word.WordMeaning
@@ -24,6 +25,7 @@ import com.kite.mnemoai.model.word.ExampleSentence
 import com.kite.mnemoai.model.word.Affix
 import com.kite.mnemoai.model.word.AffixPart
 import com.kite.mnemoai.model.dayplan.DayPlanWord
+import com.kite.mnemoai.model.dayplan.ReviewWord
 import com.kite.mnemoai.model.word.WordDetail
 
 fun WordEntity.asExternalModel(): Word = Word(
@@ -113,4 +115,22 @@ fun WordDetailInfo.asExternalModel(): WordDetail = WordDetail(
     forms = wordForm.map { it.asExternalModel() },
     extract = wordExtractEntity?.extract?.asExternalModel(),
     dayPlanWords = dayPlanWordEntities.map { it.asExternalModel() }
+)
+
+fun ReviewWord.asEntity() = ReviewWordEntity(
+    wordId = wordId,
+    reviewState = reviewState,
+    reviewCount = reviewCount,
+    nextReviewTime = nextReviewTime
+)
+
+fun DayPlanWord.asEntity() = DayPlanWordEntity(
+    wordId = wordId,
+    date = date,
+    type = type,
+    status = status,
+    blurCount = blurCount,
+    forgetCount = forgetCount,
+    learningTime = learningTime,
+    completeTime = completeTime
 )

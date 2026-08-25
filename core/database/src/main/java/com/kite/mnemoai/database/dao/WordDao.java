@@ -12,6 +12,7 @@ import com.kite.mnemoai.database.model.WordDetailInfo;
 import com.kite.mnemoai.database.model.WordListItem;
 
 import java.util.List;
+import java.util.Map;
 
 @Dao
 public interface WordDao {
@@ -64,16 +65,6 @@ public interface WordDao {
             "INNER JOIN DAY_PLAN_WORD dpw WHERE w.id = dpw.word_id AND dpw.date = :date")
     Flow<List<WordEntity>> getLearningWordEntityByDate(String date);
 
-//    @Query("SELECT w.* " +
-//            "   FROM words w " +
-//            "   INNER JOIN word_group wg ON wg.word_id = w.id " +
-//            "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
-//            "   LEFT JOIN word_review r ON r.id = w.id " +
-//            "   WHERE r.id IS NULL" +
-//            "   ORDER BY RANDOM() " +
-//            "   LIMIT :newCount")
-//    List<WordEntity> selectTodayNewLearningWordEntities(int newCount);
-
     @Query("SELECT DISTINCT w.* " +
             "   FROM words w " +
             "   INNER JOIN word_group wg ON wg.word_id = w.id " +
@@ -85,27 +76,31 @@ public interface WordDao {
             "   LIMIT :newCount")
     List<WordEntity> selectTodayNewLearningWordEntities(int newCount, String date);
 
-    @Query("SELECT DISTINCT w.* " +
+    @Query("SELECT DISTINCT w.id " +
             "   FROM words w " +
             "   INNER JOIN word_group wg ON wg.word_id = w.id " +
             "   INNER JOIN `groups` g ON g.id = wg.group_id AND g.is_learning = 1 " +
             "   LEFT JOIN word_review r ON r.id = w.id " +
             "   LEFT JOIN day_plan_word dpw ON dpw.word_id = w.id AND dpw.date = :date" +
-            "   WHERE r.id IS NULL AND dpw.word_id IS NULL AND w.id NOT IN (:addedWordIds)" +
+            "   WHERE r.id IS NULL AND dpw.word_id IS NULL AND w.id NOT IN (:excludeWordIds)" +
             "   ORDER BY RANDOM() " +
             "   LIMIT :newCount")
-    List<WordEntity> addTodayNewLearningWordEntities(int newCount, String date, List<Long> addedWordIds);
+    List<Long> addTodayNewLearningWordEntities(int newCount, String date, List<Long> excludeWordIds);
+
+    @Query("SELECT w.id " +
+            "   FROM words w " +
+            "   INNER JOIN word_review r ON r.id = w.id " +
+            "   WHERE r.next_review_time IS NOT NULL" +
+            "   AND r.next_review_time <= :today" +
+            "   AND r.review_status < 2")
+    List<Long> selectTodayReviewingWordEntities(String today);
 
     @Query("SELECT w.* " +
             "   FROM words w " +
             "   INNER JOIN word_review r ON r.id = w.id " +
-            "   WHERE r.next_review_time = :today")
-    List<WordEntity> selectTodayReviewingWordEntities(String today);
-
-    @Query("SELECT w.* " +
-            "   FROM words w " +
-            "   INNER JOIN word_review r ON r.id = w.id " +
-            "   WHERE r.next_review_time = :today")
+            "   WHERE r.next_review_time IS NOT NULL" +
+            "   AND r.next_review_time <= :today" +
+            "   AND r.review_status < 2")
     Flow<List<WordEntity>> selectTodayReviewingWordEntitiesLiveData(String today);
 
     @Query("SELECT w.id," +

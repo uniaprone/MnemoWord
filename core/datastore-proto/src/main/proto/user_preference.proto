@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+import "theme_type.proto";
+
+message UserPreferences {
+    int32 new_learning_word_count = 1;
+
+    ThemeTypeProto light_dark_mode = 2;
+
+    string api_key = 3;
+}

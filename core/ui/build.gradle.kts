@@ -28,6 +28,7 @@ android {
 
 dependencies {
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
@@ -38,6 +39,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.mpandroidchart)
+    implementation(libs.flexbox)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

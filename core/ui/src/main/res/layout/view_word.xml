@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorSurfaceContainerLowest"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/headerContainerCL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/headerLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:background="?attr/colorSurfaceContainerLowest"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/wordTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_size_headline_large"
+                android:textStyle="bold"
+                tools:text="bedroom" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/phoneticTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:gravity="center"
+                tools:text="\'bedrum\" />
+
+        </LinearLayout>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/aiChipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:visibility="gone"
+            app:chipSpacingHorizontal="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/generateAIMnemonicChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/generate_mnemonic"
+                android:textColor="?attr/colorOnTertiaryContainer"
+                android:textSize="@dimen/text_size_body_small"
+                app:chipBackgroundColor="?attr/colorTertiaryContainer"
+                app:chipCornerRadius="16dp"
+                app:chipEndPadding="0dp"
+                app:chipStartPadding="0dp"
+                app:chipStrokeColor="?attr/colorOutline"
+                app:ensureMinTouchTargetSize="false" />
+
+            <!--                                <com.google.android.material.chip.Chip-->
+            <!--                                    android:id="@+id/communicateWithAIChip"-->
+            <!--                                    android:layout_width="wrap_content"-->
+            <!--                                    android:layout_height="wrap_content"-->
+            <!--                                    android:text="@string/communicate_with_ai"-->
+            <!--                                    android:textColor="?attr/colorOnTertiaryContainer"-->
+            <!--                                    android:textSize="@dimen/text_size_body_small"-->
+            <!--                                    app:chipBackgroundColor="?attr/colorTertiaryContainer"-->
+            <!--                                    app:chipStrokeColor="?attr/colorOutline"-->
+            <!--                                    app:chipCornerRadius="16dp"-->
+            <!--                                    app:chipEndPadding="0dp"-->
+            <!--                                    app:chipStartPadding="0dp"-->
+            <!--                                    app:ensureMinTouchTargetSize="false" />-->
+        </com.google.android.material.chip.ChipGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/wordTranslationLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/showWordDefinitionLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurfaceContainerLowest"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingVertical="100dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_remove_red_eye_24" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="点击查看单词释义" />
+
+    </LinearLayout>
+</LinearLayout>

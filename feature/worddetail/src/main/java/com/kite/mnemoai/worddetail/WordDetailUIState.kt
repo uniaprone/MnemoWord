@@ -6,5 +6,6 @@ import com.kite.mnemoai.model.word.WordDetail
 data class WordDetailUIState(
     val wordDetail: WordDetail?,
     val aiMnemonicLoadingState: Result<String>?,
-    val apiKey: String?
+    val apiKey: String?,
+    val revision: Long = 0,
 )

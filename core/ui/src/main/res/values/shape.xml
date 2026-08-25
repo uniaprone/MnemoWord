@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============ 全局圆角体系（Material 3 风格） ============ -->
+    <dimen name="corner_size_none">0dp</dimen>
+    <dimen name="corner_size_extra_small">4dp</dimen>
+    <dimen name="corner_size_small">8dp</dimen>
+    <dimen name="corner_size_medium">16dp</dimen>
+    <dimen name="corner_size_large">24dp</dimen>
+    <dimen name="corner_size_extra_large">32dp</dimen>
+    <dimen name="corner_size_full">999dp</dimen>
+
+    <!-- 标准卡片圆角 -->
+    <style name="ShapeAppearance.MnemoAI.Card" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_size_medium</item>
+    </style>
+
+    <!-- 小卡片/小容器圆角 -->
+    <style name="ShapeAppearance.MnemoAI.Card.Small" parent="ShapeAppearance.MnemoAI.Card">
+        <item name="cornerSize">@dimen/corner_size_small</item>
+    </style>
+
+    <!-- 底部弹层：仅顶部圆角 -->
+    <style name="ShapeAppearance.MnemoAI.Sheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">@dimen/corner_size_large</item>
+        <item name="cornerSizeTopRight">@dimen/corner_size_large</item>
+        <item name="cornerSizeBottomLeft">@dimen/corner_size_none</item>
+        <item name="cornerSizeBottomRight">@dimen/corner_size_none</item>
+    </style>
+
+    <!-- 全圆角（胶囊按钮 / 标签） -->
+    <style name="ShapeAppearance.MnemoAI.Pill" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_size_full</item>
+    </style>
+</resources>

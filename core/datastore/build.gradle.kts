@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -26,6 +28,14 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.protobuf.javalite)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+
+    implementation(project(":core:common"))
+    implementation(project(":core:model"))
+    implementation(project(":core:datastore-proto"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

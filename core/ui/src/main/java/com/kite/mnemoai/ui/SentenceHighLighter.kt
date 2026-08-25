@@ -26,7 +26,7 @@ object TextHighlighter {
         text: String,
         highlightTexts: List<String>,
         @ColorInt highlightColor: Int,
-        isBold: Boolean = true,
+        style: Int = 0,
         relativeSize: Float = 1.2f
     ): SpannableString {
         val spannable = SpannableString(text)
@@ -53,13 +53,18 @@ object TextHighlighter {
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             // 设置粗体
-            if (isBold) {
-                spannable.setSpan(
-                    StyleSpan(Typeface.BOLD),
-                    start, end,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+            val typeface = when(style){
+                0 -> Typeface.NORMAL
+                1 -> Typeface.BOLD
+                2 -> Typeface.ITALIC
+                3 -> Typeface.BOLD_ITALIC
+                else -> Typeface.NORMAL
             }
+            spannable.setSpan(
+                StyleSpan(typeface),
+                start, end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
 
         return spannable

@@ -70,7 +70,7 @@ public class VocabularyFragment extends Fragment {
             }
         });
 
-        binding.searchLL.setOnClickListener(view ->
+        binding.searchCV.setOnClickListener(view ->
                 Navigation.findNavController(view).navigate(R.id.action_vocabularyFragment_to_searchFragment));
 
         LearningVocabularyBookAdapter learningVocabularyBookAdapter = new LearningVocabularyBookAdapter((view, aLong) -> {

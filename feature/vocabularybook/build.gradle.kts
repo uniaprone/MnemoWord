@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:domain"))
     implementation(project(":shared-ui"))
 
     implementation(libs.androidx.appcompat)

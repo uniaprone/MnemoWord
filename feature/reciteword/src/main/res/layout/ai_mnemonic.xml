@@ -12,241 +12,35 @@
     android:id="@+id/wordDetailLL"
     android:background="?attr/colorSurfaceContainer">
         <!-- AI信息-->
-        <LinearLayout
-            android:id="@+id/extractContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible">
-                <!-- Explain -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/explain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    app:cardCornerRadius="0dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceContainerLowest">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:text="@string/word_explain"
-                                    android:textSize="@dimen/text_size_body_medium"
-                                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                                <com.google.android.material.divider.MaterialDivider
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0.5dp"
-                                    app:dividerColor="?attr/colorOutlineVariant"/>
-
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:id="@+id/explainTV"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:textSize="@dimen/text_size_body_large"
-                                    tools:text="睡觉"
-                                    android:textColor="?attr/colorOnSurface"/>
-                        </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-                <!-- Example Sentences -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sentence"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    app:cardCornerRadius="0dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceContainerLowest">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:text="@string/example_sentences"
-                                    android:textSize="@dimen/text_size_body_medium"
-                                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                                <com.google.android.material.divider.MaterialDivider
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0.5dp"
-                                    app:dividerColor="?attr/colorOutlineVariant"/>
-
-                                <LinearLayout
-                                    android:id="@+id/exampleSentenceLL"
-                                    android:orientation="vertical"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"/>
-                        </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-                <!-- Phrase -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/phrase"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    app:cardCornerRadius="0dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceContainerLowest">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:text="@string/phrases"
-                                    android:textSize="@dimen/text_size_body_medium"
-                                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                                <com.google.android.material.divider.MaterialDivider
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0.5dp"
-                                    app:dividerColor="?attr/colorOutlineVariant"/>
-
-                                <LinearLayout
-                                    android:id="@+id/phraseLL"
-                                    android:orientation="vertical"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"/>
-                        </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-                <!-- Affix -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/affix"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    app:cardCornerRadius="0dp"
-                    app:strokeWidth="0dp"
-                    app:cardBackgroundColor="?attr/colorSurfaceContainerLowest">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:text="@string/affix"
-                                    android:textSize="@dimen/text_size_body_medium"
-                                    android:textColor="?attr/colorOnSurfaceVariant"/>
-
-                                <com.google.android.material.divider.MaterialDivider
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0.5dp"
-                                    app:dividerColor="?attr/colorOutlineVariant"/>
-
-                                <com.google.android.material.textview.MaterialTextView
-                                    android:id="@+id/affixTV"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="8dp"
-                                    android:textSize="@dimen/text_size_body_large"
-                                    tools:text="a sleep"
-                                    android:textColor="?attr/colorOnSurface"/>
-                        </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-        <!-- 词形信息-->
-        <LinearLayout
-            android:id="@+id/wordForm"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="4dp"
-            android:background="?attr/colorSurfaceContainerLowest">
-                <LinearLayout
-                    android:id="@+id/wordFormLL"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                        <com.google.android.material.textview.MaterialTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:text="@string/word_form_info"
-                            android:textSize="@dimen/text_size_body_medium"
-                            android:textColor="?attr/colorOnSurfaceVariant" />
-
-                        <com.google.android.material.divider.MaterialDivider
-                            android:layout_width="wrap_content"
-                            android:layout_height="0.5dp"
-                            app:dividerColor="?attr/colorOutlineVariant"/>
-
-                        <com.google.android.flexbox.FlexboxLayout
-                            android:id="@+id/wordFormFBL"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:orientation="horizontal"
-                            app:flexWrap="wrap"
-                            app:justifyContent="flex_start"
-                            app:alignItems="center"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/wordPosTV"
-                            app:layout_constraintTop_toTopOf="parent" />
-                </LinearLayout>
-
-        </LinearLayout>
         <!-- 学习历史-->
-        <LinearLayout
-            android:id="@+id/studyHistory"
+        <com.kite.mnemoai.ui.widget.ReviewHistoryView
+            android:id="@+id/reciteReviewHistoryView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="?attr/colorSurfaceContainerLowest">
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="@string/study_history"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="?attr/colorSurfaceContainer">
-                        <com.google.android.material.divider.MaterialDivider
-                            android:layout_width="wrap_content"
-                            android:layout_height="0.5dp"
-                            app:dividerColor="?attr/colorOutlineVariant"/>
-                        <LinearLayout
-                            android:id="@+id/studyHistoryContent"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical">
-                                <com.google.android.material.card.MaterialCardView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    app:cardCornerRadius="0dp"
-                                    app:strokeWidth="0dp"
-                                    app:cardBackgroundColor="?attr/colorSurfaceContainerLowest">
-                                        <androidx.recyclerview.widget.RecyclerView
-                                            android:id="@+id/studyHistoryItemsRV"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
-                                            android:padding="8dp">
-                                        </androidx.recyclerview.widget.RecyclerView>
-
-                                </com.google.android.material.card.MaterialCardView>
-                        </LinearLayout>
-                </LinearLayout>
-        </LinearLayout>
+            android:visibility="gone"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
+        <com.kite.mnemoai.ui.widget.MorphologyView
+            android:id="@+id/reciteMorphologyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"/>
+        <com.kite.mnemoai.ui.widget.ExampleSentenceView
+            android:id="@+id/recitTranslationView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="?attr/colorSurfaceContainerLowest"
+            app:highlightTextColor="?attr/colorPrimaryContainer"
+            app:highlightTextRelativeSize="1.1"
+            app:highlightTextStyle="BOLD"/>
 </LinearLayout>

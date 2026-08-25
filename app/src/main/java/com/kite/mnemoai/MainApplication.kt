@@ -2,10 +2,12 @@ package com.kite.mnemoai
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
+import com.kite.mnemoai.model.data.ThemeType
 import com.kite.mnemoai.model.repository.UserSettingRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,11 +26,11 @@ class MainApplication : Application() {
     }
 
     private suspend fun applyDayNightModel() {
-        val userSetting = userSettingRepository.getUserSettingSync()
+        val userSetting = userSettingRepository.userSetting.first()
         when (userSetting.lightDarkModel) {
-            -1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            ThemeType.FOLLOW_SYS -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            ThemeType.DAY -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            ThemeType.NIGHT -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         }
     }
 }

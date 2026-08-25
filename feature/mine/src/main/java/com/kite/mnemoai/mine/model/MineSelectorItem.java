@@ -1,5 +1,7 @@
 package com.kite.mnemoai.mine.model;
 
+import com.kite.mnemoai.model.data.ThemeType;
+
 import java.util.List;
 
 public class MineSelectorItem extends MineBaseItem{

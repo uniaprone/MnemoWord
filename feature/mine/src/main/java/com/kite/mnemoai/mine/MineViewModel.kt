@@ -1,16 +1,18 @@
 package com.kite.mnemoai.mine
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.data.ThemeType
 import com.kite.mnemoai.model.request.WordExtractRequest
 import com.kite.mnemoai.model.repository.AiMnemonicRepository
 import com.kite.mnemoai.model.repository.UserSettingRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,32 +23,29 @@ class MineViewModel @Inject constructor(
 ) : ViewModel() {
     private val _uiStatus = MutableLiveData<MineUIState?>()
     val uIStatus: LiveData<MineUIState?> get() = _uiStatus
-
-    private var dayNightMode: Int = -1
+    private val _apiTestResult = MutableSharedFlow<Result<String>>()
+    val apiTestResult: SharedFlow<Result<String>> = _apiTestResult.asSharedFlow()
+    private var dayNightMode: ThemeType = ThemeType.FOLLOW_SYS
     private var apiKey: String? = null
-    private var apiTestState: Result<String>? = null
 
     init {
         viewModelScope.launch {
-            userSettingRepository.observeUserSetting().collect { result ->
-                if (result is Result.Success) {
-                    dayNightMode = result.data.lightDarkModel
-                    apiKey = result.data.apiKey
-                    updateUIStatus()
-                }
+            userSettingRepository.userSetting.collect { userSetting ->
+                dayNightMode = userSetting.lightDarkModel
+                apiKey = userSetting.apiKey
+                updateUIStatus()
             }
         }
     }
 
     fun apiKeyTest(apiKey: String) {
-        apiTestState = Result.Loading
-        updateUIStatus()
         viewModelScope.launch {
-            apiTestState = aiMnemonicRepository.apiKeyTest(apiKey, WordExtractRequest("apple", false))
-            if (apiTestState is Result.Success) {
+            _apiTestResult.emit(Result.Loading)
+            val result = aiMnemonicRepository.apiKeyTest(apiKey, WordExtractRequest("apple", false))
+            if (result is Result.Success) {
                 saveApiKey(apiKey)
             }
-            updateUIStatus()
+            _apiTestResult.emit(result)
         }
     }
 
@@ -56,23 +55,15 @@ class MineViewModel @Inject constructor(
         }
     }
 
-    fun saveLightDarkModel(lightDarkModel: Int) {
-        dayNightMode = convertLightDarkModelToOption(lightDarkModel)
+    fun saveLightDarkModel(lightDarkModel: ThemeType, setTheme: () -> Unit) {
         viewModelScope.launch {
             userSettingRepository.setLightDarkModel(lightDarkModel)
+            setTheme.invoke()
         }
-        updateUIStatus()
     }
 
     private fun updateUIStatus() {
-        _uiStatus.value = MineUIState(dayNightMode, apiKey, apiTestState)
+        _uiStatus.value = MineUIState(dayNightMode, apiKey)
     }
 
-    fun convertLightDarkModelToOption(lightDarkModel: Int): Int {
-        return when (lightDarkModel) {
-            AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM -> 0
-            AppCompatDelegate.MODE_NIGHT_NO -> 1
-            else -> 2
-        }
-    }
 }

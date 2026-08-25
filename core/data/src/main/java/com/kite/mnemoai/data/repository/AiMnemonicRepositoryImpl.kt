@@ -14,6 +14,7 @@ import com.kite.mnemoai.model.word.WordDetail
 import com.kite.mnemoai.network.AiServiceProvider
 import com.kite.mnemoai.network.NetworkResult
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,7 +46,7 @@ class AiMnemonicRepositoryImpl @Inject constructor(
         request: WordExtractRequest
     ): Result<String> = withContext(ioDispatcher) {
         try {
-            val userSetting = userSettingRepository.getUserSettingSync()
+            val userSetting = userSettingRepository.userSetting.first()
             val networkResult = aiServiceProvider.getWordExtractDataSourceImp()
                 .generateWordExtract(userSetting.apiKey, request)
             when (networkResult) {

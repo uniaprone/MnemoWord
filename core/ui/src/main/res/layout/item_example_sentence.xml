@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_marginVertical="8dp">
+    <TextView
+        android:id="@+id/exampleSentence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:textSize="@dimen/text_size_body_medium"
+        android:textColor="?attr/colorOnSurface"
+        tools:text="hellow world"/>
+    <TextView
+        android:id="@+id/exampleSentenceTranslation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_body_medium"
+        android:textColor="?attr/colorOnSurfaceVariant"
+        tools:text="你好世界" />
+</LinearLayout>

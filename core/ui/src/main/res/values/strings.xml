@@ -9,6 +9,9 @@
     <string name="example_sentences">例句</string>
     <string name="phrases">短语/固定搭配</string>
     <string name="affix">词缀</string>
+    <string name="prefix">前缀</string>
+    <string name="root">词根</string>
+    <string name="suffix">后缀</string>
     <string name="word_form_info">词形变化</string>
     <string name="study_history">学习历史</string>
     <string name="generate_mnemonic">生成助记</string>
@@ -47,6 +50,7 @@
     <string name="cancel">取消</string>
     <string name="confirm">确认</string>
 
+    <string name="ai_thinking">AI思考中……</string>
     <string name="communicate_with_ai">与AI对话</string>
     <string name="no_vocabulary">当前还未选择词汇，请前往单词本选择词汇</string>
     <string name="reciteWordFinish">今日目标已完成，请明日再来吧！</string>

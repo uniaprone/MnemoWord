@@ -2,9 +2,12 @@ package com.kite.mnemoai.model.repository
 
 import com.kite.mnemoai.model.Result
 import com.kite.mnemoai.model.dayplan.DayPlan
+import com.kite.mnemoai.model.dayplan.DayPlanWord
+import com.kite.mnemoai.model.dayplan.ReviewWord
 import com.kite.mnemoai.model.statistic.DailyStatistic
 import com.kite.mnemoai.model.statistic.StudyStatistic
 import kotlinx.coroutines.flow.Flow
+import java.sql.Date
 
 data class ReciteStatistics(
     val wordId: Long,
@@ -27,6 +30,13 @@ data class ReciteStatistics(
 }
 
 interface StatisticsRepository {
+    /**
+     * 根据日期获取每日计划单词
+     */
+    suspend fun getDayPlanWordsByDate(date: String): List<DayPlanWord>
+    suspend fun setReviewDayPlanWords(dayPlanWords: List<DayPlanWord>)
+    suspend fun addNewLearningDayPlanWords(dayPlanWords: List<DayPlanWord>)
+    suspend fun deleteExceedDayPlanWords(removeCount: Int)
     fun observeDayPlanByDate(date: String): Flow<Result<DayPlan?>>
 
     fun observeAllPlanCountByDate(date: String): Flow<Result<Int>>
@@ -35,7 +45,20 @@ interface StatisticsRepository {
 
     fun observeDailyStatisticByDate(date: String): Flow<Result<DailyStatistic>>
 
-    suspend fun rememberWord(reciteStatistics: ReciteStatistics)
+    /**
+     * 根据id获取ReviewWord（无记录时返回 null）
+     */
+    suspend fun getReviewWordById(wordId: Long): ReviewWord?
+
+    /**
+     * 保存单词背诵后的统计上信息
+     */
+    suspend fun saveWordReciteStatistic(reciteStatistics: ReciteStatistics)
+
+    /**
+     * 保存复习单词
+     */
+    suspend fun saveReviewWord(reviewWord: ReviewWord)
 
     suspend fun getStudyStatistic(): Result<List<StudyStatistic>>
 }

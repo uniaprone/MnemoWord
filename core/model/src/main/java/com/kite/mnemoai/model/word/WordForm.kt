@@ -6,3 +6,5 @@ data class WordForm(
     val typeCode: String,
     val form: String
 )
+
+

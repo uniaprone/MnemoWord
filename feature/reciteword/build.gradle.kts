@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
@@ -42,7 +43,6 @@ dependencies {
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
-    implementation(libs.flexbox)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

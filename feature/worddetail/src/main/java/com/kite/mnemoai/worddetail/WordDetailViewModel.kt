@@ -12,6 +12,8 @@ import com.kite.mnemoai.model.repository.UserSettingRepository
 import com.kite.mnemoai.model.repository.WordRepository
 import com.kite.mnemoai.model.word.WordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,34 +26,35 @@ class WordDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableLiveData<WordDetailUIState?>()
-    val uiState: LiveData<WordDetailUIState?> get() = _uiState
+    private val _uiState = MutableStateFlow<WordDetailUIState?>(null)
+    val uiState: StateFlow<WordDetailUIState?> get() = _uiState
 
     private var apiKey: String? = null
     private var wordDetail: WordDetail? = null
     private var aiMnemonicLoadingState: Result<String>? = null
-
+    private var revision = 0L
     init {
         var wordId: Long = 1
         if (savedStateHandle.contains("word_id")) {
-            wordId = savedStateHandle.get<Long?>("word_id") ?: 1
+            wordId = savedStateHandle["word_id"] ?: 1
         }
 
         viewModelScope.launch {
             wordRepository.observeWordDetailById(wordId).collect { result ->
                 if (result is Result.Success) {
-                    wordDetail = result.data
+                    val detail = result.data 
+                    wordDetail = detail?.copy(
+                        word = detail.word.copy(phonetic = "/${detail.word.phonetic}/")
+                    )
                     updateUIState()
                 }
             }
         }
 
         viewModelScope.launch {
-            userSettingRepository.observeUserSetting().collect { result ->
-                if (result is Result.Success) {
-                    apiKey = result.data.apiKey
-                    updateUIState()
-                }
+            userSettingRepository.userSetting.collect { userSetting ->
+                apiKey = userSetting.apiKey
+                updateUIState()
             }
         }
     }
@@ -71,6 +74,7 @@ class WordDetailViewModel @Inject constructor(
     }
 
     private fun updateUIState() {
-        _uiState.value = WordDetailUIState(wordDetail, aiMnemonicLoadingState, apiKey)
+        revision++
+        _uiState.value = WordDetailUIState(wordDetail, aiMnemonicLoadingState, apiKey, revision)
     }
 }

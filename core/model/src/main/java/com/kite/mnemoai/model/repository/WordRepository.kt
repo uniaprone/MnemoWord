@@ -6,9 +6,9 @@ import com.kite.mnemoai.model.word.WordItem
 import kotlinx.coroutines.flow.Flow
 
 interface WordRepository {
+    suspend fun addTodayNewLearningWordEntities(count: Int, date: String, excludeWordIds: List<Long>): List<Long>
+    suspend fun selectTodayReviewingWordEntities(date: String): List<Long>
     fun observeWordListByGroupId(groupId: Long): Flow<Result<List<WordItem>>>
-
-    suspend fun setDailyDayPlanWordEntities(learningCount: Int)
 
     fun observeDailyReciteStatus(): Flow<Result<Int>>
 

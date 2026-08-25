@@ -1,10 +1,10 @@
 package com.kite.mnemoai.reciteword
 
 import android.os.SystemClock
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kite.domain.RememberWordUseCase
+import com.kite.domain.SetDailyReciteWordUseCase
 import com.kite.mnemoai.model.Result
 import com.kite.mnemoai.model.repository.AiMnemonicRepository
 import com.kite.mnemoai.model.repository.ReciteStatistics
@@ -14,6 +14,13 @@ import com.kite.mnemoai.model.repository.WordRepository
 import com.kite.mnemoai.model.request.WordExtractRequest
 import com.kite.mnemoai.model.word.WordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Random
@@ -27,24 +34,25 @@ class ReciteWordViewModel @Inject constructor(
     private val statisticsRepository: StatisticsRepository,
     private val userSettingRepository: UserSettingRepository,
     private val aiMnemonicRepository: AiMnemonicRepository,
+    private val rememberWordUseCase: RememberWordUseCase,
+    private val setDailyReciteWordUseCase: SetDailyReciteWordUseCase
 ) : ViewModel() {
-
-    private val _uiState = MutableLiveData<ReciteWordUIState?>()
+    private val _uiState = MutableStateFlow<ReciteWordUIState?>(null)
+    val uiState: StateFlow<ReciteWordUIState?> = _uiState.asStateFlow()
     private var reciteStage: ReciteStage? = null
     private var reciteWordDetailInfoItemUIState: MutableList<WordDetail>? = null
-    private var reciteStatistics: MutableList<ReciteStatistics> = ArrayList()
+    private var reciteStatistics: MutableList<ReciteStatistics> = mutableListOf()
     private var totalProgress = 0
     private var currentProgress = 0
-
-    @JvmField
-    var isShowNext: Boolean = true
+    private val _showNext = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val showNext: SharedFlow<Unit> = _showNext.asSharedFlow()
     private var isShowTranslation = false
     private var isShowDetail = false
     private var aiMnemonicLoadingState: Result<String>? = null
+    private var revision = 0L
     private val random = Random()
     private val date: LocalDate = LocalDate.now()
     private var apiKey: String? = null
-    private var hasSetDailyPlanWord = false
 
     init {
         viewModelScope.launch {
@@ -61,15 +69,9 @@ class ReciteWordViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            userSettingRepository.observeUserSetting().collect { result ->
-                if (result is Result.Success) {
-                    apiKey = result.data.apiKey
-                    updateUIStatus()
-                    if (!hasSetDailyPlanWord) {
-                        wordRepository.setDailyDayPlanWordEntities(result.data.newLearningWordCount)
-                        hasSetDailyPlanWord = true
-                    }
-                }
+            userSettingRepository.userSetting.collect { result ->
+                apiKey = result.apiKey
+                updateUIStatus()
             }
         }
         viewModelScope.launch {
@@ -124,7 +126,7 @@ class ReciteWordViewModel @Inject constructor(
                 val wordDetailInfo = iterator.next()
                 if (newPlanMap[wordDetailInfo.word.id] == null) {
                     iterator.remove()
-                    isShowNext = true
+                    _showNext.tryEmit(Unit)
                     resetShowState()
                 }
             }
@@ -144,7 +146,7 @@ class ReciteWordViewModel @Inject constructor(
                         val insertIndex = random.nextInt(orderSize) + 1
                         this.reciteWordDetailInfoItemUIState!!.add(insertIndex, newPlan)
                     }
-                    isShowNext = true
+                    _showNext.tryEmit(Unit)
                     resetShowState()
                 } else {
                     val index = this.reciteWordDetailInfoItemUIState!!.indexOf(oldStatus)
@@ -162,28 +164,23 @@ class ReciteWordViewModel @Inject constructor(
 
     fun setDailyDayPlanWordEntities() {
         viewModelScope.launch {
-            val result = userSettingRepository.getUserSetting()
-            if (result is Result.Success) {
-                wordRepository.setDailyDayPlanWordEntities(result.data.newLearningWordCount)
-            }
+            setDailyReciteWordUseCase()
         }
     }
 
     private fun updateUIStatus() {
+        revision++
         _uiState.value = ReciteWordUIState(
             reciteStage,
             reciteWordDetailInfoItemUIState,
             totalProgress,
             currentProgress,
-            isShowNext,
             isShowTranslation,
             isShowDetail,
-            aiMnemonicLoadingState
+            aiMnemonicLoadingState,
+            revision
         )
     }
-
-    val uiState: LiveData<ReciteWordUIState?>
-        get() = _uiState
 
     fun showAll() {
         this.isShowTranslation = true
@@ -217,12 +214,13 @@ class ReciteWordViewModel @Inject constructor(
         val remembered = this.reciteWordDetailInfoItemUIState!![0]
         resetShowState()
         this.reciteWordDetailInfoItemUIState!!.remove(remembered)
+        ensureReciteStatistics(remembered.word.id)
         val rememberedReciteStatistics = reciteStatistics.first { rs -> rs.wordId == remembered.word.id }
         updateReciteStatistics(remembered.word.id, 2)
         viewModelScope.launch {
-            statisticsRepository.rememberWord(rememberedReciteStatistics)
+            rememberWordUseCase(rememberedReciteStatistics)
         }
-        this.isShowNext = true
+        _showNext.tryEmit(Unit)
         updateUIStatus()
     }
 
@@ -248,7 +246,8 @@ class ReciteWordViewModel @Inject constructor(
 
         val position = minPos + random.nextInt(maxPos - minPos + 1)
         this.reciteWordDetailInfoItemUIState!!.add(position, blured)
-        this.isShowNext = true
+        _showNext.tryEmit(Unit)
+        ensureReciteStatistics(blured.word.id)
         updateReciteStatistics(blured.word.id, 1)
         updateUIStatus()
     }
@@ -275,9 +274,27 @@ class ReciteWordViewModel @Inject constructor(
 
         val position = minPos + random.nextInt(maxPos - minPos + 1)
         this.reciteWordDetailInfoItemUIState!!.add(position, forgot)
-        this.isShowNext = true
+        _showNext.tryEmit(Unit)
+        ensureReciteStatistics(forgot.word.id)
         updateReciteStatistics(forgot.word.id, 0)
         updateUIStatus()
+    }
+
+    /**
+     * 确保指定单词的学习统计项已建立。
+     * 修复竞态：进程重建后 Room 数据流晚于 onStart 到达时，
+     * startReciteStatistics 会因列表为空提前返回，导致 reciteStatistics 缺失当前词统计项，
+     * 进而使 rememberWord 的 first{} 抛 NoSuchElementException、blur/forget 的计数丢失。
+     */
+    private fun ensureReciteStatistics(wordId: Long) {
+        if (reciteStatistics.none { it.wordId == wordId }) {
+            reciteStatistics.add(
+                ReciteStatistics(
+                    wordId = wordId,
+                    startLearningTime = SystemClock.elapsedRealtime()
+                )
+            )
+        }
     }
 
     fun startReciteStatistics() {
