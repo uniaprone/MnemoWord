@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+enum ThemeTypeProto {
+    UNSPECIFIED = 0;
+    FOLLOW_SYS = 1;
+    DAY = 2;
+    NIGHT = 3;
+}
