@@ -15,84 +15,38 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp">
 
-        <ImageView
-            android:id="@+id/groupIV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:src="@drawable/baseline_book_24"
-            app:tint="?attr/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/groupIV"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/groupNameTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
+                android:layout_margin="12dp"
                 android:textSize="@dimen/text_size_body_large"
-                tools:text="中考词汇" />
+                android:textColor="?attr/colorOnSurface"
+                android:textStyle="bold"
+                tools:text="中考词汇"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
-            <LinearLayout
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/totalWordsTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="2dp">
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/totalWordsTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body_medium"
-                    tools:text="1228" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/materialTextView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:text="个单词" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/masteredWordsPercentageTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:layout_marginStart="30dp" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/percent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:text="% " />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_size_body_medium"
-                    android:text="@string/mastered" />
-
-            </LinearLayout>
-
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/masteredProgressPI"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                app:indicatorTrackGapSize="0dp"
-                app:layout_constraintWidth_percent="0.5"
-                app:trackStopIndicatorSize="0dp" />
-        </LinearLayout>
+                android:textSize="@dimen/text_size_body_large"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintBottom_toBottomOf="@+id/groupNameTV"
+                app:layout_constraintStart_toEndOf="@id/groupNameTV"
+                app:layout_constraintTop_toTopOf="@+id/groupNameTV"
+                tools:text="1228" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
             android:id="@+id/imageView4"

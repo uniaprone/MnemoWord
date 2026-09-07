@@ -5,9 +5,11 @@ import com.kite.mnemoai.model.dayplan.DayPlan
 import com.kite.mnemoai.model.dayplan.DayPlanWord
 import com.kite.mnemoai.model.dayplan.ReviewWord
 import com.kite.mnemoai.model.statistic.DailyStatistic
+import com.kite.mnemoai.model.statistic.DateInterval
 import com.kite.mnemoai.model.statistic.StudyStatistic
 import kotlinx.coroutines.flow.Flow
 import java.sql.Date
+import java.time.LocalDate
 
 data class ReciteStatistics(
     val wordId: Long,
@@ -34,7 +36,6 @@ interface StatisticsRepository {
      * 根据日期获取每日计划单词
      */
     suspend fun getDayPlanWordsByDate(date: String): List<DayPlanWord>
-    suspend fun setReviewDayPlanWords(dayPlanWords: List<DayPlanWord>)
     suspend fun addNewLearningDayPlanWords(dayPlanWords: List<DayPlanWord>)
     suspend fun deleteExceedDayPlanWords(removeCount: Int)
     fun observeDayPlanByDate(date: String): Flow<Result<DayPlan?>>
@@ -46,7 +47,7 @@ interface StatisticsRepository {
     fun observeDailyStatisticByDate(date: String): Flow<Result<DailyStatistic>>
 
     /**
-     * 根据id获取ReviewWord（无记录时返回 null）
+     * 根据id获取ReviewWord
      */
     suspend fun getReviewWordById(wordId: Long): ReviewWord?
 
@@ -61,4 +62,5 @@ interface StatisticsRepository {
     suspend fun saveReviewWord(reviewWord: ReviewWord)
 
     suspend fun getStudyStatistic(): Result<List<StudyStatistic>>
+    fun queryStudyStatisticByDateInterval(startDate: LocalDate, endDate: LocalDate): Flow<List<StudyStatistic>>
 }

@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="study_history">学习历史</string>
+    <string name="statistic">统计</string>
+    <string name="in_the_past_date">近七天|近一个月|近三个月|自定义</string>
+    <string name="date">%s年%s月%s日</string>
 </resources>

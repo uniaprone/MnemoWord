@@ -36,9 +36,7 @@ class AllVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAdapter<
         fun bind(item: AllVocabularyBookItem){
             this.item = item
             binding.groupNameTV.text = item.name
-            binding.totalWordsTV.text = item.totalWords.toString()
-            binding.masteredWordsPercentageTV.text = item.masteredProgress.toString()
-            binding.masteredProgressPI.setProgress(item.masteredProgress, true)
+            binding.totalWordsTV.text = binding.itemVocabularyBookAll.context.resources.getString(R.string.bracket_number, item.totalWords)
         }
     }
 }

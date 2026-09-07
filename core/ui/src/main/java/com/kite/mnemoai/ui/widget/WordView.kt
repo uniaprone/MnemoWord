@@ -28,36 +28,36 @@ class WordView @JvmOverloads constructor(
 
     private val bannerView = BannerView(this.context)
 
-    private lateinit var generateAIMnemonicListener: () -> Unit
-    private lateinit var showReciteDetailListener: () -> Unit
+    private var generateAIMnemonicListener: (() -> Unit)? = null
+    private var showReciteDetailListener: (() -> Unit)? = null
+    private var communicateWithAIListener: (() -> Unit)? = null
+    private var speechListener:(() -> Unit)? = null
 
     fun setGenerateAIMnemonicListener(block: () -> Unit){
         generateAIMnemonicListener = block
+        binding.generateAIMnemonicChip.setOnClickListener { generateAIMnemonicListener?.invoke() }
     }
 
     fun setShowReciteDetailListener(block: () -> Unit){
         showReciteDetailListener = block
+        binding.showWordDefinitionLL.setOnClickListener { showReciteDetailListener?.invoke() }
+    }
+
+    fun setCommunicateWithAIListener(block: () -> Unit){
+        communicateWithAIListener = block
+        binding.communicateWithAIChip.setOnClickListener { communicateWithAIListener?.invoke() }
+    }
+
+    fun setSpeechListener(block: () -> Unit){
+        speechListener = block
+        binding.headerLayout.setOnClickListener { speechListener?.invoke() }
     }
 
     fun setReciteStyle(wordDetail: WordDetail){
         binding.wordTV.text = wordDetail.word.word
         binding.phoneticTV.text = wordDetail.word.phonetic
-
-        binding.headerLayout.gravity = Gravity.CENTER
-        binding.phoneticTV.gravity = Gravity.CENTER
-        val headerConstraintSet = ConstraintSet()
-        headerConstraintSet.clone(binding.headerContainerCL)
-        headerConstraintSet.connect(
-            R.id.headerLayout, ConstraintSet.END,
-            ConstraintSet.PARENT_ID, ConstraintSet.END
-        )
-        headerConstraintSet.applyTo(binding.headerContainerCL)
-
-        binding.aiChipGroup.visibility = GONE
         binding.wordTranslationLL.visibility = GONE
         binding.showWordDefinitionLL.visibility = VISIBLE
-
-        binding.showWordDefinitionLL.setOnClickListener { showReciteDetailListener() }
     }
 
     fun setReciteDetailStyle(wordDetail: WordDetail){
@@ -105,11 +105,8 @@ class WordView @JvmOverloads constructor(
         binding.headerLayout.gravity = Gravity.START
         binding.phoneticTV.gravity = Gravity.START
 
-        binding.aiChipGroup.visibility = VISIBLE
         binding.wordTranslationLL.visibility = VISIBLE
         binding.showWordDefinitionLL.visibility = GONE
-
-        binding.generateAIMnemonicChip.setOnClickListener { generateAIMnemonicListener() }
     }
 
     fun showBanner(aiMnemonicLoadingState: Result<String>?) {
@@ -120,7 +117,7 @@ class WordView @JvmOverloads constructor(
             is Result.Loading -> {
                 (bannerView.parent as? ViewGroup)?.removeView(bannerView)
                 binding.root.addView(bannerView)
-                bannerView.setBanner(resources.getString(R.string.ai_thinking))
+                bannerView.setLoading(resources.getString(R.string.ai_thinking))
             }
 
             is Result.Success<*> -> {
@@ -130,7 +127,7 @@ class WordView @JvmOverloads constructor(
             is Result.Error -> {
                 (bannerView.parent as? ViewGroup)?.removeView(bannerView)
                 aiMnemonicLoadingState.exception.message?.let {
-                    bannerView.setBanner(it)
+                    bannerView.setLoading(it)
                     binding.root.addView(bannerView)
                 }
             }

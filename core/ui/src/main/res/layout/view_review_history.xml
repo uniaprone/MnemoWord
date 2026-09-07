@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp">
+    android:padding="12dp">
     <LinearLayout
         android:id="@+id/reviewHistoryTitle"
         android:layout_width="0dp"

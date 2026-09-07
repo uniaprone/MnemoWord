@@ -1,19 +1,21 @@
 package com.kite.mnemoai.reciteword
 
+import android.net.Uri
 import android.os.SystemClock
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kite.domain.RememberWordUseCase
 import com.kite.domain.SetDailyReciteWordUseCase
 import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.recite.PronounceType
 import com.kite.mnemoai.model.repository.AiMnemonicRepository
 import com.kite.mnemoai.model.repository.ReciteStatistics
 import com.kite.mnemoai.model.repository.StatisticsRepository
 import com.kite.mnemoai.model.repository.UserSettingRepository
 import com.kite.mnemoai.model.repository.WordRepository
-import com.kite.mnemoai.model.request.WordExtractRequest
 import com.kite.mnemoai.model.word.WordDetail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.Random
@@ -28,6 +31,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class ReciteWordViewModel @Inject constructor(
     private val wordRepository: WordRepository,
@@ -48,20 +52,27 @@ class ReciteWordViewModel @Inject constructor(
     val showNext: SharedFlow<Unit> = _showNext.asSharedFlow()
     private var isShowTranslation = false
     private var isShowDetail = false
-    private var aiMnemonicLoadingState: Result<String>? = null
+    private val _aiMnemonicLoadingState = MutableSharedFlow<Result<String>?>(extraBufferCapacity = 1)
+    val aiMnemonicLoadingState get() = _aiMnemonicLoadingState.asSharedFlow()
     private var revision = 0L
     private val random = Random()
-    private val date: LocalDate = LocalDate.now()
+    private val today = MutableStateFlow(LocalDate.now())
     private var apiKey: String? = null
+    private var autoPronounce = true
+    private var pronounceType: PronounceType = PronounceType.USA
+
 
     init {
         viewModelScope.launch {
-            wordRepository.observeDailyReciteStatus().collect { result ->
+            today.flatMapLatest { date ->
+                wordRepository.observeDailyReciteStatus(date.toString())
+            }.collect { result ->
                 if (result is Result.Success) {
                     reciteStage = when (result.data) {
                         0 -> ReciteStage.NO_VOCABULARY
                         1 -> ReciteStage.FINISH
                         2 -> ReciteStage.IN_PROGRESS
+                        3 -> ReciteStage.NOT_STARTED
                         else -> null
                     }
                     updateUIStatus()
@@ -70,12 +81,16 @@ class ReciteWordViewModel @Inject constructor(
         }
         viewModelScope.launch {
             userSettingRepository.userSetting.collect { result ->
-                apiKey = result.apiKey
+                apiKey = result.deepseekSettings.apiKey
+                autoPronounce = result.autoPronounce
+                pronounceType = result.pronounceType
                 updateUIStatus()
             }
         }
         viewModelScope.launch {
-            wordRepository.observeUnfinishedWordDetailInfos().collect { result ->
+            today.flatMapLatest { date ->
+                wordRepository.observeUnfinishedWordDetailInfos(date.toString())
+            }.collect { result ->
                 if (result is Result.Success) {
                     val formatted = result.data.map { detail -> formatWordDetail(detail) }
                     updateOrderData(formatted.toMutableList())
@@ -84,7 +99,9 @@ class ReciteWordViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            statisticsRepository.observeAllPlanCountByDate(date.toString()).collect { result ->
+            today.flatMapLatest { date ->
+                statisticsRepository.observeAllPlanCountByDate(date.toString())
+            }.collect { result ->
                 if (result is Result.Success) {
                     totalProgress = result.data
                     updateUIStatus()
@@ -92,7 +109,9 @@ class ReciteWordViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
-            statisticsRepository.observeFinishedPlanCountByDate(date.toString()).collect { result ->
+            today.flatMapLatest { date ->
+                statisticsRepository.observeFinishedPlanCountByDate(date.toString())
+            }.collect { result ->
                 if (result is Result.Success) {
                     currentProgress = result.data
                     updateUIStatus()
@@ -102,6 +121,7 @@ class ReciteWordViewModel @Inject constructor(
     }
 
     private fun formatWordDetail(detail: WordDetail): WordDetail {
+        val updateDayPlanWords = detail.dayPlanWords.filter { it.date != today.value.toString()}
         val updatedWord = detail.word.copy(phonetic = "\\${detail.word.phonetic}\\")
         val sortedTranslations = detail.translations.sorted()
         val updatedTranslations = sortedTranslations.map { translation ->
@@ -111,7 +131,7 @@ class ReciteWordViewModel @Inject constructor(
                 }
             )
         }
-        return detail.copy(word = updatedWord, translations = updatedTranslations)
+        return detail.copy(word = updatedWord, translations = updatedTranslations, dayPlanWords = updateDayPlanWords)
     }
 
     private fun updateOrderData(newPlans: MutableList<WordDetail>) {
@@ -168,6 +188,20 @@ class ReciteWordViewModel @Inject constructor(
         }
     }
 
+    fun onResume() {
+        if (LocalDate.now() == today.value) return
+        stopReciteStatistics()
+        today.value = LocalDate.now()
+        reciteStage = null
+        reciteWordDetailInfoItemUIState = null
+        reciteStatistics.clear()
+        totalProgress = 0
+        currentProgress = 0
+        isShowTranslation = false
+        isShowDetail = false
+        setDailyDayPlanWordEntities()
+    }
+
     private fun updateUIStatus() {
         revision++
         _uiState.value = ReciteWordUIState(
@@ -177,8 +211,9 @@ class ReciteWordViewModel @Inject constructor(
             currentProgress,
             isShowTranslation,
             isShowDetail,
-            aiMnemonicLoadingState,
-            revision
+            revision,
+            autoPronounce = autoPronounce,
+            pronounceType = pronounceType
         )
     }
 
@@ -191,21 +226,15 @@ class ReciteWordViewModel @Inject constructor(
     fun resetShowState() {
         this.isShowTranslation = false
         this.isShowDetail = false
-        this.aiMnemonicLoadingState = null
         updateUIStatus()
     }
 
     fun fetchWordExtract() {
         if (this.reciteWordDetailInfoItemUIState.isNullOrEmpty()) return
         val currentWord = this.reciteWordDetailInfoItemUIState!![0]
-        aiMnemonicLoadingState = Result.Loading
-        updateUIStatus()
+        _aiMnemonicLoadingState.tryEmit(Result.Loading)
         viewModelScope.launch {
-            aiMnemonicLoadingState = aiMnemonicRepository.generateWordExtract(
-                currentWord,
-                WordExtractRequest(currentWord.word.word, false)
-            )
-            updateUIStatus()
+            _aiMnemonicLoadingState.tryEmit(aiMnemonicRepository.generateWordExtract(listOf(currentWord)))
         }
     }
 
@@ -313,6 +342,19 @@ class ReciteWordViewModel @Inject constructor(
         }
     }
 
+    fun getMediaItemURI(): String {
+        if (this.reciteWordDetailInfoItemUIState.isNullOrEmpty()) return ""
+        val currentWord = this.reciteWordDetailInfoItemUIState!![0].word.word
+        val type = when (pronounceType) {
+            PronounceType.USA -> 2
+            PronounceType.UK -> 1
+        }
+        return "https://dict.youdao.com/dictvoice?audio=${Uri.encode(currentWord)}&type=$type"
+    }
+
+    fun isAutoPronounceEnabled(): Boolean = autoPronounce
+
+    fun currentPronounceType(): PronounceType = pronounceType
     fun updateReciteStatistics(wordId: Long, type: Int) {
         for (currentReciteStatistics in this.reciteStatistics) {
             if (currentReciteStatistics.wordId == wordId) {
@@ -337,5 +379,17 @@ class ReciteWordViewModel @Inject constructor(
         if (this.reciteWordDetailInfoItemUIState.isNullOrEmpty()) return
         val currentWordId = this.reciteWordDetailInfoItemUIState!![0].word.id
         updateReciteStatistics(currentWordId, 3)
+    }
+
+    fun saveEnableAutoPronounce(enableAutoPronounce: Boolean){
+        viewModelScope.launch {
+            userSettingRepository.setAutoPronounce(enableAutoPronounce)
+        }
+    }
+
+    fun savePronounceType(pronounceType: PronounceType){
+        viewModelScope.launch {
+            userSettingRepository.setPronounceType(pronounceType)
+        }
     }
 }

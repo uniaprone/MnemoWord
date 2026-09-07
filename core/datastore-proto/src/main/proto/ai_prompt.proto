@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+enum AiPromptTypeProto {
+    AI_PROMPT_TYPE_UNSPECIFIED = 0;
+    AI_PROMPT_TYPE_WORD_EXTRACT = 1;
+    AI_PROMPT_TYPE_CHAT = 2;
+}
+
+message AiPromptSetProto {
+    string system_prompt = 1;
+    string user_prompt = 2;
+}
+
+message AiPromptEntryProto {
+    AiPromptTypeProto type = 1;
+    AiPromptSetProto set = 2;
+}

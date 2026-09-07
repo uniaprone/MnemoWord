@@ -1,5 +1,8 @@
 package com.kite.mnemoai.ui.widget.segment
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Resources
@@ -7,14 +10,14 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.ViewConfiguration
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.updateLayoutParams
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.shape.MaterialShapeDrawable
@@ -22,12 +25,13 @@ import com.google.android.material.shape.ShapeAppearanceModel
 import com.kite.mnemoai.ui.R
 import com.kite.mnemoai.ui.databinding.ViewSegmentedControlBinding
 import com.kite.mnemoai.ui.dpToPx
+import kotlin.math.abs
 
-open class SegmentedControl @JvmOverloads constructor(
+open class SegmentControl @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-): FrameLayout(context, attrs, defStyleAttr) {
+): FrameLayout(context, attrs, defStyleAttr){
     val Float.dp: Float
         get() = this * Resources.getSystem().displayMetrics.density
     val binding = ViewSegmentedControlBinding.inflate(LayoutInflater.from(context), this, true)
@@ -37,6 +41,13 @@ open class SegmentedControl @JvmOverloads constructor(
     protected var segments: MutableList<MaterialButton> = mutableListOf()
     private var listener: ((Int) -> Unit)? = null
     var currentIndex = -1
+    private var thumbAnimator: ValueAnimator? = null
+
+    // 手指滑动相关状态
+    private val touchSlop: Int = (ViewConfiguration.get(context).scaledTouchSlop * 0).toInt()
+    private var downX = 0f
+    private var downY = 0f
+    private var horizontalDragStarted = false
 
     init {
         context.theme.obtainStyledAttributes(
@@ -55,10 +66,59 @@ open class SegmentedControl @JvmOverloads constructor(
               recycle()
             }
         }
-        // 仅当使用方显式设置了 segmentContainerBg 时才覆盖布局里的默认 backgroundTint
+
         segmentContainerBg?.let { binding.segmentContainerFL.backgroundTintList = it }
         binding.thumb.background = thumbBackground
         if(!segmentTitles.isEmpty()) init()
+    }
+
+    /**
+     * 手指滑动手势：
+     * - 只在「水平位移超过 touchSlop 且明显大于垂直位移」时才接管事件，
+     *   垂直方向滑动交给父容器（如 NestedScrollView）正常滚动；
+     * - 接管后子按钮会收到 ACTION_CANCEL，不会误触发点击；
+     * - 抬手时按位移方向切换选中项：左滑下一个、右滑上一个。
+     */
+    override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                downX = event.x
+                downY = event.y
+                horizontalDragStarted = false
+            }
+            MotionEvent.ACTION_MOVE -> {
+                if (!horizontalDragStarted) {
+                    val dx = event.x - downX
+                    val dy = event.y - downY
+                    if (abs(dx) > touchSlop) {
+                        horizontalDragStarted = true
+                        return true
+                    }
+                }
+            }
+            else -> {}
+        }
+        return false
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        when (event.actionMasked) {
+            MotionEvent.ACTION_MOVE -> {
+                if (horizontalDragStarted && segmentTitles.isNotEmpty()) {
+                    val dx = event.x - downX
+                    val threshold = touchSlop * 1
+                    if (dx < -threshold) {
+                        setSelectedIndex((currentIndex - 1).coerceIn(0, segmentTitles.lastIndex))
+                    } else if (dx > threshold) {
+                        setSelectedIndex((currentIndex + 1).coerceIn(0, segmentTitles.lastIndex))
+                    }
+                }
+                horizontalDragStarted = false
+            }
+            MotionEvent.ACTION_CANCEL -> horizontalDragStarted = false
+            else -> {}
+        }
+        return true
     }
 
     private fun init(){
@@ -122,8 +182,6 @@ open class SegmentedControl @JvmOverloads constructor(
         currentIndex = index
         refreshButtons(index)
         updateThumb(index, true)
-        // 业务回调与动画解耦：选中即通知，不依赖 transition 生命周期
-        listener?.invoke(index)
     }
     private fun createBackground(): Drawable = MaterialShapeDrawable().apply {
         fillColor =
@@ -145,7 +203,6 @@ open class SegmentedControl @JvmOverloads constructor(
         this.listener = listener
     }
 
-
     private fun updateThumb(index: Int, animate: Boolean) {
         binding.container.post {
             var startMargin = context.dpToPx(4)
@@ -158,18 +215,33 @@ open class SegmentedControl @JvmOverloads constructor(
                     binding.container.getChildAt(index).marginStart +
                     binding.container.getChildAt(index).marginEnd
             if (animate) {
-                // 只做视觉动画；不再挂 listener/endTransitions，
-                // 避免连续点击时结束掉后发起的过渡导致 thumb 闪回
-                TransitionManager.beginDelayedTransition(
-                    binding.root,
-                    ChangeBounds().apply { duration = 300 }
-                )
-                binding.thumb.updateLayoutParams<LayoutParams> {
-                    width = thumbWidth
-                    height = binding.container.height
-                    marginStart = startMargin
-                    topMargin = context.dpToPx(4)
+                thumbAnimator?.let { it.removeAllListeners(); it.cancel() }
+                val fromMargin = binding.thumb.marginStart.toFloat()
+                val toMargin = startMargin.toFloat()
+                val fromWidth = binding.thumb.width.toFloat()
+                val toWidth = thumbWidth.toFloat()
+                val animator = ValueAnimator.ofFloat(0f, 1f).apply {
+                    duration = 300
+                    addUpdateListener { anim ->
+                        val t = anim.animatedValue as Float
+                        binding.thumb.updateLayoutParams<LayoutParams> {
+                            width = (fromWidth + (toWidth - fromWidth) * t).toInt()
+                            height = binding.container.height
+                            marginStart = (fromMargin + (toMargin - fromMargin) * t).toInt()
+                            topMargin = context.dpToPx(4)
+                        }
+                    }
+                    addListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator) {
+                            if (thumbAnimator === animation) {
+                                thumbAnimator = null
+                                listener?.invoke(index)
+                            }
+                        }
+                    })
+                    start()
                 }
+                thumbAnimator = animator
             }else{
                 binding.thumb.updateLayoutParams<LayoutParams> {
                     width = thumbWidth

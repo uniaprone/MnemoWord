@@ -1,4 +1,4 @@
-package com.kite.mnemoai.data.mapper
+package com.kite.mnemoai.data.model
 
 import com.kite.mnemoai.database.model.WordDetailInfo
 import com.kite.mnemoai.database.model.WordEntity
@@ -7,7 +7,6 @@ import com.kite.mnemoai.database.model.WordMeaningEntity
 import com.kite.mnemoai.database.model.WordFormEntity
 import com.kite.mnemoai.database.model.WordTranslation as DbWordTranslation
 import com.kite.mnemoai.database.model.WordExtract as DbWordExtract
-import com.kite.mnemoai.database.model.WordExtractEntity
 import com.kite.mnemoai.database.model.Phrase as DbPhrase
 import com.kite.mnemoai.database.model.ExampleSentence as DbExampleSentence
 import com.kite.mnemoai.database.model.Affix as DbAffix
@@ -134,3 +133,5 @@ fun DayPlanWord.asEntity() = DayPlanWordEntity(
     learningTime = learningTime,
     completeTime = completeTime
 )
+
+

@@ -1,4 +1,4 @@
-package com.kite.mnemoai.data.mapper
+package com.kite.mnemoai.data.model
 
 import com.kite.mnemoai.database.model.WordListItem
 import com.kite.mnemoai.model.word.WordItem

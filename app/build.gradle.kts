@@ -50,6 +50,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":core:notification"))
     implementation(project(":shared-ui"))
 
     implementation(project(":feature:vocabularybook"))
@@ -63,7 +64,7 @@ dependencies {
 
     implementation(libs.androidx.preference)
     implementation(libs.mpandroidchart)
-
+    implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.fragment)
     implementation(libs.androidx.legacy.support.v4)
     implementation(libs.androidx.navigation.ui)

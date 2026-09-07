@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MnemoAI</string>
+    <string name="app_name">Mnemo</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="group">组</string>
@@ -43,7 +43,7 @@
     <string name="no_vocabulary">当前还未选择词汇，请前往单词本选择词汇</string>
     <string name="reciteWordFinish">今日目标已完成，请明日再来吧！</string>
     <string name="learning_progress">学习进度</string>
-    <string name="study_history">学习历史</string>
+    <string name="study_statisic">学习历史</string>
     <string name="statistic">统计</string>
     <string name="mine">我的</string>
     <string name="light_dark_model">日夜模式</string>

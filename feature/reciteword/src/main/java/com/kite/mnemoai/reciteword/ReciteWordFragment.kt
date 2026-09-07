@@ -1,36 +1,49 @@
 package com.kite.mnemoai.reciteword
 
+import android.animation.LayoutTransition
+import android.app.AlertDialog
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.MenuProvider
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.transition.ChangeBounds
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
+import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.recite.PronounceType
 import com.kite.mnemoai.model.word.WordDetail
 import com.kite.mnemoai.model.word.WordExtract
 import com.kite.mnemoai.model.word.WordForm
 import com.kite.mnemoai.reciteword.databinding.FragmentReciteWordBinding
+import com.kite.mnemoai.shared_ui.chat.AiChatBottomSheetDialogFragment
 import com.kite.mnemoai.ui.main.MainViewModel
-import com.kite.mnemoai.ui.widget.BannerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ReciteWordFragment : Fragment() {
+class ReciteWordFragment : Fragment(), MenuProvider {
     private var _binding: FragmentReciteWordBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ReciteWordViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
-    private lateinit var bannerView: BannerView
+    private var player: Player? = null
+    private var autoPronounceMenuItem: MenuItem? = null
+    private var pronounceTypeMenuItem: MenuItem? = null
+    private val layoutTransition = LayoutTransition()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,24 +55,79 @@ class ReciteWordFragment : Fragment() {
 
         _binding = FragmentReciteWordBinding.inflate(inflater, container, false)
         viewModel.setDailyDayPlanWordEntities()
-        bannerView = BannerView(requireContext())
         // 动作按钮
         binding.statusReciteWordOK.rememberBtn.setOnClickListener { viewModel.rememberWord() }
         binding.statusReciteWordOK.blurBtn.setOnClickListener { viewModel.blurWord() }
         binding.statusReciteWordOK.forgetBtn.setOnClickListener { viewModel.forgetWord() }
 
+        binding.root.layoutTransition = layoutTransition
+        requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        initInProgressBtn()
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { viewModel.uiState.collect { state -> renderReciteState(state) } }
-                launch { viewModel.showNext.collect { showNextCard() } }
+                launch { viewModel.showNext.collect {
+                        showNextCard()
+                    }
+                }
+                launch { viewModel.aiMnemonicLoadingState.collect {
+                    when(it){
+                        is Result.Success -> binding.bannerView.setSuccess(it.data)
+                        is Result.Error -> binding.bannerView.setFailure(it.exception.message)
+                        is Result.Loading -> binding.bannerView.setLoading(getString(com.kite.mnemoai.ui.R.string.ai_thinking))
+                        else -> {}
+                    }
+                } }
             }
         }
 
         return binding.root
     }
 
+    override fun onStart() {
+        if(Build.VERSION.SDK_INT > 23){
+            player = ExoPlayer.Builder(requireContext()).build()
+        }
+        viewModel.onResume()
+        viewModel.startReciteStatistics()
+        super.onStart()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT <= 23 || player == null) {
+            player = ExoPlayer.Builder(requireContext()).build()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.stopReciteStatistics()
+        if (Build.VERSION.SDK_INT > 23) {
+            player?.let {
+                it.release()
+            }
+            player = null
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (Build.VERSION.SDK_INT <= 23) {
+            player?.let {
+                it.release()
+            }
+            player = null
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     private fun renderReciteState(reciteWordUIState: ReciteWordUIState?) {
         if (reciteWordUIState == null) return
+        updateMenuState(reciteWordUIState)
         val reciteStage = reciteWordUIState.reciteStage ?: return
         when (reciteStage) {
             ReciteStage.IN_PROGRESS -> {
@@ -67,6 +135,8 @@ class ReciteWordFragment : Fragment() {
                 binding.statusReciteWordNoVocabulary.statusReciteWordNoVocabularyCL.visibility =
                     View.GONE
                 binding.statusReciteWordFinish.statusReciteWordFinishCL.visibility = View.GONE
+                binding.statusReciteWordNotStarted.statusReciteWordNotStartedCL.visibility =
+                    View.GONE
 
                 val progress =
                     ((reciteWordUIState.currentProgress * 100f) / reciteWordUIState.totalProgress).toInt()
@@ -76,29 +146,18 @@ class ReciteWordFragment : Fragment() {
                     reciteWordUIState.currentProgress,
                     reciteWordUIState.totalProgress
                 )
-                binding.statusReciteWordOK.reciteWordView.setShowReciteDetailListener {
-                    viewModel.showAll()
-                }
-                binding.statusReciteWordOK.reciteWordView.setGenerateAIMnemonicListener {
-                    viewModel.fetchWordExtract()
-                }
+
                 val original: MutableList<WordDetail>? = reciteWordUIState.reciteWordItemStatusOrder
                 if (!original.isNullOrEmpty()) {
                     val currentReciteWord = original[0]
                     binding.statusReciteWordOK.reciteWordView.setReciteStyle(currentReciteWord)
                     if (reciteWordUIState.isShowDetail) {
-                        TransitionManager.beginDelayedTransition(
-                            binding.statusReciteWordOK.NestedScrollContainer,
-                            TransitionSet().apply {
-                                addTransition(ChangeBounds())
-                                addTransition(Fade().addTarget(bannerView))
-                            }
-                        )
-
-                        binding.statusReciteWordOK.NestedScrollContainer.gravity = Gravity.START
+                        binding.statusReciteWordOK.reciteWordView.updateLayoutParams {
+                            height = ConstraintLayout.LayoutParams.WRAP_CONTENT
+                        }
 
                         binding.statusReciteWordOK.reciteWordView.setReciteDetailStyle(currentReciteWord)
-                        binding.statusReciteWordOK.reciteWordView.showBanner(reciteWordUIState.aiMnemonicLoadingState)
+
                         setAndShowWordForm(currentReciteWord.forms)
                         setAndShowAffix(currentReciteWord.extract)
                         setAndShowExplain(currentReciteWord.extract)
@@ -112,9 +171,7 @@ class ReciteWordFragment : Fragment() {
                         )
                         setAndShowStudyHistory(currentReciteWord)
                     } else {
-
                         hideAll()
-                        binding.statusReciteWordOK.NestedScrollContainer.gravity = Gravity.CENTER
                     }
                 }
             }
@@ -124,6 +181,8 @@ class ReciteWordFragment : Fragment() {
                 binding.statusReciteWordNoVocabulary.statusReciteWordNoVocabularyCL.visibility =
                     View.VISIBLE
                 binding.statusReciteWordFinish.statusReciteWordFinishCL.visibility = View.GONE
+                binding.statusReciteWordNotStarted.statusReciteWordNotStartedCL.visibility =
+                    View.GONE
             }
 
             ReciteStage.FINISH -> {
@@ -131,30 +190,56 @@ class ReciteWordFragment : Fragment() {
                 binding.statusReciteWordNoVocabulary.statusReciteWordNoVocabularyCL.visibility =
                     View.GONE
                 binding.statusReciteWordFinish.statusReciteWordFinishCL.visibility = View.VISIBLE
+                binding.statusReciteWordNotStarted.statusReciteWordNotStartedCL.visibility =
+                    View.GONE
+            }
+
+            ReciteStage.NOT_STARTED -> {
+                binding.statusReciteWordOK.statusReciteWordOKCL.visibility = View.GONE
+                binding.statusReciteWordNoVocabulary.statusReciteWordNoVocabularyCL.visibility =
+                    View.GONE
+                binding.statusReciteWordFinish.statusReciteWordFinishCL.visibility = View.GONE
+                binding.statusReciteWordNotStarted.statusReciteWordNotStartedCL.visibility =
+                    View.VISIBLE
             }
         }
     }
-
-    /**
-     * 翻到下一张单词卡片：重置卡片视图并开始新一轮学习统计。
-     * 由 ViewModel 的 showNext 一次性事件触发。
-     */
+    private fun initInProgressBtn(){
+        binding.statusReciteWordOK.reciteWordView.setShowReciteDetailListener {
+            viewModel.showAll()
+        }
+        binding.statusReciteWordOK.reciteWordView.setGenerateAIMnemonicListener {
+            viewModel.fetchWordExtract()
+        }
+        binding.statusReciteWordOK.reciteWordView.setCommunicateWithAIListener {
+            val wordId = viewModel.uiState.value
+                ?.reciteWordItemStatusOrder
+                ?.firstOrNull()
+                ?.word
+                ?.id
+            if (wordId != null) {
+                AiChatBottomSheetDialogFragment.newInstance(wordId).show(
+                    requireActivity().supportFragmentManager,
+                    AiChatBottomSheetDialogFragment.TAG
+                )
+            }
+        }
+        binding.statusReciteWordOK.reciteWordView.setSpeechListener {
+            playCurrentWord()
+        }
+    }
     private fun showNextCard() {
-        TransitionManager.endTransitions(binding.statusReciteWordOK.NestedScrollContainer)
         hideAll()
-        binding.statusReciteWordOK.wordCardVF.showNext()
         viewModel.startReciteStatistics()
         viewModel.resetShowState()
+        if (viewModel.isAutoPronounceEnabled()) {
+            playCurrentWord()
+        }
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
     private fun hideAll(){
-        (bannerView.parent as? ViewGroup)?.removeView(bannerView)
-
+        binding.statusReciteWordOK.reciteWordView.updateLayoutParams {
+            height = ConstraintLayout.LayoutParams.MATCH_PARENT
+        }
         binding.statusReciteWordOK.reciteMorphologyView.visibility = View.GONE
         binding.statusReciteWordOK.reciteExplainView.visibility = View.GONE
         binding.statusReciteWordOK.recitTranslationView.visibility = View.GONE
@@ -170,7 +255,6 @@ class ReciteWordFragment : Fragment() {
             binding.statusReciteWordOK.reciteMorphologyView.visibility = View.VISIBLE
         }
     }
-
     private fun setAndShowExplain(currentWordExtract: WordExtract?){
         val view = binding.statusReciteWordOK.reciteExplainView
         val explain = currentWordExtract?.explain
@@ -228,13 +312,62 @@ class ReciteWordFragment : Fragment() {
         }
     }
 
-    override fun onStart() {
-        viewModel.startReciteStatistics()
-        super.onStart()
+    override fun onCreateMenu(p0: Menu, p1: MenuInflater) {
+        p1.inflate(R.menu.recite_word_menu, p0)
+        autoPronounceMenuItem = p0.findItem(R.id.auto_pronounce).apply {
+            isCheckable = true
+            isChecked = viewModel.isAutoPronounceEnabled()
+        }
+        pronounceTypeMenuItem = p0.findItem(R.id.pronounce_type).apply {
+            title = getString(R.string.pronounce_type, typeLabel(viewModel.currentPronounceType()))
+        }
     }
 
-    override fun onStop() {
-        viewModel.stopReciteStatistics()
-        super.onStop()
+    override fun onMenuItemSelected(p0: MenuItem): Boolean {
+        when (p0.itemId) {
+            R.id.auto_pronounce -> {
+                val enabled = !viewModel.isAutoPronounceEnabled()
+                autoPronounceMenuItem?.isChecked = enabled
+                viewModel.saveEnableAutoPronounce(enabled)
+                return true
+            }
+            R.id.pronounce_type -> {
+                val pronounceType = viewModel.currentPronounceType()
+                pronounceTypeMenuItem?.title = when(pronounceType){
+                    PronounceType.USA -> {
+                        viewModel.savePronounceType(PronounceType.UK)
+                        getString(R.string.pronounce_type, typeLabel(PronounceType.UK))
+                    }
+                    PronounceType.UK -> {
+                        viewModel.savePronounceType(PronounceType.USA)
+                        getString(R.string.pronounce_type, typeLabel(PronounceType.USA))
+                    }
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun updateMenuState(state: ReciteWordUIState) {
+        autoPronounceMenuItem?.isChecked = state.autoPronounce
+        pronounceTypeMenuItem?.title = getString(R.string.pronounce_type, typeLabel(state.pronounceType))
+    }
+
+    private fun typeLabel(type: PronounceType): String = when (type) {
+        PronounceType.USA -> getString(R.string.pronounce_usa)
+        PronounceType.UK -> getString(R.string.pronounce_uk)
+    }
+
+    private fun playCurrentWord() {
+        val uri = viewModel.getMediaItemURI()
+        if (uri.isBlank()) return
+        val p = player ?: return
+        if (p.playbackState != Player.STATE_IDLE) {
+            p.stop()
+        }
+        p.setMediaItem(MediaItem.fromUri(uri))
+        p.prepare()
+        p.play()
     }
 }

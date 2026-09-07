@@ -54,11 +54,21 @@
     <string name="communicate_with_ai">与AI对话</string>
     <string name="no_vocabulary">当前还未选择词汇，请前往单词本选择词汇</string>
     <string name="reciteWordFinish">今日目标已完成，请明日再来吧！</string>
+    <string name="recite_word_not_started">今天还没有要背诵的任务</string>
     <string name="get_ai_mnemonic_error">获取 AI 助记失败，请稍后再试</string>
-    <string name="getting_Ai_mnemonic">正在生成AI助记...</string>
+    <string name="getting_Ai_mnemonic">正在生成AI助记…</string>
     <string name="choose_vocabulary_book">选择单词本</string>
     <string name="total_count">总词汇: %d</string>
     <string name="setting_title_api_key">API key</string>
     <string name="number_of_words_learned_per_day">每日学习单词数量</string>
+    <string name="date_interval_pick">选择日期</string>
     <string name="light_dark_model">日夜模式</string>
+
+    <string name="learning_trends">学习趋势</string>
+    <string name="average_daily_study_time">平均学习时长:</string>
+    <string name="minute">分钟</string>
+    <string name="total_learning_time">总学习时长:</string>
+    <string name="new_learned_word">新学单词:</string>
+    <string name="reviewed_word">复习单词:</string>
+    <string name="click_to_view_word_definition">点击查看单词释义</string>
 </resources>

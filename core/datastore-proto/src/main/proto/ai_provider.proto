@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+enum AiProviderProto {
+    AI_PROVIDER_UNSPECIFIED = 0;
+    AI_PROVIDER_DEEPSEEK = 1;
+}

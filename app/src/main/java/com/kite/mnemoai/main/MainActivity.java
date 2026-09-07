@@ -58,19 +58,10 @@ public class MainActivity extends AppCompatActivity {
                 });
         toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                navController.navigateUp();
-            }
-        });
-        viewmodel.getUiState().observe(this, new Observer<MainUIState>() {
-            @Override
-            public void onChanged(MainUIState mainUIState) {
-                if(mainUIState == null) return;
-                Objects.requireNonNull(getSupportActionBar()).setTitle(mainUIState.getTitle());
-                getSupportActionBar().setDisplayHomeAsUpEnabled(mainUIState.isShowNavIcon());
-            }
+        toolbar.setNavigationOnClickListener(v -> navController.navigateUp());
+        viewmodel.getUiState().observe(this, mainUIState -> {
+            Objects.requireNonNull(getSupportActionBar()).setTitle(mainUIState.getTitle());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(mainUIState.isShowNavIcon());
         });
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.navHostFragment);
@@ -93,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onNavigateUp() {
-        boolean isSuccess = navController.navigateUp();
-        return isSuccess;
+        return navController.navigateUp();
     }
 }

@@ -2,4 +2,9 @@
 <resources>
     <string name="recite_word">背单词</string>
     <string name="number_progress">%d / %d 词</string>
+    <string name="auto_pronounce">自动发音</string>
+    <string name="pronounce_type">发音：%s</string>
+    <string name="pronounce_type_title">选择发音类型</string>
+    <string name="pronounce_uk">英式</string>
+    <string name="pronounce_usa">美式</string>
 </resources>

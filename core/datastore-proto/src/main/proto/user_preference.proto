@@ -4,11 +4,40 @@ option java_package = "com.kite.mnemoai.datastore";
 option java_multiple_files = true;
 
 import "theme_type.proto";
+import "statistic_date_interval.proto";
+import "statistic_date_interval_type.proto";
+import "ai_provider.proto";
+import "ai_prompt.proto";
+import "pronounce_type.proto";
 
 message UserPreferences {
     int32 new_learning_word_count = 1;
 
     ThemeTypeProto light_dark_mode = 2;
 
-    string api_key = 3;
+    StatisticDateIntervalType statistic_date_interval_type = 4;
+
+    StatisticDateInterval statistic_date_interval = 5;
+
+    AiProviderProto ai_provider = 8;
+
+    bool enable_reminder = 9;
+
+    string reminder_time = 10;
+
+    bool enable_auto_generate_daily_word_extract = 11;
+
+    repeated AiPromptEntryProto ai_prompts = 12;
+
+    DeepseekSettings deepseek_settings = 13;
+
+    PronounceTypeProto pronounce_type = 14;
+
+    optional bool auto_pronounce = 15;
+}
+
+message DeepseekSettings {
+    string api_key = 1;
+    string model_type = 4;
+    bool enable_thinking = 3;
 }

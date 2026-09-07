@@ -55,6 +55,7 @@ class VocabularyGroupFragment : Fragment(), MenuProvider {
         val adapter = LearningStatusWordAdapter(this)
         viewPager2.setAdapter(adapter)
         val tabLayout = binding!!.learningStatusTL
+        tabLayout.tabRippleColor = null
 
         // attach 只执行一次：结构（页数 + 联动）在这里定死
         TabLayoutMediator(

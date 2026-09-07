@@ -1,4 +1,6 @@
 package com.kite.mnemoai.ui.widget.wheelwidget
 
-class WheelState {
-}
+data class WheelState(
+    val selected: Int,
+    val offsetY: Float
+)

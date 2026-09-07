@@ -5,11 +5,11 @@
     <item
         android:id="@+id/reciteWordFragment"
         android:title="@string/recite_word"
-        android:icon="@drawable/baseline_memory_24" />
+        android:icon="@drawable/baseline_menu_book_24" />
     <item
         android:id="@+id/vocabularyFragment"
         android:title="@string/vocabulary_book"
-        android:icon="@drawable/baseline_menu_book_24"/>
+        android:icon="@drawable/baseline_book_24"/>
     <item
         android:id="@+id/statisticFragment"
         android:title="@string/statistic"

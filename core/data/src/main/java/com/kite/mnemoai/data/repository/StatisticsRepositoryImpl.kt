@@ -2,8 +2,8 @@ package com.kite.mnemoai.data.repository
 
 import com.kite.mnemoai.common.Dispatcher
 import com.kite.mnemoai.common.MaiDispatcher
-import com.kite.mnemoai.data.mapper.asEntity
-import com.kite.mnemoai.data.mapper.asExternalModel
+import com.kite.mnemoai.data.model.asEntity
+import com.kite.mnemoai.data.model.asExternalModel
 import com.kite.mnemoai.database.dao.DayPlanDao
 import com.kite.mnemoai.database.dao.DayPlanWordDao
 import com.kite.mnemoai.database.dao.ReviewWordDao
@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.map
@@ -37,10 +38,6 @@ class StatisticsRepositoryImpl @Inject constructor(
 ) : StatisticsRepository {
     override suspend fun getDayPlanWordsByDate(date: String): List<DayPlanWord> = withContext(ioDispatcher) {
         dayPlanWordDao.queryDayPlanWordsByDate(date).map { it.asExternalModel() }
-    }
-
-    override suspend fun setReviewDayPlanWords(dayPlanWords: List<DayPlanWord>) = withContext(ioDispatcher){
-        dayPlanWordDao.insertReviewDayPlanWord(dayPlanWords.map { it.asEntity() })
     }
 
     override suspend fun addNewLearningDayPlanWords(dayPlanWords: List<DayPlanWord>) = withContext(ioDispatcher){
@@ -116,4 +113,17 @@ class StatisticsRepositoryImpl @Inject constructor(
                 Result.Error(e)
             }
         }
+
+    override fun queryStudyStatisticByDateInterval(
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): Flow<List<StudyStatistic>> =
+        dayPlanWordDao.queryStudyStatisticByDateInterval(startDate.toString(), endDate.toString())
+            .map { list ->
+                val byDate = list.map { it.asExternalModel() }.associateBy { it.date }
+                (0L..ChronoUnit.DAYS.between(startDate, endDate)).map { offset ->
+                    val date = startDate.plusDays(offset).toString()
+                    byDate[date] ?: StudyStatistic(date, 0, 0, 0)
+                }
+            }
 }

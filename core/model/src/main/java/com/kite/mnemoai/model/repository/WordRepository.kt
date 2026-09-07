@@ -1,6 +1,7 @@
 package com.kite.mnemoai.model.repository
 
 import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.chat.ChatMessage
 import com.kite.mnemoai.model.word.WordDetail
 import com.kite.mnemoai.model.word.WordItem
 import kotlinx.coroutines.flow.Flow
@@ -10,9 +11,11 @@ interface WordRepository {
     suspend fun selectTodayReviewingWordEntities(date: String): List<Long>
     fun observeWordListByGroupId(groupId: Long): Flow<Result<List<WordItem>>>
 
-    fun observeDailyReciteStatus(): Flow<Result<Int>>
+    fun observeDailyReciteStatus(date: String): Flow<Result<Int>>
 
-    fun observeUnfinishedWordDetailInfos(): Flow<Result<List<WordDetail>>>
+    fun observeUnfinishedWordDetailInfos(date: String): Flow<Result<List<WordDetail>>>
+
+    suspend fun getUnfinishedWordDetailInfos(date: String): List<WordDetail>
 
     fun observeWordDetailById(id: Long): Flow<Result<WordDetail?>>
 
@@ -21,4 +24,6 @@ interface WordRepository {
     suspend fun addOptionWordsSearch(groupId: Long, word: String): Result<List<WordItem>>
 
     suspend fun removeOptionWordsSearch(groupId: Long, word: String): Result<List<WordItem>>
+
+    fun observeChatMessages(wordId: Long): Flow<List<ChatMessage>>
 }

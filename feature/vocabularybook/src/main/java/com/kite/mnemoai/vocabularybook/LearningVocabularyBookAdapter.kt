@@ -54,117 +54,99 @@ class LearningVocabularyBookAdapter(val listener: (View, Long) -> Unit): ListAda
             val resource = binding.root.resources
             this.item = item
             binding.learningVocabularyBookNameTV.text = item.name
-            binding.totalWordsCountTV.text = item.totalWords.toString()
+            binding.totalWordsCountTV.text = binding.root.resources.getString(R.string.bracket_number, item.totalWords)
             binding.learningWordsCountTV.text = item.learningWords.toString()
             binding.reviewingWordsCountTV.text = item.reviewingWords.toString()
             binding.masteredWordsCountTV.text = item.masteredWords.toString()
             binding.learningProgressPI.setProgress((item.masteredProgress * 100).roundToInt(), true)
             binding.learningProgressTV.text = "${(item.masteredProgress * 100).roundToInt()} %"
 
-            val colorPrimary = MaterialColors.getColor(
-                binding.statisticPieChart,
-                android.R.attr.colorPrimary
-            )
-            val colorSecondary = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorSecondary
-            )
-            val colorTertiary = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorTertiary
-            )
-            val colorOnPrimary = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorOnPrimary
-            )
-            val colorPrimaryContainer = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorPrimaryContainer
-            )
-            val colorSecondaryContainer = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorSecondaryContainer
-            )
-            val colorTertiaryContainer = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorTertiaryContainer
-            )
-            val colorOnPrimaryContainer = MaterialColors.getColor(
-                binding.statisticPieChart,
-                com.google.android.material.R.attr.colorOnPrimaryContainer
-            )
+//            val colorPrimary = MaterialColors.getColor(
+//                binding.statisticPieChart,
+//                android.R.attr.colorPrimary
+//            )
+//            val colorSecondary = MaterialColors.getColor(
+//                binding.statisticPieChart,
+//                com.google.android.material.R.attr.colorSecondary
+//            )
+//            val colorTertiary = MaterialColors.getColor(
+//                binding.statisticPieChart,
+//                com.google.android.material.R.attr.colorTertiary
+//            )
+//            val colorOnPrimaryContainer = MaterialColors.getColor(
+//                binding.statisticPieChart,
+//                com.google.android.material.R.attr.colorOnPrimaryContainer
+//            )
 
-            val pieEntries: MutableList<PieEntry?> = mutableListOf()
-            pieEntries.apply {
-                add(PieEntry(item.learningWords.toFloat(), resource.getString(R.string.learning)))
-                add(PieEntry(item.reviewingWords.toFloat(), resource.getString(R.string.reviewing)))
-                add(PieEntry(item.masteredWords.toFloat(), resource.getString(R.string.mastered)))
-            }
-            val pieDataSet = PieDataSet(pieEntries, "").apply {
-                setDrawValues(false)
-                setSliceSpace(1f)
-                setColors(
-                    colorPrimary,
-                    colorSecondary,
-                    colorTertiary
-                )
-            }
-            val pieData = PieData(pieDataSet)
-            binding.statisticPieChart.legend.apply {
-                isEnabled = true
-                textColor = colorPrimary
-                xEntrySpace = 2f
-                formToTextSpace = 1f
-            }
+//            val pieEntries: MutableList<PieEntry?> = mutableListOf()
+//            pieEntries.apply {
+//                add(PieEntry(item.learningWords.toFloat(), resource.getString(R.string.learning)))
+//                add(PieEntry(item.reviewingWords.toFloat(), resource.getString(R.string.reviewing)))
+//                add(PieEntry(item.masteredWords.toFloat(), resource.getString(R.string.mastered)))
+//            }
+//            val pieDataSet = PieDataSet(pieEntries, "").apply {
+//                setDrawValues(false)
+//                setSliceSpace(1f)
+//                setColors(
+//                    colorPrimary,
+//                    colorSecondary,
+//                    colorTertiary
+//                )
+//            }
+//            val pieData = PieData(pieDataSet)
+//            binding.statisticPieChart.legend.apply {
+//                isEnabled = false
+//                textColor = colorPrimary
+//                xEntrySpace = 2f
+//                formToTextSpace = 1f
+//            }
 
-            val fullText = "${(item.learningProgress * 100).roundToInt()} %\n待学习"
-            val spannable = SpannableString(fullText)
-            val firstLineEnd = fullText.indexOf('\n') // 第一行的结束位置
-
-// 为第一行设置样式（红色，大号）
-            spannable.setSpan(
-                ForegroundColorSpan(colorOnPrimaryContainer),
-                0,
-                firstLineEnd,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannable.setSpan(
-                RelativeSizeSpan(1.5f),
-                0,
-                firstLineEnd,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-// 为第二行设置样式（灰色，小号）
-            spannable.setSpan(
-                ForegroundColorSpan(colorOnPrimaryContainer),
-                firstLineEnd + 1,
-                fullText.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            spannable.setSpan(
-                RelativeSizeSpan(0.8f),
-                firstLineEnd + 1,
-                fullText.length,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            binding.statisticPieChart.apply {
-                setBackgroundColor(Color.TRANSPARENT)
-                isDrawHoleEnabled = true
-                transparentCircleRadius = 0f
-                setDrawEntryLabels(false)
-                description = null
-                holeRadius = 60f
-                setExtraOffsets(-4f, 0f, 0f, -8f)
-                setHoleColor(MaterialColors.getColor(
-                    binding.statisticPieChart,
-                    com.google.android.material.R.attr.colorSurfaceContainerLowest
-                ))
-                setDrawCenterText(true)
-                centerText = spannable
-                setData(pieData)
-                invalidate()
-            }
+//            val fullText = "${(item.learningProgress * 100).roundToInt()} %\n待学习"
+//            val spannable = SpannableString(fullText)
+//            val firstLineEnd = fullText.indexOf('\n') // 第一行的结束位置
+//
+//            spannable.setSpan(
+//                ForegroundColorSpan(colorOnPrimaryContainer),
+//                0,
+//                firstLineEnd,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//            spannable.setSpan(
+//                RelativeSizeSpan(1.5f),
+//                0,
+//                firstLineEnd,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//
+//            spannable.setSpan(
+//                ForegroundColorSpan(colorOnPrimaryContainer),
+//                firstLineEnd + 1,
+//                fullText.length,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//            spannable.setSpan(
+//                RelativeSizeSpan(0.8f),
+//                firstLineEnd + 1,
+//                fullText.length,
+//                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+//            )
+//            binding.statisticPieChart.apply {
+//                setBackgroundColor(Color.TRANSPARENT)
+//                isDrawHoleEnabled = true
+//                transparentCircleRadius = 0f
+//                setDrawEntryLabels(false)
+//                description = null
+//                holeRadius = 60f
+//                setExtraOffsets(-4f, 0f, 0f, -8f)
+//                setHoleColor(MaterialColors.getColor(
+//                    binding.statisticPieChart,
+//                    com.google.android.material.R.attr.colorSurfaceContainerLowest
+//                ))
+//                setDrawCenterText(true)
+//                centerText = spannable
+//                setData(pieData)
+//                invalidate()
+//            }
         }
     }
 }

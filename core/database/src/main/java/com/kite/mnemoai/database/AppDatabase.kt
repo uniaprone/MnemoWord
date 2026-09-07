@@ -2,6 +2,7 @@ package com.kite.mnemoai.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.kite.mnemoai.database.dao.ChatMessageDao
 import com.kite.mnemoai.database.dao.DayPlanDao
 import com.kite.mnemoai.database.dao.DayPlanWordDao
 import com.kite.mnemoai.database.dao.GroupDao
@@ -9,6 +10,7 @@ import com.kite.mnemoai.database.dao.ReviewWordDao
 import com.kite.mnemoai.database.dao.WordDao
 import com.kite.mnemoai.database.dao.WordExtractDao
 import com.kite.mnemoai.database.dao.WordGroupDao
+import com.kite.mnemoai.database.model.ChatMessageEntity
 import com.kite.mnemoai.database.model.DayPlanEntity
 import com.kite.mnemoai.database.model.DayPlanWordEntity
 import com.kite.mnemoai.database.model.GroupEntity
@@ -31,7 +33,8 @@ import com.kite.mnemoai.database.model.WordPosEntity
         DayPlanWordEntity::class,
         WordPosEntity::class,
         WordMeaningEntity::class,
-        WordFormEntity::class
+        WordFormEntity::class,
+        ChatMessageEntity::class
     ], version = 1
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -42,4 +45,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reviewWordDao(): ReviewWordDao
     abstract fun dayPlanDao(): DayPlanDao
     abstract fun dayPlanWordDao(): DayPlanWordDao
+    abstract fun chaMessageDao(): ChatMessageDao
 }

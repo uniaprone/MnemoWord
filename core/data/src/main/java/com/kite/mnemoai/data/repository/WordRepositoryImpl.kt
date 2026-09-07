@@ -2,14 +2,19 @@ package com.kite.mnemoai.data.repository
 
 import com.kite.mnemoai.common.Dispatcher
 import com.kite.mnemoai.common.MaiDispatcher
-import com.kite.mnemoai.data.mapper.asExternalModel
+import com.kite.mnemoai.data.model.asExternalModel
+import com.kite.mnemoai.database.dao.ChatMessageDao
 import com.kite.mnemoai.database.dao.DayPlanWordDao
 import com.kite.mnemoai.database.dao.GroupDao
 import com.kite.mnemoai.database.dao.WordDao
+import com.kite.mnemoai.database.model.WordDetailInfo
+import com.kite.mnemoai.database.model.asExternalModel
 import com.kite.mnemoai.model.Result
+import com.kite.mnemoai.model.chat.ChatMessage
 import com.kite.mnemoai.model.repository.WordRepository
 import com.kite.mnemoai.model.word.WordDetail
 import com.kite.mnemoai.model.word.WordItem
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,8 +25,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.filter
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
@@ -29,13 +32,14 @@ class WordRepositoryImpl @Inject constructor(
     private val wordDao: WordDao,
     private val groupDao: GroupDao,
     private val dayPlanWordDao: DayPlanWordDao,
+    private val chatMessageDao: ChatMessageDao,
     @Dispatcher(MaiDispatcher.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WordRepository {
     override suspend fun addTodayNewLearningWordEntities(
         count: Int,
         date: String,
         excludeWordIds: List<Long>
-    ): List<Long> = withContext(ioDispatcher){
+    ): List<Long> = withContext(ioDispatcher) {
         wordDao.addTodayNewLearningWordEntities(count, date, excludeWordIds)
     }
 
@@ -50,8 +54,7 @@ class WordRepositoryImpl @Inject constructor(
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }
 
-    override fun observeDailyReciteStatus(): Flow<Result<Int>> = flow<Result<Int>> {
-        val date = java.time.LocalDate.now().toString()
+    override fun observeDailyReciteStatus(date: String): Flow<Result<Int>> = flow<Result<Int>> {
         groupDao.hasLearningGroup()
             .flatMapLatest { hasLearningGroup ->
                 if (hasLearningGroup == 0) {
@@ -60,7 +63,7 @@ class WordRepositoryImpl @Inject constructor(
                     dayPlanWordDao.hasDayPlanWord(date)
                         .flatMapLatest { hasDayPlanWord ->
                             if (hasDayPlanWord == 0) {
-                                flow { emit(1) }
+                                flow { emit(3) }
                             } else {
                                 dayPlanWordDao.hasUnfinishedDayPlanWord(date)
                                     .map { hasUnfinished ->
@@ -76,30 +79,25 @@ class WordRepositoryImpl @Inject constructor(
     }.onStart { emit(Result.Loading) }
         .catch { e -> emit(Result.Error(e)) }
 
-    override fun observeUnfinishedWordDetailInfos(): Flow<Result<List<WordDetail>>> {
-        val date = java.time.LocalDate.now().toString()
-        return wordDao.getUnfinishWordDetailInfoLiveData(date)
-            .map { entities ->
-                entities.map { entity ->
-                    entity.asExternalModel().let { detail ->
-                        detail.copy(
-                            dayPlanWords = detail.dayPlanWords.filter { it.date != date },
-                            forms = detail.forms.filter { it.typeCode != "0" &&  it.typeCode != "1" }
-                        )
-                    }
-                }
-            }
+    override fun observeUnfinishedWordDetailInfos(date: String): Flow<Result<List<WordDetail>>> =
+        wordDao.getUnfinishWordDetailInfoLiveData(date)
+            .map { entities -> entities.map { entity -> toReciteWordDetail(date, entity) } }
             .map { Result.Success(it) as Result<List<WordDetail>> }
             .onStart { emit(Result.Loading) }
             .catch { e -> emit(Result.Error(e)) }
-    }
+
+    override suspend fun getUnfinishedWordDetailInfos(date: String): List<WordDetail> =
+        withContext(ioDispatcher) {
+            wordDao.getUnfinishWordDetailInfos(date)
+                .map { entity -> toReciteWordDetail(date, entity) }
+        }
 
     override fun observeWordDetailById(id: Long): Flow<Result<WordDetail?>> =
         wordDao.getWordDetailInfoLiveDataById(id)
             .map { entity ->
-                entity.asExternalModel().let {
-                detail -> detail.copy(
-                    forms = detail.forms.filter { it.typeCode != "0" &&  it.typeCode != "1" }
+                entity.asExternalModel().let { detail ->
+                    detail.copy(
+                        forms = detail.forms.filter { it.typeCode != "0" && it.typeCode != "1" }
                     )
                 }
             }
@@ -135,5 +133,16 @@ class WordRepositoryImpl @Inject constructor(
             } catch (e: Exception) {
                 Result.Error(e)
             }
+        }
+
+    override fun observeChatMessages(wordId: Long): Flow<List<ChatMessage>> =
+        chatMessageDao.getChatMessagesByWordId(wordId)
+            .map { it.map { it.asExternalModel() } }
+
+    private fun toReciteWordDetail(date: String, entity: WordDetailInfo): WordDetail =
+        entity.asExternalModel().let { detail ->
+            detail.copy(
+                forms = detail.forms.filter { it.typeCode != "0" && it.typeCode != "1" }
+            )
         }
 }

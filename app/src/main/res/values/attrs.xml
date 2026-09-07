@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ThreeColorRingView">
-        <attr name="ringToLearnColor" format="color" />
-        <attr name="ringReviewingColor" format="color" />
-        <attr name="ringMasteredColor" format="color" />
-        <attr name="ringTrackColor" format="color" />
-        <attr name="ringStrokeWidth" format="dimension" />
-    </declare-styleable>
-
-    <declare-styleable name="SegmentedControl">
-        <attr name="segmentTitle" format="reference"/>
-        <attr name="thumbBackground" format="reference"/>
-    </declare-styleable>
     <!-- 忘记按钮 -->
     <attr name="choiceForgetBackground" format="color|reference" />
     <attr name="choiceForgetText" format="color|reference" /> <!-- 文本和图标共用 -->

@@ -18,7 +18,7 @@ data class DayPlanWord(
 
 data class ReviewWord(
     val wordId: Long,
-    val reviewState: Int,
+    var reviewState: Int,
     var reviewCount: Int,
     var nextReviewTime: String?
 )

@@ -12,6 +12,8 @@ import java.time.LocalDate
 class RememberWordUseCase @Inject constructor(
     private val statisticsRepository: StatisticsRepository
 ) {
+    private val masteredReviewCount = 6
+
     suspend operator fun invoke(reciteStatistics: ReciteStatistics){
         statisticsRepository.saveWordReciteStatistic(reciteStatistics)
 
@@ -22,6 +24,9 @@ class RememberWordUseCase @Inject constructor(
         if (reviewWord != null) {
             val reviewCount = reviewWord.reviewCount + 1
             reviewWord.reviewCount = reviewCount
+            if (reviewCount >= masteredReviewCount) {
+                reviewWord.reviewState = 2
+            }
             reviewWord.nextReviewTime = MemoryAlgorithm.calculateNextReviewDate(
                 reviewCount,
                 reciteStatistics.blurCount,

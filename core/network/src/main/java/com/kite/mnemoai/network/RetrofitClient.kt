@@ -6,14 +6,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    fun createOkHttpClient(): OkHttpClient{
+    fun createOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)
             .readTimeout(15, TimeUnit.SECONDS)
             .build()
     }
 
-    fun createRetrofit(url: String): Retrofit{
+    fun createRetrofit(url: String): Retrofit {
         return Retrofit.Builder()
             .baseUrl(url)
             .client(createOkHttpClient())
@@ -22,6 +22,19 @@ object RetrofitClient {
     }
 
     val deepseekRetrofit: Retrofit = createRetrofit("https://api.deepseek.com/")
+}
 
-    val openAiRetrofit: Retrofit = createRetrofit("https://api.openai.com/")
+object YouDaoVoiceClient{
+    fun createOkHttpClient(): OkHttpClient{
+        return OkHttpClient.Builder().build()
+    }
+
+    fun createRetrofit(url: String): Retrofit{
+        return Retrofit.Builder()
+            .baseUrl(url)
+            .client(createOkHttpClient())
+            .build()
+    }
+
+    val youdaoRetrofit: Retrofit = createRetrofit("https://dict.youdao.com/")
 }

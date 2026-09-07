@@ -42,6 +42,13 @@ public interface WordDao {
     Flow<List<WordDetailInfo>> getUnfinishWordDetailInfoLiveData(String date);
 
     @Transaction
+    @Query("SELECT * FROM words WHERE id IN (" +
+            "SELECT word_id FROM day_plan_word " +
+            "WHERE date = :date AND status = 0" +
+            ")")
+    List<WordDetailInfo> getUnfinishWordDetailInfos(String date);
+
+    @Transaction
     @Query("SELECT * FROM words WHERE id = :id")
     Flow<WordDetailInfo> getWordDetailInfoLiveDataById(long id);
 

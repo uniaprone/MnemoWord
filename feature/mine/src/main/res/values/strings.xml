@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="mine">我的</string>
-    <string-array name="segment_theme">
-        <item>跟随系统</item>
-        <item>浅色</item>
-        <item>深色</item>
-    </string-array>
+    <string name="dark_theme_config">跟随系统|浅色|深色</string>
+    <string name="ai">AI</string>
+    <string name="appearance">外观</string>
+    <string name="ai_model">AI模型</string>
+    <string name="thinking_mode">思考模式</string>
+    <string name="sub_model">子模型</string>
+    <string name="open_close">关|开</string>
+    <string name="study_reminder">学习提醒</string>
+    <string name="reminder_time">提醒时间</string>
+    <string name="general">通用</string>
+    <string name="colon">:</string>
+    <string name="no_set">未设置</string>
+    <string name="select_model">请选择模型</string>
+    <string name="click_to_set">点击设置</string>
+    <string name="auto_generate_daily_word_extract">自动获取每日单词助记</string>
+    <string name="testing_api_key_available">正在测试API Key是否可用</string>
+    <string name="prompt">提示词</string>
+    <string name="prompt_type_word_extract">单词助记</string>
+    <string name="prompt_type_chat">AI对话</string>
+    <string name="prompt_edit_system_prompt">系统提示词</string>
+    <string name="prompt_edit_user_prompt">用户提示词</string>
+    <string name="save">保存</string>
 </resources>

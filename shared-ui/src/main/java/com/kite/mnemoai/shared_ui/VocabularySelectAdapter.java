@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kite.mnemoai.shared_ui.databinding.ItemVocabularySelectBinding;
-import com.kite.mnemoai.common.StringConvert;
 
 import java.util.List;
 

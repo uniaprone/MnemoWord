@@ -1,101 +1,372 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mineRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginHorizontal="8dp">
-    <FrameLayout
-        android:id="@+id/infoFL"
+    android:layout_marginHorizontal="8dp"
+    android:orientation="vertical">
+    <com.kite.mnemoai.ui.widget.BannerView
+        android:id="@+id/bannerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:background="?attr/colorPrimaryContainer"
-        android:visibility="gone">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/settingInfoTV"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="@dimen/text_size_body_medium"/>
-    </FrameLayout>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/themeSetting"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        app:cardCornerRadius="8dp"
-        app:strokeWidth="0dp"
-        app:cardElevation="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoFL">
+        android:visibility="gone"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settingContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorSurfaceContainerLowest"
-            android:padding="8dp">
+            android:layout_height="match_parent">
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/settingTitleTV"
+                android:id="@+id/appearance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/light_dark_model"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.kite.mnemoai.ui.SegmentedControl
-                android:id="@+id/segmentedControl"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="12dp"
+                android:text="@string/appearance"
+                android:textSize="@dimen/text_size_body_small"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 app:layout_constraintTop_toTopOf="parent"
-                custom:segmentTitle="@array/segment_theme"
-                custom:thumbBackground="@drawable/bg_segment_control" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+                app:layout_constraintStart_toStartOf="parent" />
 
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/apikeySetting"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        app:cardCornerRadius="8dp"
-        app:strokeWidth="0dp"
-        app:cardElevation="0dp"
-        app:layout_constraintTop_toBottomOf="@id/themeSetting"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?attr/colorSurfaceContainerLowest"
-            android:padding="8dp">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/apikeyTitleTV"
-                android:layout_width="wrap_content"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/themeSetting"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/setting_title_api_key"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/apikeyInfoTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/appearance">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/settingTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/light_dark_model"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.kite.mnemoai.ui.widget.segment.SegmentControl
+                            android:id="@+id/segmentedControl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            custom:segmentTitle="@string/dark_theme_config"
+                            custom:thumbBackground="@drawable/bg_segment_control" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/aiSettingTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="@string/ai"
+                android:textSize="@dimen/text_size_body_small"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintTop_toBottomOf="@id/themeSetting"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/aiSettingCV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:layout_constraintTop_toBottomOf="@id/aiSettingTV"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/aiModel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ai_model"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Spinner
+                            android:id="@+id/aiModelSp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            style="@style/MaiSpinnerStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/apikeySetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/apikeyTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/setting_title_api_key"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/apikeyInfoTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:padding="8dp"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSurface"
+                            android:background="@drawable/bg_corner"
+                            android:backgroundTint="?attr/colorSurfaceContainer"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/promptSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/promptTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/prompt"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/promptArrowIV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/baseline_keyboard_arrow_right_24"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="?attr/colorOnSurfaceVariant" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/sub_model"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <Spinner
+                            android:id="@+id/subModelSp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            style="@style/MaiSpinnerStyle"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/thinking_mode"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.kite.mnemoai.ui.widget.segment.SegmentControl
+                            android:id="@+id/thinkingMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            custom:segmentTitle="@string/open_close"
+                            custom:thumbBackground="@drawable/bg_segment_control"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/generalTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:text="@string/general"
+                android:textSize="@dimen/text_size_body_small"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintTop_toBottomOf="@id/aiSettingCV"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/generalSettingCV"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="8dp"
+                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/generalTV">
+                <LinearLayout
+                    android:id="@+id/generalSettingContainerLL"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/enableStudyReminderSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/enableStudyReminderTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/study_reminder"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.kite.mnemoai.ui.widget.segment.SegmentControl
+                            android:id="@+id/enableStudyReminder"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            custom:segmentTitle="@string/open_close"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            custom:thumbBackground="@drawable/bg_segment_control"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/reminderTimeSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/reminderTimeTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/reminder_time"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/reminderTimeTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:padding="8dp"
+                            android:gravity="center"
+                            android:textColor="?attr/colorOnSurface"
+                            android:background="@drawable/bg_corner"
+                            android:backgroundTint="?attr/colorSurfaceContainer"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/autoGenerateDailyWordExtractSetting"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="?attr/colorSurfaceContainerLowest"
+                        android:paddingVertical="8dp"
+                        android:paddingHorizontal="12dp">
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/autoGenerateDailyWordExtractTitleTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/auto_generate_daily_word_extract"
+                            android:textColor="?attr/colorOnSurface"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <com.kite.mnemoai.ui.widget.segment.SegmentControl
+                            android:id="@+id/autoGenerateDailyWordExtract"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            custom:segmentTitle="@string/open_close"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            custom:thumbBackground="@drawable/bg_segment_control"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>

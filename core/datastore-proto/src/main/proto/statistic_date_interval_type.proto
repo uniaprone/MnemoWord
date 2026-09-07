@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+enum StatisticDateIntervalType {
+    StatisticDateIntervalUNSPECIFIED = 0;
+    INTHELASTSEVENDAY = 1;
+    INTHELASTMONTH = 2;
+    INTHELASTTHREEMONTH = 3;
+    CUSTOM = 4;
+}

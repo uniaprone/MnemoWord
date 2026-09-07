@@ -5,9 +5,9 @@ import javax.inject.Singleton
 
 @Singleton
 class AiServiceProvider @Inject constructor(
-    private val wordExtractDataSourceImp: WordExtractDataSource
+    private val maiNetworkDataSourceImp: MaiNetworkDataSource
 ){
-    fun getWordExtractDataSourceImp(): WordExtractDataSource{
-        return wordExtractDataSourceImp
+    fun getNetworkDataSourceImp(): MaiNetworkDataSource{
+        return maiNetworkDataSourceImp
     }
 }

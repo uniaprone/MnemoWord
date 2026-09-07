@@ -15,4 +15,5 @@
     <string name="study_word_count_today">已新学</string>
     <string name="review_word_count_today">已复习</string>
     <string name="word">词</string>
+    <string name="bracket_number">(%d)</string>
 </resources>

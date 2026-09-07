@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "com.kite.mnemoai.datastore";
+option java_multiple_files = true;
+
+enum PronounceTypeProto{
+    PRONOUNCE_TYPE_UNSPECIFIED = 0;
+    PRONOUNCE_TYPE_USA = 1;
+    PRONOUNCE_TYPE_UK = 2;
+}

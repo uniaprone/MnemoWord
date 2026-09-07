@@ -20,7 +20,9 @@
             android:id="@+id/learningVocabularyBookNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_title_large"
+            android:textSize="@dimen/text_size_title_medium"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tool:text="中考词汇" />
@@ -29,20 +31,12 @@
             android:id="@+id/totalWordsCountTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            tool:text="18"
-            android:textSize="@dimen/text_size_body_medium"
-            app:layout_constraintStart_toStartOf="@+id/learningVocabularyBookNameTV"
-            app:layout_constraintTop_toBottomOf="@+id/learningVocabularyBookNameTV"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="个词汇"
-            android:textSize="@dimen/text_size_body_medium"
-            app:layout_constraintStart_toEndOf="@+id/totalWordsCountTV"
-            app:layout_constraintTop_toBottomOf="@+id/learningVocabularyBookNameTV"/>
+            android:textSize="@dimen/text_size_title_medium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="@+id/learningVocabularyBookNameTV"
+            app:layout_constraintStart_toEndOf="@+id/learningVocabularyBookNameTV"
+            app:layout_constraintTop_toTopOf="@+id/learningVocabularyBookNameTV"
+            tool:text="18" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -58,9 +52,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toStartOf="@+id/statisticPieChart"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/learningVocabularyBookNameTV"
             app:layout_constraintTop_toBottomOf="@+id/totalWordsCountTV">
 
@@ -178,15 +171,15 @@
             app:layout_constraintTop_toTopOf="@+id/materialTextView"
             tool:text="22%" />
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/statisticPieChart"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <com.github.mikephil.charting.charts.PieChart-->
+<!--            android:id="@+id/statisticPieChart"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:padding="10dp"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/learningProgressPI"-->
+<!--            app:layout_constraintDimensionRatio="1:1"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

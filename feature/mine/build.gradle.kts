@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:ui"))
     implementation(project(":core:common"))
+    implementation(project(":sync"))
 
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
@@ -42,6 +43,8 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.preference)
     implementation(libs.androidx.preference.ktx)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

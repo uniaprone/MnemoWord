@@ -1,4 +1,5 @@
 package com.kite.mnemoai.model.recite
 
-class PronounceType {
+enum class PronounceType {
+    USA,UK
 }

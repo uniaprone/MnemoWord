@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:text="@string/today_goal"
-                        android:textColor="?attr/colorOnSurface"
+                        android:textColor="?attr/colorOnSurfaceVariant"
                         android:textSize="@dimen/text_size_title_medium" />
 
                 </LinearLayout>

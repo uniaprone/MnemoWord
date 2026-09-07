@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-  
+    <item>
+        <shape>
+            <solid android:color="?attr/colorSurfaceContainer"/>
+            <corners android:radius="8dp"/>
+        </shape>
+    </item>
+    <item
+        android:drawable="@drawable/baseline_arrow_right_24"
+        android:gravity="end|center_vertical">
+    </item>
 </layer-list>

@@ -1,7 +1,7 @@
 package com.kite.mnemoai.worddetail
 
+import android.animation.LayoutTransition
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,34 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.textview.MaterialTextView
+import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.kite.mnemoai.model.Result
-import com.kite.mnemoai.model.word.Word
 import com.kite.mnemoai.model.word.WordDetail
 import com.kite.mnemoai.model.word.WordExtract
 import com.kite.mnemoai.model.word.WordForm
-import com.kite.mnemoai.model.word.WordTranslation
-import com.kite.mnemoai.ui.BannerControl
-import com.kite.mnemoai.ui.ReviewHistoryAdapter
-import com.kite.mnemoai.ui.dpToPx
+import com.kite.mnemoai.shared_ui.chat.AiChatBottomSheetDialogFragment
 import com.kite.mnemoai.ui.main.MainViewModel
 import com.kite.mnemoai.worddetail.databinding.FragmentWordDetailBinding
-import com.kite.mnemoai.worddetail.databinding.ItemWordTranslationBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Locale
-import kotlin.getValue
 
 @AndroidEntryPoint
 class WordDetailFragment : Fragment() {
@@ -45,6 +31,7 @@ class WordDetailFragment : Fragment() {
 
     private val viewModel: WordDetailViewModel by viewModels()
     private val mainViewModel: MainViewModel by activityViewModels()
+    private var player: Player? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,20 +42,40 @@ class WordDetailFragment : Fragment() {
         mainViewModel.setShowNavIcon(true)
 
         _binding = FragmentWordDetailBinding.inflate(inflater, container, false)
+        binding.root.layoutTransition = LayoutTransition()
         binding.reciteWordView.setGenerateAIMnemonicListener { viewModel.fetchWordExtract() }
+        binding.reciteWordView.setCommunicateWithAIListener {
+            val wordId = viewModel.uiState.value?.wordDetail?.word?.id
+            if (wordId != null) {
+                AiChatBottomSheetDialogFragment.newInstance(wordId).show(
+                    requireActivity().supportFragmentManager,
+                    AiChatBottomSheetDialogFragment.TAG
+                )
+            }
+        }
+        binding.reciteWordView.setSpeechListener {
+            playVoice()
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
-                viewModel.uiState.collect { wordDetailUIState ->
-                    if (wordDetailUIState == null || wordDetailUIState.wordDetail == null) return@collect
-                    TransitionManager.beginDelayedTransition(
-                        binding.getRoot(),
-                        TransitionSet().addTransition(ChangeBounds())
-                    )
-                    showAll(
-                        wordDetailUIState.wordDetail,
-                        wordDetailUIState.aiMnemonicLoadingState
-                    )
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.uiState.collect { wordDetailUIState ->
+                        if (wordDetailUIState == null || wordDetailUIState.wordDetail == null) return@collect
+                        showAll(wordDetailUIState.wordDetail)
+                    }
+                }
+                launch {
+                    viewModel.aiMnemonicLoadingState.collect { state ->
+                        when (state) {
+                            is Result.Success -> binding.bannerView.setSuccess(state.data)
+                            is Result.Error -> binding.bannerView.setFailure(state.exception.message)
+                            is Result.Loading -> binding.bannerView.setLoading(
+                                getString(com.kite.mnemoai.ui.R.string.ai_thinking)
+                            )
+                            null -> {}
+                        }
+                    }
                 }
             }
         }
@@ -76,14 +83,38 @@ class WordDetailFragment : Fragment() {
         return binding.getRoot()
     }
 
+    override fun onStart() {
+        super.onStart()
+        if (player == null) {
+            player = ExoPlayer.Builder(requireContext()).build()
+        }
+    }
+
+    override fun onStop() {
+        player?.release()
+        player = null
+        super.onStop()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    private fun showAll(wordDetail: WordDetail, aiMnemonicLoadingState: Result<String>?) {
+    private fun playVoice() {
+        val uri = viewModel.getWordVoiceUri()
+        if (uri.isBlank()) return
+        val p = player ?: return
+        if (p.playbackState != Player.STATE_IDLE) {
+            p.stop()
+        }
+        p.setMediaItem(MediaItem.fromUri(uri))
+        p.prepare()
+        p.play()
+    }
+
+    private fun showAll(wordDetail: WordDetail) {
         binding.reciteWordView.setReciteDetailStyle(wordDetail)
-        binding.reciteWordView.showBanner(aiMnemonicLoadingState)
         setAndShowWordForm(wordDetail.forms)
         setAndShowExplain(wordDetail.extract)
         setAndShowExampleSentence(wordDetail.extract, wordDetail.forms)

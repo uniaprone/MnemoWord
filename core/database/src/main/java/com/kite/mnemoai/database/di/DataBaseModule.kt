@@ -3,6 +3,7 @@ package com.kite.mnemoai.database.di
 import android.content.Context
 import androidx.room.Room
 import com.kite.mnemoai.database.AppDatabase
+import com.kite.mnemoai.database.dao.ChatMessageDao
 import com.kite.mnemoai.database.dao.DayPlanDao
 import com.kite.mnemoai.database.dao.DayPlanWordDao
 import com.kite.mnemoai.database.dao.GroupDao
@@ -64,5 +65,10 @@ object DataBaseModule {
     @Provides
     fun provideGroupDao(database: AppDatabase): GroupDao {
         return database.groupDao()
+    }
+
+    @Provides
+    fun provideChatMessageDao(database: AppDatabase): ChatMessageDao{
+        return database.chaMessageDao()
     }
 }

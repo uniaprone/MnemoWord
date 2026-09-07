@@ -2,8 +2,8 @@ package com.kite.mnemoai.data.repository
 
 import com.kite.mnemoai.common.Dispatcher
 import com.kite.mnemoai.common.MaiDispatcher
-import com.kite.mnemoai.data.mapper.asExternalModel
-import com.kite.mnemoai.data.mapper.asEntity
+import com.kite.mnemoai.data.model.asExternalModel
+import com.kite.mnemoai.data.model.asEntity
 import com.kite.mnemoai.database.dao.GroupDao
 import com.kite.mnemoai.database.dao.WordGroupDao
 import com.kite.mnemoai.database.model.WordGroupEntity

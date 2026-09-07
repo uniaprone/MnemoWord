@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="study_reminder_channer_name">学习通知</string>
+    <string name="study_reminder_channer_describe">用于学习提醒通知</string>
+    <string name="study_reminder_title">该记单词啦！</string>
+    <string name="study_reminder_content">📖 今天也和单词打个照面吧！</string>
+</resources>

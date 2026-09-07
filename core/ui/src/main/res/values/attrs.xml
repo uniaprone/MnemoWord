@@ -22,11 +22,41 @@
     </declare-styleable>
 
     <declare-styleable name="SegmentedControl">
-        <attr name="segmentTitle" format="reference"/>
+        <attr name="segmentTitle" format="string"/>
         <attr name="thumbBackground" format="reference"/>
+        <attr name="segmentContainerBg" format="color"/>
+    </declare-styleable>
+    
+    <declare-styleable name="StatisticDataHView">
+        <attr name="statisticDataHImage" format="reference"/>
+        <attr name="statisticDataHDescript" format="string"/>
+        <attr name="statisticDataHData" format="string"/>
     </declare-styleable>
 
     <attr name="wordAwaitingLearning" format="color|reference"/>
     <attr name="wordReviewing" format="color|reference"/>
     <attr name="wordMastered" format="color|reference"/>
+
+    <attr name="colorPrimary" format="color|reference"/>
+    <attr name="colorOnPrimary" format="color|reference"/>
+    <attr name="colorPrimaryContainer" format="color|reference"/>
+    <attr name="colorOnPrimaryContainer" format="color|reference"/>
+
+    <attr name="colorSecondary" format="color|reference"/>
+    <attr name="colorSecondaryContainer" format="color|reference"/>
+
+    <attr name="colorTertiary" format="color|reference"/>
+    <attr name="colorTertiaryContainer" format="color|reference"/>
+
+    <attr name="colorErrorContainer" format="color|reference"/>
+    <attr name="colorOnErrorContainer" format="color|reference"/>
+
+    <attr name="statusBarBackground" format="color|reference"/>
+
+    <attr name="colorOnSurface" format="color|reference"/>
+    <attr name="colorOnSurfaceVariant" format="color|reference"/>
+
+    <attr name="colorSurfaceContainer" format="color|reference"/>
+    <attr name="colorSurfaceContainerLow" format="color|reference"/>
+    <attr name="colorSurfaceContainerLowest" format="color|reference"/>
 </resources>
