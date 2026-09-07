@@ -115,10 +115,10 @@
 
 ## 运行截图
 
-![背单词](screenshot/背单词.jpg)
-![单词本](screenshot/单词本.jpg)
-![统计](screenshot/统计.jpg)
-![我的](screenshot/我的.jpg)
+![背单词](screenshot/recite.jpg)
+![单词本](screenshot/vocabulary.jpg)
+![统计](screenshot/statistic.jpg)
+![我的](screenshot/mine.jpg)
 
 ---
 
