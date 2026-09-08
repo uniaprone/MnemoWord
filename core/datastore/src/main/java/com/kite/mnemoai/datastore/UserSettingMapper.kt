@@ -75,7 +75,7 @@ fun DateIntervalType.toProto(): StatisticDateIntervalType = when (this) {
 
 fun DeepseekSettings.toDomain(): DeepseekAiSettings = DeepseekAiSettings(
     apiKey = apiKey,
-    modelType = modelType,
+    modelType = modelType.ifEmpty { UserSettingDefaults.DEFAULT_MODEL_TYPE },
     enableThinking = enableThinking
 )
 

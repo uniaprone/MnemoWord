@@ -5,7 +5,7 @@ import java.time.LocalTime
 
 object UserSettingDefaults {
     const val NEW_LEARNING_WORD_COUNT = 20
-    const val DEFAULT_MODEL_TYPE = "deepseek-chat"
+    const val DEFAULT_MODEL_TYPE = "deepseek-v4-flash"
     val REMINDER_TIME: LocalTime = LocalTime.of(8, 0)
 
     val DEFAULT_DEEPSEEK_SETTINGS = DeepseekAiSettings()

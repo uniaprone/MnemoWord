@@ -272,7 +272,7 @@ class MineFragment : Fragment(){
                                     binding.aiModelSp.setSelection(uIState.aiProvider.ordinal)
                                     fitSpinnerToSelection(
                                         binding.aiModelSp,
-                                        uIState.aiProvider?.name?.lowercase()
+                                        uIState.aiProvider.name.lowercase()
                                     )
                                     if(uIState.apikey.isNullOrEmpty()){
                                         binding.apikeyInfoTV.text = getString(R.string.no_set)
