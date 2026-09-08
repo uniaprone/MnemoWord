@@ -1,1 +1,1 @@
-app/src/main/assets/vocabulary.db filter=lfs diff=lfs merge=lfs -text
+# vocabulary.db is not distributed with the repo (see README), no LFS needed
