@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/main/res/drawable/logo.png" width="64" height="64" alt="图标"/>
+  <img src="app/src/main/res/drawable/logo.png" width="128" height="128" alt="图标"/>
 </p>
 
 <h1 align="center">Mnemo</h1>
