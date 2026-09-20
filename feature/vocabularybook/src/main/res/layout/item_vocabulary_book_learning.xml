@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/text_size_title_medium"
             android:textColor="?attr/colorOnSurface"
-            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tool:text="中考词汇" />

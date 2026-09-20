@@ -138,8 +138,11 @@ class ReciteWordFragment : Fragment(), MenuProvider {
                 binding.statusReciteWordNotStarted.statusReciteWordNotStartedCL.visibility =
                     View.GONE
 
-                val progress =
+                val progress =if(reciteWordUIState.totalProgress == 0){
+                    0
+                }else{
                     ((reciteWordUIState.currentProgress * 100f) / reciteWordUIState.totalProgress).toInt()
+                }
                 binding.statusReciteWordOK.linearProgressIndicator.setProgress(progress, true)
                 binding.statusReciteWordOK.numberProgressTV.text = getString(
                     R.string.number_progress,

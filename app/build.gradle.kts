@@ -62,7 +62,6 @@ dependencies {
     implementation(project(":feature:mine"))
     implementation(project(":feature:statistic"))
 
-    implementation(libs.androidx.preference)
     implementation(libs.mpandroidchart)
     implementation(libs.androidx.hilt.work)
     implementation(libs.androidx.fragment)

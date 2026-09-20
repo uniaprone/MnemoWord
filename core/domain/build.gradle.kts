@@ -19,21 +19,18 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.material)
+    implementation(project(":core:model"))
+    implementation(libs.kotlinx.coroutines.core)
+
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-
-    implementation(project(":core:model"))
-    implementation(project(":core:data"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -73,7 +73,7 @@ class UserSettingDataSource @Inject constructor(
 
     suspend fun setAiPrompts(aiPrompts: Map<AiPromptType, AiPromptSet>) {
         userPreferences.updateData { preferences ->
-            val builder = preferences.toBuilder()
+            val builder = preferences.toBuilder().clearAiPrompts()
             aiPrompts.forEach { (type, set) ->
                 builder.addAiPrompts(
                     AiPromptEntryProto.newBuilder()

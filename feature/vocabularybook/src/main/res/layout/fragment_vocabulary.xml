@@ -66,7 +66,6 @@
                     android:id="@+id/todayLearningGoalLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="1dp"
                     android:background="?attr/colorSurfaceContainerLowest">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -74,7 +73,8 @@
                         android:layout_height="wrap_content"
                         android:padding="8dp"
                         android:text="@string/today_goal"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textStyle="bold"
+                        android:textColor="?attr/colorOnSurface"
                         android:textSize="@dimen/text_size_title_medium" />
 
                 </LinearLayout>
@@ -313,7 +313,6 @@
                     android:paddingHorizontal="8dp"
                     android:paddingTop="8dp"
                     android:paddingBottom="7dp"
-                    android:layout_marginBottom="1dp"
                     android:background="?attr/colorSurfaceContainerLowest">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -323,7 +322,9 @@
                         android:layout_weight="1"
                         android:gravity="start"
                         android:text="@string/learning_vocabulary"
+                        android:textStyle="bold"
                         android:textSize="@dimen/text_size_title_medium"
+                        android:textColor="?attr/colorOnSurface"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -347,17 +348,17 @@
 
                         android:text="@string/add"
                         android:textSize="@dimen/text_size_label_medium"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?attr/colorOnPrimaryContainer"
 
-                        app:strokeWidth="0.5dp"
+                        app:strokeWidth="0dp"
                         app:strokeColor="?attr/colorOutlineVariant"
-                        app:backgroundTint="?attr/colorTertiaryContainer"
+                        app:backgroundTint="?attr/colorPrimaryContainer"
 
                         app:icon="@drawable/baseline_add_24"
                         app:iconSize="@dimen/text_size_label_medium"
-                        app:iconTint="?attr/colorOnTertiaryContainer"
+                        app:iconTint="?attr/colorOnPrimaryContainer"
                         app:iconPadding="0dp"
-                        app:rippleColor="?attr/colorTertiary"
+                        app:rippleColor="?attr/colorPrimary"
 
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -401,7 +402,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:layout_marginBottom="1dp"
                     android:background="?attr/colorSurfaceContainerLowest">
 
                     <com.google.android.material.textview.MaterialTextView
@@ -409,7 +409,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/my_group"
+                        android:textStyle="bold"
                         android:textSize="@dimen/text_size_title_medium"
+                        android:textColor="?attr/colorOnSurface"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -433,17 +435,17 @@
 
                         android:text="@string/add"
                         android:textSize="@dimen/text_size_label_medium"
-                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textColor="?attr/colorOnPrimaryContainer"
 
-                        app:strokeWidth="0.5dp"
+                        app:strokeWidth="0dp"
                         app:strokeColor="?attr/colorOutlineVariant"
-                        app:backgroundTint="?attr/colorTertiaryContainer"
+                        app:backgroundTint="?attr/colorPrimaryContainer"
 
                         app:icon="@drawable/baseline_add_24"
                         app:iconSize="@dimen/text_size_label_medium"
-                        app:iconTint="?attr/colorOnTertiaryContainer"
+                        app:iconTint="?attr/colorOnPrimaryContainer"
                         app:iconPadding="0dp"
-                        app:rippleColor="?attr/colorTertiary"
+                        app:rippleColor="?attr/colorPrimary"
 
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

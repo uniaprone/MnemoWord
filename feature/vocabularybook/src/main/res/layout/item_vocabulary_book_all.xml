@@ -30,7 +30,6 @@
                 android:layout_margin="12dp"
                 android:textSize="@dimen/text_size_body_large"
                 android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold"
                 tools:text="中考词汇"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

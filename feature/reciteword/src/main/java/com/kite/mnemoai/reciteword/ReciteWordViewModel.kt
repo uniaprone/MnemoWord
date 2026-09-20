@@ -360,11 +360,11 @@ class ReciteWordViewModel @Inject constructor(
             if (currentReciteStatistics.wordId == wordId) {
                 when (type) {
                     0 -> {
-                        currentReciteStatistics.addBlurCount()
+                        currentReciteStatistics.addForgetCount()
                         currentReciteStatistics.addLearningTime(SystemClock.elapsedRealtime() - currentReciteStatistics.startLearningTime)
                     }
                     1 -> {
-                        currentReciteStatistics.addForgetCount()
+                        currentReciteStatistics.addBlurCount()
                         currentReciteStatistics.addLearningTime(SystemClock.elapsedRealtime() - currentReciteStatistics.startLearningTime)
                     }
                     2, 3 -> {
