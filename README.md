@@ -2,19 +2,19 @@
   <img src="app/src/main/res/drawable/logo.png" width="128" height="128" alt="图标"/>
 </p>
 
-<h1 align="center">Mnemo</h1>
+<h1 align="center">MnemoWord</h1>
 
 <p align="center">一款 AI 助记 + 间隔重复复习的 Android 背单词应用<br/>
 让AI为你解释单词，生成例句；复习算法自动安排单词复习日期。<br/>
 内置约 77 万词离线词库，不联网也能学。</p>
 
 <p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/sdfkjak/Mnemo?style=flat" alt="License"/></a>
-  <a href="https://github.com/sdfkjak/Mnemo/releases"><img src="https://img.shields.io/github/v/release/sdfkjak/Mnemo?style=flat" alt="Release"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/uniaprone/MnemoWord?style=flat" alt="License"/></a>
+  <a href="https://github.com/uniaprone/MnemoWord/releases"><img src="https://img.shields.io/github/v/release/uniaprone/MnemoWord?style=flat" alt="Release"/></a>
   <a href="https://developer.android.com"><img src="https://img.shields.io/badge/Android-8.0%2B-3DDC84?style=flat&amp;logo=android" alt="Android"/></a>
   <a href="https://kotlinlang.org"><img src="https://img.shields.io/badge/Kotlin-2.3-7F52FF?style=flat&amp;logo=kotlin" alt="Kotlin"/></a>
-  <a href="https://github.com/sdfkjak/Mnemo/stargazers"><img src="https://img.shields.io/github/stars/sdfkjak/Mnemo?style=social" alt="Stars"/></a>
-  <a href="https://github.com/sdfkjak/Mnemo/issues"><img src="https://img.shields.io/github/issues/sdfkjak/Mnemo?style=flat" alt="Issues"/></a>
+  <a href="https://github.com/uniaprone/MnemoWord/stargazers"><img src="https://img.shields.io/github/stars/uniaprone/MnemoWord?style=social" alt="Stars"/></a>
+  <a href="https://github.com/uniaprone/MnemoWord/issues"><img src="https://img.shields.io/github/issues/uniaprone/MnemoWord?style=flat" alt="Issues"/></a>
 </p>
 
 <p align="center">
@@ -173,7 +173,7 @@ sync/                         # 同步
 
 ## 下载
 
-前往本仓库 [Releases](https://github.com/sdfkjak/Mnemo/releases) 页面下载最新 APK 直接安装；也可以按下方「快速开始」自行构建。
+前往本仓库 [Releases](https://github.com/uniaprone/MnemoWord/releases) 页面下载最新 APK 直接安装；也可以按下方「快速开始」自行构建。
 
 ## 快速开始
 
@@ -187,7 +187,7 @@ sync/                         # 同步
 
 应用的内置词库 `app/src/main/assets/vocabulary.db`（约 200MB）**不随仓库分发**（GitHub 单文件上限 100MB），需要先从本仓库的 **Releases** 下载：
 
-1. 前往本仓库 [Releases](https://github.com/sdfkjak/Mnemo/releases) 页面
+1. 前往本仓库 [Releases](https://github.com/uniaprone/MnemoWord/releases) 页面
 2. 下载最新的 `vocabulary.db`
 3. 放入 `app/src/main/assets/vocabulary.db`
 
@@ -204,7 +204,7 @@ python tools/csv_to_sqlite.py <CSV文件路径> app/src/main/assets/vocabulary.d
 步骤：
 
 ```bash
-git clone https://github.com/sdfkjak/Mnemo.git
+git clone https://github.com/uniaprone/MnemoWord.git
 
 # 命令行构建调试包
 ./gradlew :app:assembleDebug
@@ -239,7 +239,7 @@ git clone https://github.com/sdfkjak/Mnemo.git
 
 ## 问题反馈
 
-使用过程中遇到 Bug 或有功能建议，欢迎到 [Issues](https://github.com/sdfkjak/Mnemo/issues) 提交。
+使用过程中遇到 Bug 或有功能建议，欢迎到 [Issues](https://github.com/uniaprone/MnemoWord/issues) 提交。
 
 ## 数据来源与致谢
 
